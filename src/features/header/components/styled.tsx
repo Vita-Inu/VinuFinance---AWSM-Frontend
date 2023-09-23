@@ -1,7 +1,7 @@
 import styled, {css} from "styled-components";
 
 export const Wrapper = styled.header`
-  padding: 5.4rem 0 10.4rem;
+  padding: 0 0 10.4rem;
 `
 
 export const Row = styled.div`
