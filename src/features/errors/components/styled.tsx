@@ -1,5 +1,3 @@
-import NextLink from "next/link"
-
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -45,7 +43,7 @@ export const LinkWrapper = styled.div`
   text-align: center;
 `
 
-export const Link = styled(NextLink)`
+export const Link = styled.span`
   color: ${props => props.theme.colors.grey};
   text-align: center;
   font-size: 1.8rem;
