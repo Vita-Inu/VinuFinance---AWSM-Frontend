@@ -20,7 +20,7 @@ export const Menu = styled.nav`
   border: 0.1rem solid rgba(255, 255, 255, 0.15);
 `
 
-export const MenuItem = styled.span<{active: boolean}>`
+export const MenuItem = styled.span<{$active: boolean}>`
   padding: 0.4rem 1.2rem;
   border-radius: 3rem;
   background: transparent;
@@ -30,7 +30,7 @@ export const MenuItem = styled.span<{active: boolean}>`
   font-weight: 500;
   line-height: 1.5;
   
-  ${props => props.active && css`
+  ${props => props.$active && css`
     background: ${props => props.theme.colors.darkGrey};
   `}
 `
