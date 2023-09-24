@@ -1,10 +1,10 @@
-import {ModalBase} from "@/features/modalBase";
+import {ModalBase} from "../modalBase";
 
 type Props = {
     onClose: VoidFunction
 }
 
-export function Modal({onClose}: Props) {
+export function WalletDescriptionModal({onClose}: Props) {
     return (
         <ModalBase title={'What is wallet?'} onClose={onClose}>
             <p>

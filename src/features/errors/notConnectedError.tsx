@@ -1,8 +1,10 @@
 import {useState} from "react";
 import {useTheme} from "styled-components";
 
-import {Wrapper, Container, LinkWrapper, Link, Buttons, Title, Description, Modal} from "./components";
-import {Button} from "@/components/button";
+import {WalletDescriptionModal} from "@/features/modals";
+import {Button} from "@/components/buttons";
+
+import {Wrapper, Container, LinkWrapper, Link, Buttons, Title, Description} from "./components";
 
 
 export function NotConnectedError() {
@@ -28,7 +30,7 @@ export function NotConnectedError() {
                     </LinkWrapper>
                 </Container>
             </Wrapper>
-            {isModalVisible && <Modal onClose={hideModal}/>}
+            {isModalVisible && <WalletDescriptionModal onClose={hideModal}/>}
         </>
     )
 }

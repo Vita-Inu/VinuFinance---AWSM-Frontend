@@ -13,7 +13,7 @@ type Props = {
 function ModalContainer({children, title, onClose}: Props) {
     return (
         <Wrapper>
-            <Background/>
+            <Background onClick={onClose}/>
             <Container>
                 <Box>
                     <Top>

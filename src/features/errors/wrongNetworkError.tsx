@@ -1,6 +1,6 @@
 import {useTheme} from "styled-components";
 
-import {Button} from "@/components/button";
+import {Button} from "@/components/buttons";
 
 import {Buttons, Container, Description, Title, Wrapper} from "./components";
 

@@ -4,6 +4,7 @@ import {PropsWithChildren} from "react";
 type Props = {
     background?: string
     text?: string
+    onClick?: VoidFunction
 }
 
 const StyledButton = styled.div<Props>`
