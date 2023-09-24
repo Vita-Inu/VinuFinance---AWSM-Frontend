@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTheme } from 'styled-components';
 
-import { WalletDescriptionModal } from '@/features/modals';
 import { Button } from '@/components/buttons';
+import { WalletDescriptionModal } from '@/features/modals';
 
 import {
   Wrapper,

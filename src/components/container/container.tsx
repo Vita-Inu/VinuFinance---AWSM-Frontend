@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { PropsWithChildren } from 'react';
 
 const StyledContainer = styled.div`

@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 
 import {
   Top,
@@ -11,7 +12,6 @@ import {
   Title,
   Close,
 } from './components';
-import Image from 'next/image';
 
 type Props = {
   title: string;
