@@ -1,2 +1,2 @@
-export * from "./notConnectedError"
-export * from "./wrongNetworkError"
+export * from './notConnectedError';
+export * from './wrongNetworkError';

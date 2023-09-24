@@ -1,1 +1,1 @@
-export * from "./aeonik"
+export * from './aeonik';

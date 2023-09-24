@@ -1,1 +1,1 @@
-export * from "./modalBase"
+export * from './modalBase';

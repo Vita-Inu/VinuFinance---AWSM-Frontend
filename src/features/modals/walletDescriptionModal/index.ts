@@ -1,1 +1,1 @@
-export * from './walletDescriptionModal'
+export * from './walletDescriptionModal';

@@ -1,1 +1,1 @@
-export * from "./walletButton"
+export * from './walletButton';

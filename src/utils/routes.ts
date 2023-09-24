@@ -1,4 +1,4 @@
 export const enum ROUTE {
-    HOME = '/',
-    BORROW = '/borrow'
+  HOME = '/',
+  BORROW = '/borrow',
 }

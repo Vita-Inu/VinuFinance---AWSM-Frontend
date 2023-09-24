@@ -1,1 +1,1 @@
-export * from './loginModal'
+export * from './loginModal';
