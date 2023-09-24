@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTheme } from 'styled-components';
 
 import { Button } from '@/components/buttons';
 import { WalletDescriptionModal } from '@/features/modals';
@@ -20,8 +19,6 @@ export function NotConnectedError() {
   const hideModal = () => setIsModalVisible(false);
   const showModal = () => setIsModalVisible(true);
 
-  const { colors } = useTheme();
-
   return (
     <>
       <Wrapper>
@@ -32,10 +29,10 @@ export function NotConnectedError() {
             positions
           </Description>
           <Buttons>
-            <Button background={colors.pink} text={colors.black}>
+            <Button background={'#DFCEFD'} text={'#000'}>
               Connect Wallet
             </Button>
-            <Button background={colors.white} text={colors.black}>
+            <Button background={'#FFF'} text={'#000'}>
               Learn more
             </Button>
           </Buttons>

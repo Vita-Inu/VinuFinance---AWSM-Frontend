@@ -1,12 +1,8 @@
-import { useTheme } from 'styled-components';
-
 import { Button } from '@/components/buttons';
 
 import { Buttons, Container, Description, Title, Wrapper } from './components';
 
 export function WrongNetworkError() {
-  const { colors } = useTheme();
-
   //TODO:: Adjust text
   return (
     <Wrapper>
@@ -14,7 +10,7 @@ export function WrongNetworkError() {
         <Title>Wrong network selected</Title>
         <Description>Please connect to Vita Inu network</Description>
         <Buttons>
-          <Button background={colors.white} text={colors.black}>
+          <Button background={'#FFF'} text={'#000'}>
             Switch to Vita Inu
           </Button>
         </Buttons>

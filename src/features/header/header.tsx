@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { useTheme } from 'styled-components';
 
 import { LoginModal } from '@/features/modals';
 import { Logo } from '@/components/logo';
@@ -12,8 +11,6 @@ import { Row, Wrapper, Menu, MenuItem } from './components';
 
 export function Header() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-  const { colors } = useTheme();
 
   const showModal = () => setIsModalVisible(true);
 
@@ -38,11 +35,7 @@ export function Header() {
                 <MenuItem $active={false}>LP</MenuItem>
               </Link>
             </Menu>
-            <Button
-              background={colors.pink}
-              text={colors.black}
-              onClick={showModal}
-            >
+            <Button background={'#DFCEFD'} text={'#000'} onClick={showModal}>
               Connect Wallet
             </Button>
           </Row>

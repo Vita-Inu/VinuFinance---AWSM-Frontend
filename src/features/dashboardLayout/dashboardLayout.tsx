@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Header } from '@/features/header';
 import { AuthGuard } from '@/features/authGuard';
