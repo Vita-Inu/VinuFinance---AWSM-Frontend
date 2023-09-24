@@ -14,8 +14,8 @@ const StyledButton = styled.div<Props>`
   font-style: normal;
   font-weight: 500;
   line-height: 1.5;
-  background: ${props => props.background ?? props.theme.colors.white};
-  color: ${props => props.text ?? props.theme.colors.black};
+  background: ${props => props.background ?? '#FFF'};
+  color: ${props => props.text ?? '#000'};
 `
 
 export const Button = (props: PropsWithChildren<Props>) => <StyledButton {...props} role={'button'}/>

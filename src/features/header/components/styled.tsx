@@ -24,13 +24,13 @@ export const MenuItem = styled.span<{$active: boolean}>`
   padding: 0.4rem 1.2rem;
   border-radius: 3rem;
   background: transparent;
-  color: ${props => props.theme.colors.white};
+  color: #FFF;
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
   line-height: 1.5;
   
   ${props => props.$active && css`
-    background: ${props => props.theme.colors.darkGrey};
+    background: #38313F;
   `}
 `

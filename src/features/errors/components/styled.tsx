@@ -11,7 +11,7 @@ export const Container = styled.div`
 `
 
 export const Title = styled.h1`
-  color: ${props => props.theme.colors.pink};
+  color: #DFCEFD;
   font-size: 6.4rem;
   font-style: normal;
   font-weight: 500;
@@ -20,7 +20,7 @@ export const Title = styled.h1`
 `
 
 export const Description = styled.p`
-  color: ${props => props.theme.colors.pink};
+  color: #DFCEFD;
   text-align: center;
   font-size: 2rem;
   font-style: normal;
@@ -44,11 +44,11 @@ export const LinkWrapper = styled.div`
 `
 
 export const Link = styled.span`
-  color: ${props => props.theme.colors.grey};
+  color: #736E77;
   text-align: center;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 500;
   line-height: 180%;
-  border-bottom: .1rem solid ${props => props.theme.colors.grey};
+  border-bottom: .1rem solid #736E77;
 `
