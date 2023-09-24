@@ -1,13 +1,6 @@
 import { ChangeEventHandler, ReactNode } from 'react';
 
-import {
-  BoxBackground,
-  Box,
-  BoxMark,
-  Description,
-  Row,
-  Input,
-} from './components';
+import { BoxBackground, Box, BoxMark, Description, Row, Input } from './styled';
 
 type Props = {
   children: ReactNode;

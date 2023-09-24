@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-import { Agreement } from '@/features/inputs';
+import { Agreement } from '@/components/inputs';
 import { WalletButton } from '@/components/buttons';
 
 import { ModalBase } from '../modalBase';

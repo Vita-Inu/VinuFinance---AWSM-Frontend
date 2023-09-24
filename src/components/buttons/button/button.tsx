@@ -11,9 +11,9 @@ type Props = {
 };
 
 const StyledButton = styled.div<{
-  text: string;
-  background: string;
-  backgroundHovered: string;
+  $text: string;
+  $background: string;
+  $backgroundHovered: string;
 }>`
   padding: 1.2rem 2.4rem;
   border-radius: 3rem;
@@ -21,12 +21,12 @@ const StyledButton = styled.div<{
   font-style: normal;
   font-weight: 500;
   line-height: 1.5;
-  background: ${(props) => props.background};
-  color: ${(props) => props.text};
+  background: ${(props) => props.$background};
+  color: ${(props) => props.$text};
   transition: 0.2s ease-in-out;
 
   &:hover {
-    background: ${(props) => props.backgroundHovered};
+    background: ${(props) => props.$backgroundHovered};
   }
 `;
 
@@ -37,9 +37,9 @@ export const Button = ({ preset, ...props }: Props) => {
   return (
     <StyledButton
       {...props}
-      text={presetColors.text}
-      background={presetColors.background}
-      backgroundHovered={presetColors.backgroundHovered}
+      $text={presetColors.text}
+      $background={presetColors.background}
+      $backgroundHovered={presetColors.backgroundHovered}
       role={'button'}
     />
   );
