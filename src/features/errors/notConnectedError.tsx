@@ -1,16 +1,16 @@
 import { useState } from 'react';
 
-import { Button } from '@/components/buttons';
+import { Button, BUTTON_PRESET } from '@/components/buttons';
 import { WalletDescriptionModal } from '@/features/modals';
 
 import {
-  Wrapper,
-  Container,
-  LinkWrapper,
-  Link,
   Buttons,
-  Title,
+  Container,
   Description,
+  Link,
+  LinkWrapper,
+  Title,
+  Wrapper,
 } from './components';
 
 export function NotConnectedError() {
@@ -29,12 +29,8 @@ export function NotConnectedError() {
             positions
           </Description>
           <Buttons>
-            <Button background={'#DFCEFD'} text={'#000'}>
-              Connect Wallet
-            </Button>
-            <Button background={'#FFF'} text={'#000'}>
-              Learn more
-            </Button>
+            <Button preset={BUTTON_PRESET.PINK}>Connect Wallet</Button>
+            <Button preset={BUTTON_PRESET.WHITE}>Learn more</Button>
           </Buttons>
           <LinkWrapper>
             <Link onClick={showModal} role={'button'}>

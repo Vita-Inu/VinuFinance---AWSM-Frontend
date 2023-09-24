@@ -1,4 +1,4 @@
-import { Button } from '@/components/buttons';
+import { Button, BUTTON_PRESET } from '@/components/buttons';
 
 import { Buttons, Container, Description, Title, Wrapper } from './components';
 
@@ -10,9 +10,7 @@ export function WrongNetworkError() {
         <Title>Wrong network selected</Title>
         <Description>Please connect to Vita Inu network</Description>
         <Buttons>
-          <Button background={'#FFF'} text={'#000'}>
-            Switch to Vita Inu
-          </Button>
+          <Button preset={BUTTON_PRESET.WHITE}>Switch to Vita Inu</Button>
         </Buttons>
       </Container>
     </Wrapper>

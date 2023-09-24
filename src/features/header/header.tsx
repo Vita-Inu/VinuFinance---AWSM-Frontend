@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 import { LoginModal } from '@/features/modals';
 import { Logo } from '@/components/logo';
-import { Button } from '@/components/buttons';
+import { Button, BUTTON_PRESET } from '@/components/buttons';
 import { Container } from '@/components/container';
 import { ROUTE } from '@/utils';
 
-import { Row, Wrapper, Menu, MenuItem } from './components';
+import { Menu, MenuItem, Row, Wrapper } from './components';
 
 export function Header() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -35,7 +35,7 @@ export function Header() {
                 <MenuItem $active={false}>LP</MenuItem>
               </Link>
             </Menu>
-            <Button background={'#DFCEFD'} text={'#000'} onClick={showModal}>
+            <Button preset={BUTTON_PRESET.PINK} onClick={showModal}>
               Connect Wallet
             </Button>
           </Row>
