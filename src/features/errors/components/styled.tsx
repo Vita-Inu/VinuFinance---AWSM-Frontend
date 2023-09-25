@@ -44,11 +44,17 @@ export const LinkWrapper = styled.div`
 `;
 
 export const Link = styled.span`
-  color: #736e77;
+  color: rgba(255, 255, 255, 0.4);
   text-align: center;
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 500;
   line-height: 180%;
-  border-bottom: 0.1rem solid #736e77;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.4);
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    color: #fff;
+    border-color: #fff;
+  }
 `;
