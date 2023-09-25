@@ -1,11 +1,16 @@
 import { ChangeEvent, useState } from 'react';
 
 import { Agreement } from '@/components/inputs';
-import { WalletButton } from '@/components/buttons';
 
 import { ModalBase } from '../modalBase';
 
-import { Link, Agreements, Buttons } from './components';
+import {
+  Link,
+  Agreements,
+  Buttons,
+  CoinbaseButton,
+  MetamaskButton,
+} from './components';
 
 type Props = {
   onClose: VoidFunction;
@@ -35,52 +40,11 @@ export function LoginModal({ onClose }: Props) {
 
   const canLogin = Object.values(agreements).every((val) => val);
 
-  const handleLogin = () => {
-    //TODO:: Use wallet enum. Maybe from wagmi???
-    //TODO:: Handle wagmi wallet connect
-
-    if (!canLogin) return;
-  };
-
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
       <Buttons>
-        <WalletButton
-          disabled={!canLogin}
-          onClick={handleLogin}
-          icon={{
-            src: '/wallets/metamask.svg',
-            alt: 'Metamask',
-            width: 17,
-            height: 16,
-          }}
-        >
-          Metamask
-        </WalletButton>
-        <WalletButton
-          disabled={!canLogin}
-          onClick={handleLogin}
-          icon={{
-            src: '/wallets/coinbase.svg',
-            alt: 'Coinbase',
-            width: 16,
-            height: 16,
-          }}
-        >
-          Metamask
-        </WalletButton>
-        <WalletButton
-          disabled={!canLogin}
-          onClick={handleLogin}
-          icon={{
-            src: '/wallets/walletconnect.svg',
-            alt: 'Wallet connect',
-            width: 16,
-            height: 16,
-          }}
-        >
-          Metamask
-        </WalletButton>
+        <MetamaskButton disabled={!canLogin} onConnect={onClose} />
+        <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
       </Buttons>
       <Agreements>
         <Agreement

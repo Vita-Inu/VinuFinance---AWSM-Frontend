@@ -1,20 +1,16 @@
-import { useState } from 'react';
 import Link from 'next/link';
+import { useAccount } from 'wagmi';
 
-import { LoginModal } from '@/features/modals';
 import { Logo } from '@/components/logo';
-import { Button, BUTTON_PRESET } from '@/components/buttons';
 import { Container } from '@/components/container';
 import { ROUTE } from '@/utils';
+import { ConnectButton } from '@/features/connectButton';
+import { DropdownMenu } from '@/features/dropdownMenu';
 
 import { Menu, MenuItem, Row, Wrapper } from './components';
 
 export function Header() {
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-  const showModal = () => setIsModalVisible(true);
-
-  const hideModal = () => setIsModalVisible(false);
+  const { address } = useAccount();
 
   return (
     <>
@@ -35,13 +31,11 @@ export function Header() {
                 <MenuItem $active={false}>LP</MenuItem>
               </Link>
             </Menu>
-            <Button preset={BUTTON_PRESET.PINK} onClick={showModal}>
-              Connect Wallet
-            </Button>
+            {!address && <ConnectButton />}
+            {address && <DropdownMenu address={address} />}
           </Row>
         </Container>
       </Wrapper>
-      {isModalVisible && <LoginModal onClose={hideModal} />}
     </>
   );
 }

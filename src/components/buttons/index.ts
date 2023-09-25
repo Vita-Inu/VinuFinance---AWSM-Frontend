@@ -1,2 +1,2 @@
-export * from './walletButton';
 export * from './button';
+export * from './walletButton';

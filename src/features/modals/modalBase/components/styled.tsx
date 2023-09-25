@@ -35,7 +35,7 @@ export const Container = styled.div`
 
 export const Box = styled.div`
   width: 100%;
-  max-height: 63.8rem;
+  max-height: 69.2rem;
   border-radius: 8px;
   background: #2d2635;
   overflow: auto;

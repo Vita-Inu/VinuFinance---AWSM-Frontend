@@ -7,6 +7,7 @@ import { StyledComponentsRegistry } from '@/lib';
 import { aeonik } from '@/fonts';
 import { GlobalStyles, theme } from '@/features/theme';
 import { DashboardLayout } from '@/features/dashboardLayout';
+import { Wagmi } from '@/features/wagmi';
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <GlobalStyles />
         <ThemeProvider theme={theme}>
           <StyledComponentsRegistry>
-            <DashboardLayout>{children}</DashboardLayout>
+            <Wagmi>
+              <DashboardLayout>{children}</DashboardLayout>
+            </Wagmi>
           </StyledComponentsRegistry>
         </ThemeProvider>
       </body>
