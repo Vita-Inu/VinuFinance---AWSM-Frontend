@@ -1,7 +1,7 @@
-import { useConnect } from 'wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/connectors/coinbaseWallet';
 
-import { WalletButton } from '@/components/buttons';
+import { WalletButton } from './components';
+import { useWalletButton } from './hooks';
 
 type Props = {
   disabled: boolean;
@@ -9,9 +9,9 @@ type Props = {
 };
 
 export function CoinbaseButton({ disabled, onConnect }: Props) {
-  const { connect } = useConnect({
+  const { connect } = useWalletButton({
     connector: new CoinbaseWalletConnector({ options: { appName: 'wagmi' } }),
-    onSuccess: () => onConnect(),
+    onSuccess: onConnect,
   });
 
   return (

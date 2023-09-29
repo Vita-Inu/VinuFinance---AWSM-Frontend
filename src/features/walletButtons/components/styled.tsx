@@ -1,20 +1,7 @@
-import { ReactNode } from 'react';
-import { styled, css } from 'styled-components';
+import { css, styled } from 'styled-components';
 import NextImage from 'next/image';
 
-type Props = {
-  icon: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
-  children: ReactNode;
-  onClick: VoidFunction;
-  disabled?: boolean;
-};
-
-const Button = styled.div<{ $disabled?: boolean }>`
+export const Button = styled.div<{ $disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,21 +28,12 @@ const Button = styled.div<{ $disabled?: boolean }>`
     `}
 `;
 
-const Icon = styled(NextImage)``;
+export const Icon = styled(NextImage)``;
 
-const Text = styled.div`
+export const Text = styled.div`
   color: #fff;
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
   line-height: 2.4rem;
 `;
-
-export const WalletButton = ({ children, icon, disabled, ...rest }: Props) => {
-  return (
-    <Button {...rest} $disabled={disabled} role={'button'}>
-      <Icon {...icon} />
-      <Text>{children}</Text>
-    </Button>
-  );
-};

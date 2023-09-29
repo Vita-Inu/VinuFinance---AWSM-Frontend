@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button, BUTTON_PRESET } from '@/components/buttons';
-import { LoginModal } from '@/features/modals';
+import { ConnectModal } from '@/features/modals';
 
 export function ConnectButton() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -15,7 +15,7 @@ export function ConnectButton() {
       <Button preset={BUTTON_PRESET.PINK} onClick={showModal}>
         Connect Wallet
       </Button>
-      {isModalVisible && <LoginModal onClose={hideModal} />}
+      {isModalVisible && <ConnectModal onClose={hideModal} />}
     </>
   );
 }

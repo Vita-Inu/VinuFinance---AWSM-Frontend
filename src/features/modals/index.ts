@@ -1,2 +1,2 @@
-export * from './loginModal';
+export * from './connectModal';
 export * from './walletDescriptionModal';

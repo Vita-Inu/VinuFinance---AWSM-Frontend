@@ -1,7 +1,7 @@
-import { useConnect } from 'wagmi';
 import { MetaMaskConnector } from '@wagmi/connectors/metaMask';
 
-import { WalletButton } from '@/components/buttons';
+import { WalletButton } from './components';
+import { useWalletButton } from './hooks';
 
 type Props = {
   disabled: boolean;
@@ -9,9 +9,9 @@ type Props = {
 };
 
 export function MetamaskButton({ disabled, onConnect }: Props) {
-  const { connect } = useConnect({
+  const { connect } = useWalletButton({
     connector: new MetaMaskConnector(),
-    onSuccess: () => onConnect(),
+    onSuccess: onConnect,
   });
 
   return (

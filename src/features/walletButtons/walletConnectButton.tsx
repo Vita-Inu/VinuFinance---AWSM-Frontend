@@ -1,7 +1,7 @@
-import { useConnect } from 'wagmi';
 import { WalletConnectConnector } from '@wagmi/connectors/walletConnect';
 
-import { WalletButton } from '@/components/buttons';
+import { WalletButton } from './components';
+import { useWalletButton } from './hooks';
 
 type Props = {
   disabled: boolean;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function WalletConnectButton({ disabled, onConnect }: Props) {
-  const { connect } = useConnect({
+  const { connect } = useWalletButton({
     connector: new WalletConnectConnector({ options: { projectId: '...' } }),
     onSuccess: () => onConnect(),
   });

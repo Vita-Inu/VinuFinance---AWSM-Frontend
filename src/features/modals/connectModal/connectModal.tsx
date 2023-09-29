@@ -1,44 +1,17 @@
-import { ChangeEvent, useState } from 'react';
-
 import { Agreement } from '@/components/inputs';
+import { CoinbaseButton, MetamaskButton } from '@/features/walletButtons';
 
 import { ModalBase } from '../modalBase';
 
-import {
-  Link,
-  Agreements,
-  Buttons,
-  CoinbaseButton,
-  MetamaskButton,
-} from './components';
+import { useConnectModal } from './hooks';
+import { Link, Agreements, Buttons } from './components';
 
 type Props = {
   onClose: VoidFunction;
 };
 
-const DEFAULT_AGREEMENTS_STATE = {
-  country: false,
-  policy: false,
-  vpn: false,
-};
-
-export function LoginModal({ onClose }: Props) {
-  const [agreements, setAgreements] = useState<typeof DEFAULT_AGREEMENTS_STATE>(
-    DEFAULT_AGREEMENTS_STATE,
-  );
-
-  const handleAgreementChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setAgreements((prevState) => {
-      if (!Object.keys(agreements).includes(evt.target.name)) return prevState;
-
-      return {
-        ...prevState,
-        [evt.target.name]: evt.target.checked,
-      };
-    });
-  };
-
-  const canLogin = Object.values(agreements).every((val) => val);
+export function ConnectModal({ onClose }: Props) {
+  const { agreements, handleAgreementChange, canLogin } = useConnectModal();
 
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
