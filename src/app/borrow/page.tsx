@@ -1,3 +1,7 @@
+'use client';
+
+import { Borrow } from '@/features/borrow';
+
 export default function BorrowPage() {
-  return <></>;
+  return <Borrow />;
 }

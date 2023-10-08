@@ -15,11 +15,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body className={aeonik.className}>
         <GlobalStyles />
         <ThemeProvider theme={theme}>
-          <StyledComponentsRegistry>
-            <Wagmi>
+          <Wagmi>
+            <StyledComponentsRegistry>
               <DashboardLayout>{children}</DashboardLayout>
-            </Wagmi>
-          </StyledComponentsRegistry>
+            </StyledComponentsRegistry>
+          </Wagmi>
         </ThemeProvider>
       </body>
     </html>

@@ -29,6 +29,8 @@ TBD
 
 ### Project structure
 
+//TODO:: Remake since we will drop `app` feature...
+
 ```
 - public
 - src
