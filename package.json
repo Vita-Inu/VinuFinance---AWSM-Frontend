@@ -19,10 +19,12 @@
     "react-dom": "18.2.0",
     "styled-components": "^6.0.7",
     "typescript": "5.2.2",
+    "uuid": "^9.0.1",
     "viem": "^1.12.2",
     "wagmi": "^1.4.2"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "8.48.0",
