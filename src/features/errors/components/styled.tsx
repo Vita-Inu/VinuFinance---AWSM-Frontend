@@ -14,7 +14,7 @@ export const Title = styled.h1`
   color: #dfcefd;
   font-size: 6.4rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.192rem;
 `;
@@ -24,7 +24,7 @@ export const Description = styled.p`
   text-align: center;
   font-size: 2rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 180%;
   max-width: 50rem;
   margin: 4rem auto 0;
@@ -48,7 +48,7 @@ export const Link = styled.span`
   text-align: center;
   font-size: 1.8rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 180%;
   border-bottom: 0.1rem solid rgba(255, 255, 255, 0.4);
   transition: 0.2s ease-in-out;

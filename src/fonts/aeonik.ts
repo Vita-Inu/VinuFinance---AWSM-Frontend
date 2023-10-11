@@ -3,17 +3,17 @@ import localFont from 'next/font/local';
 export const aeonik = localFont({
   src: [
     {
-      path: './AeonikTRIAL-Light.otf',
+      path: './Aeonik-Light.woff2',
       weight: '300',
       style: 'normal',
     },
     {
-      path: './AeonikTRIAL-Regular.otf',
+      path: './Aeonik-Regular.woff2',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './AeonikTRIAL-Bold.otf',
+      path: './Aeonik-Bold.woff2',
       weight: '700',
       style: 'normal',
     },

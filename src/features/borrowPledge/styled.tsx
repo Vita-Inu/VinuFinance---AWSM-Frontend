@@ -26,7 +26,7 @@ export const Value = styled.input`
   color: #fff;
   font-size: 3.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 100%;
   letter-spacing: -0.108rem;
   -moz-appearance: textfield;
@@ -51,7 +51,7 @@ export const Currency = styled.div`
   color: rgba(255, 255, 255, 0.6);
   font-size: 3.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 100%;
   letter-spacing: -0.108rem;
 `;
@@ -61,7 +61,7 @@ export const Fiat = styled.div`
   color: rgba(255, 255, 255, 0.6);
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 100%;
   letter-spacing: -0.048rem;
 `;
@@ -82,7 +82,7 @@ export const Balance = styled.div`
   color: #fff;
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.048rem;
 `;

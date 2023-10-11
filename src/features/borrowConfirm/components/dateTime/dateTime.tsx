@@ -6,7 +6,7 @@ const Value = styled.div`
   color: rgba(255, 255, 255, 0.65);
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.4;
 `;
 

@@ -25,7 +25,7 @@ export const Text = styled.div`
   color: rgba(255, 255, 255, 0.45);
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 100%;
 
   span {

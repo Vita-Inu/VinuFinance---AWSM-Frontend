@@ -23,7 +23,7 @@ const StyledButton = styled.div<{
   border-radius: 3rem;
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.5;
   text-align: center;
   background: ${(props) => props.$background};

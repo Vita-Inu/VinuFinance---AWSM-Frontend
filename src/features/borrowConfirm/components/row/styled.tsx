@@ -21,7 +21,7 @@ export const Label = styled.div`
   color: #fff;
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
 `;
 
@@ -29,7 +29,7 @@ export const Value = styled.div`
   color: #fff;
   font-size: 2rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   margin-bottom: 0.8rem;
 `;
@@ -38,6 +38,6 @@ export const Explain = styled.div`
   color: rgba(255, 255, 255, 0.45);
   font-size: 1.4rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
 `;

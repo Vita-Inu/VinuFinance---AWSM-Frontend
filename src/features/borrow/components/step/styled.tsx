@@ -31,7 +31,7 @@ export const Bubble = styled.div`
   color: #fff;
   font-size: 1.8rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.054rem;
 `;
@@ -40,7 +40,7 @@ export const Title = styled.div`
   color: #fff;
   font-size: 2rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 180%; /* 36px */
 `;
 

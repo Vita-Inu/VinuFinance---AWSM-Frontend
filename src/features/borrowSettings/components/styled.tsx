@@ -21,7 +21,7 @@ export const Title = styled.div`
   color: #fff;
   font-size: 2rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.8;
 `;
 
