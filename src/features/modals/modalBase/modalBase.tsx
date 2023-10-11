@@ -43,8 +43,13 @@ function ModalContainer({ children, title, onClose }: Props) {
   );
 }
 
-export const ModalBase: FC<Props> = ({ children, ...rest }) =>
-  createPortal(
+export const ModalBase: FC<Props> = ({ children, ...rest }) => {
+  const anchor = document.querySelector('main');
+
+  if (!anchor) return null;
+
+  return createPortal(
     <ModalContainer {...rest}>{children}</ModalContainer>,
-    document.body,
+    anchor,
   );
+};

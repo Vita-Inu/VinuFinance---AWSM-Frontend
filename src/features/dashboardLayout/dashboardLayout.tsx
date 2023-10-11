@@ -3,13 +3,18 @@ import { styled } from 'styled-components';
 
 import { Header } from '@/features/header';
 import { AuthGuard } from '@/features/authGuard';
+import { aeonik } from '@/fonts';
+import { PageMeta } from '@/features/pageMeta';
 
 export function DashboardLayout({ children }: PropsWithChildren) {
   return (
-    <Background>
-      <Header />
-      <AuthGuard>{children}</AuthGuard>
-    </Background>
+    <>
+      <PageMeta />
+      <Background className={aeonik.className}>
+        <Header />
+        <AuthGuard>{children}</AuthGuard>
+      </Background>
+    </>
   );
 }
 

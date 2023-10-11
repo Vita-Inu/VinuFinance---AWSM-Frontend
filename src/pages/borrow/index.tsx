@@ -1,5 +1,3 @@
-'use client';
-
 import { Borrow } from '@/features/borrow';
 
 export default function BorrowPage() {
