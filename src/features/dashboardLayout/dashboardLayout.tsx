@@ -16,5 +16,5 @@ export function DashboardLayout({ children }: PropsWithChildren) {
 const Background = styled.main`
   background-color: #150d1d;
   min-height: 100vh;
-  padding: 5.4rem 0 6.3rem;
+  padding: 4.2rem 0 6.3rem;
 `;

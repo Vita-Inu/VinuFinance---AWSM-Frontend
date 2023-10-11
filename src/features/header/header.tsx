@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
+import { usePathname } from 'next/navigation';
+import { v4 as uuidV4 } from 'uuid';
 
 import { Logo } from '@/components/logo';
 import { Container } from '@/components/container';
@@ -9,8 +11,25 @@ import { DropdownMenu } from '@/features/dropdownMenu';
 
 import { Menu, MenuItem, Row, Wrapper } from './components';
 
+const URLS = [
+  {
+    url: ROUTE.BORROW,
+    label: 'Borrow',
+  },
+  {
+    url: ROUTE.LOANS,
+    label: 'Manage Loans',
+  },
+  {
+    url: ROUTE.LIQUIDITY_PROVIDERS,
+    label: 'LP',
+  },
+];
+
 export function Header() {
   const { address } = useAccount();
+
+  const pathname = usePathname();
 
   return (
     <>
@@ -21,15 +40,11 @@ export function Header() {
               <Logo />
             </Link>
             <Menu>
-              <Link href={'#'}>
-                <MenuItem $active={true}>Borrow</MenuItem>
-              </Link>
-              <Link href={'#'}>
-                <MenuItem $active={false}>Manage Loans</MenuItem>
-              </Link>
-              <Link href={'#'}>
-                <MenuItem $active={false}>LP</MenuItem>
-              </Link>
+              {URLS.map(({ url, label }) => (
+                <Link key={uuidV4()} href={url}>
+                  <MenuItem $active={url === pathname}>{label}</MenuItem>
+                </Link>
+              ))}
             </Menu>
             {!address && <ConnectButton />}
             {address && <DropdownMenu address={address} />}

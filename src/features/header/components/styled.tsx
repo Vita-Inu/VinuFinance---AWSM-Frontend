@@ -29,6 +29,11 @@ export const MenuItem = styled.span<{ $active: boolean }>`
   font-style: normal;
   font-weight: 500;
   line-height: 1.5;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background: #38313f;
+  }
 
   ${(props) =>
     props.$active &&
