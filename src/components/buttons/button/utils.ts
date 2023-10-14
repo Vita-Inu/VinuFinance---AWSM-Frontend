@@ -17,5 +17,9 @@ export const presetColorMap = new Map<BUTTON_PRESET, ColorPreset>([
     BUTTON_PRESET.PINK,
     { background: '#DFCEFD', backgroundHovered: '#C4A3FF', text: '#000' },
   ],
+  [
+    BUTTON_PRESET.PURPLE,
+    { background: '#4E415E', backgroundHovered: '#150D1D', text: '#fff' },
+  ],
   [BUTTON_PRESET.WHITE, DEFAULT_COLOR_PRESET],
 ]);

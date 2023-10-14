@@ -8,8 +8,9 @@ import { Container } from '@/components/container';
 import { ROUTE } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
 import { DropdownMenu } from '@/features/dropdownMenu';
+import { Notifications } from '@/features/notifications';
 
-import { Menu, MenuItem, Row, Wrapper } from './components';
+import { Menu, MenuItem, Row, Wrapper, Buttons } from './components';
 
 const URLS = [
   {
@@ -47,7 +48,12 @@ export function Header() {
               ))}
             </Menu>
             {!address && <ConnectButton />}
-            {address && <DropdownMenu address={address} />}
+            {address && (
+              <Buttons>
+                <DropdownMenu address={address} />
+                <Notifications />
+              </Buttons>
+            )}
           </Row>
         </Container>
       </Wrapper>

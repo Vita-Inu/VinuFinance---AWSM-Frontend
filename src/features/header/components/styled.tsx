@@ -41,3 +41,10 @@ export const MenuItem = styled.span<{ $active: boolean }>`
       background: #38313f;
     `}
 `;
+
+export const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.8rem;
+`;
