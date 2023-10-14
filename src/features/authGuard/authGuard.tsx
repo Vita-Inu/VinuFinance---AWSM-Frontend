@@ -7,11 +7,9 @@ import { useAuthGuard } from './hooks';
 export function AuthGuard({ children }: PropsWithChildren) {
   const { isConnected, isCorrectNetwork } = useAuthGuard();
 
-  const TEMP_GUARD_DISABLE = true;
+  if (!isConnected) return <NotConnectedError />;
 
-  if (!isConnected && !TEMP_GUARD_DISABLE) return <NotConnectedError />;
-
-  if (!isCorrectNetwork && !TEMP_GUARD_DISABLE) return <WrongNetworkError />;
+  if (!isCorrectNetwork) return <WrongNetworkError />;
 
   return <>{children}</>;
 }
