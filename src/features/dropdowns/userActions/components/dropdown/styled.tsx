@@ -1,27 +1,12 @@
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import NextImage from 'next/image';
 
-export const Wrapper = styled.div<{ $visible?: boolean }>`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 28.6rem;
+export const Wrapper = styled.div`
   padding-top: 1.2rem;
-  transition: 0.2s ease-in-out;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-2rem);
-
-  ${(props) =>
-    props.$visible &&
-    css`
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
-    `}
 `;
 
 export const Items = styled.div`
+  width: 28.6rem;
   border-radius: 1.2rem;
   background: #332a3f;
   padding: 1.2rem;

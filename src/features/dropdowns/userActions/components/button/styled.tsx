@@ -9,7 +9,13 @@ export const Wrapper = styled.div`
   gap: 1rem;
   flex-shrink: 0;
   border-radius: 10rem;
+  background-color: transparent;
   border: 0.1rem solid rgba(255, 255, 255, 0.15);
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
 `;
 
 export const Text = styled.div`

@@ -3,26 +3,13 @@ import CopyAddressIcon from './assets/copy.svg';
 import LogoutIcon from './assets/logout.svg';
 
 type Props = {
-  onHoverIn: VoidFunction;
-  onHoverOut: VoidFunction;
   onCopyAddress: VoidFunction;
   onLogout: VoidFunction;
-  visible?: boolean;
 };
 
-export function Dropdown({
-  onCopyAddress,
-  onLogout,
-  visible,
-  onHoverIn,
-  onHoverOut,
-}: Props) {
+export function Dropdown({ onCopyAddress, onLogout }: Props) {
   return (
-    <Wrapper
-      $visible={visible}
-      onMouseOver={onHoverIn}
-      onMouseLeave={onHoverOut}
-    >
+    <Wrapper>
       <Items>
         <Item role={'button'} onClick={onCopyAddress}>
           <Icon

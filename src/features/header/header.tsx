@@ -7,8 +7,7 @@ import { Logo } from '@/components/logo';
 import { Container } from '@/components/container';
 import { ROUTE } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
-import { DropdownMenu } from '@/features/dropdownMenu';
-import { Notifications } from '@/features/notifications';
+import { UserActions, Notifications } from '@/features/dropdowns';
 
 import { Menu, MenuItem, Row, Wrapper, Buttons } from './components';
 
@@ -50,7 +49,7 @@ export function Header() {
             {!address && <ConnectButton />}
             {address && (
               <Buttons>
-                <DropdownMenu address={address} />
+                <UserActions address={address} />
                 <Notifications />
               </Buttons>
             )}

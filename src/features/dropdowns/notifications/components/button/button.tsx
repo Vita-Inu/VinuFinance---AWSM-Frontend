@@ -1,13 +1,9 @@
 import { Icon, Wrapper } from './styled';
 import NotificationIcon from './assets/notifications.svg';
 
-type Props = {
-  onClick: VoidFunction;
-};
-
-export function Button({ onClick }: Props) {
+export function Button() {
   return (
-    <Wrapper role={'button'} onClick={onClick}>
+    <Wrapper>
       <Icon
         src={NotificationIcon}
         alt={'notifications'}
