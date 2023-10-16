@@ -2,6 +2,7 @@ import { CoinbaseWalletConnector } from '@wagmi/connectors/coinbaseWallet';
 
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
+import CoinbaseIcon from './assets/coinbase.svg';
 
 type Props = {
   disabled: boolean;
@@ -19,7 +20,7 @@ export function CoinbaseButton({ disabled, onConnect }: Props) {
       disabled={disabled}
       onClick={connect}
       icon={{
-        src: '/wallets/coinbase.svg',
+        src: CoinbaseIcon,
         alt: 'Coinbase',
         width: 16,
         height: 16,

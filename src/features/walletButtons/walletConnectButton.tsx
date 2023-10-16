@@ -2,6 +2,7 @@ import { WalletConnectConnector } from '@wagmi/connectors/walletConnect';
 
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
+import WalletConnectIcon from './assets/walletconnect.svg';
 
 type Props = {
   disabled: boolean;
@@ -19,7 +20,7 @@ export function WalletConnectButton({ disabled, onConnect }: Props) {
       disabled={disabled}
       onClick={connect}
       icon={{
-        src: '/wallets/walletconnect.svg',
+        src: WalletConnectIcon,
         alt: 'Wallet connect',
         width: 16,
         height: 16,

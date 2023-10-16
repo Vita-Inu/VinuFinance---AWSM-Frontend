@@ -8,6 +8,7 @@ import {
   Column,
 } from '@/components/table';
 
+import CheckIcon from './assets/check.svg';
 import { Box } from './styled';
 
 type Row = {
@@ -26,12 +27,7 @@ const COLUMNS: Column<Row>[] = [
     key: 'active',
     render: (row) =>
       row.active && (
-        <NextImage
-          width={24}
-          height={24}
-          src={'/borrow/check.svg'}
-          alt={'check icon'}
-        />
+        <NextImage width={24} height={24} src={CheckIcon} alt={'check icon'} />
       ),
   },
   {

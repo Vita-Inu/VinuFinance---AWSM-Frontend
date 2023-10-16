@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 
+import CloseIcon from './assets/modal-close.svg';
 import {
   Top,
   Box,
@@ -31,7 +32,7 @@ function ModalContainer({ children, title, onClose }: Props) {
               <Image
                 width={14}
                 height={14}
-                src={'/modal-close.svg'}
+                src={CloseIcon}
                 alt={'Close modal'}
               />
             </Close>

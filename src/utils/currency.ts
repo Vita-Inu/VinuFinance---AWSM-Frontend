@@ -1,3 +1,5 @@
+import PlaceholderIcon from '@/assets/currency-placeholder.svg';
+
 export const enum CURRENCY {
   ETH = 'ETH',
   RETH = 'RETH',
@@ -5,7 +7,7 @@ export const enum CURRENCY {
 }
 
 export const CurrencyMap = new Map<CURRENCY, { title: string; img: string }>([
-  [CURRENCY.ETH, { img: '/currency/placeholder.svg', title: 'ETH' }],
-  [CURRENCY.RETH, { img: '/currency/placeholder.svg', title: 'rETH' }],
-  [CURRENCY.RPL, { img: '/currency/placeholder.svg', title: 'RPL' }],
+  [CURRENCY.ETH, { img: PlaceholderIcon, title: 'ETH' }],
+  [CURRENCY.RETH, { img: PlaceholderIcon, title: 'rETH' }],
+  [CURRENCY.RPL, { img: PlaceholderIcon, title: 'RPL' }],
 ]);

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/buttons';
 
 import { Popup, Input, Box, Icon, Title, Buttons, Inputs } from './components';
+import SettingsIcon from './assets/settings.svg';
 
 export function BorrowSettings() {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -10,7 +11,7 @@ export function BorrowSettings() {
   return (
     <Box>
       <Icon
-        src={'/borrow/settings.svg'}
+        src={SettingsIcon}
         alt={'settings'}
         width={20}
         height={20}

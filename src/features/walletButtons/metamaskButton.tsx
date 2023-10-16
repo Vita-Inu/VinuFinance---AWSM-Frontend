@@ -2,6 +2,7 @@ import { MetaMaskConnector } from '@wagmi/connectors/metaMask';
 
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
+import MetamaskIcon from './assets/metamask.svg';
 
 type Props = {
   disabled: boolean;
@@ -19,7 +20,7 @@ export function MetamaskButton({ disabled, onConnect }: Props) {
       disabled={disabled}
       onClick={connect}
       icon={{
-        src: '/wallets/metamask.svg',
+        src: MetamaskIcon,
         alt: 'Metamask',
         width: 17,
         height: 16,
