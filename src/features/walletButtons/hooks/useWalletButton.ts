@@ -1,6 +1,6 @@
-import { Connector, useConnect } from 'wagmi';
+import { Connector, mainnet, useConnect } from 'wagmi';
 
-import { vinuTestnet } from '@/features/wagmi';
+// import { vinuTestnet } from '@/features/wagmi';
 
 type Props = {
   onSuccess: VoidFunction;
@@ -11,7 +11,7 @@ export const useWalletButton = ({ connector, onSuccess }: Props) => {
   const { connect } = useConnect({
     connector,
     onSuccess,
-    chainId: vinuTestnet.id,
+    chainId: mainnet.id,
   });
 
   return { connect };

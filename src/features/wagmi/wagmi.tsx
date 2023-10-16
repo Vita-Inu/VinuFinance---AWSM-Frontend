@@ -1,11 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig, mainnet } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
-import { vinuTestnet } from './chains';
-
 const { publicClient, webSocketPublicClient } = configureChains(
-  [vinuTestnet],
+  [mainnet],
   [publicProvider()], //TODO::Maybe there is access for private provider???
 );
 
