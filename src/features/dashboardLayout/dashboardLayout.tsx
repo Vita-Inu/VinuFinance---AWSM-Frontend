@@ -22,4 +22,8 @@ const Background = styled.main`
   background-color: #150d1d;
   min-height: 100vh;
   padding: 4.2rem 0 6.3rem;
+
+  @media (max-width: 767px) {
+    padding: 2.4rem 0;
+  }
 `;

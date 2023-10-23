@@ -1,11 +1,9 @@
-import { useAccount, useNetwork } from 'wagmi';
-
-import { vinuTestnet } from '@/features/wagmi';
+import { mainnet, useAccount, useNetwork } from 'wagmi';
 
 export const useAuthGuard = () => {
   const { isConnected } = useAccount();
 
   const { chain } = useNetwork();
 
-  return { isConnected, isCorrectNetwork: chain?.id === vinuTestnet.id };
+  return { isConnected, isCorrectNetwork: chain?.id === mainnet.id };
 };

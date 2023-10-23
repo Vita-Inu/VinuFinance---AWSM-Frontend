@@ -1,15 +1,15 @@
 import { PropsWithChildren } from 'react';
 
-import { NotConnectedError } from '@/features/errors';
+import { NotConnectedError, WrongNetworkError } from '@/features/errors';
 
 import { useAuthGuard } from './hooks';
 
 export function AuthGuard({ children }: PropsWithChildren) {
-  const { isConnected } = useAuthGuard();
+  const { isConnected, isCorrectNetwork } = useAuthGuard();
 
   if (!isConnected) return <NotConnectedError />;
 
-  // if (!isCorrectNetwork) return <WrongNetworkError />;
+  if (!isCorrectNetwork) return <WrongNetworkError />;
 
   return <>{children}</>;
 }

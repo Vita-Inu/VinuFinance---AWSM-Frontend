@@ -2,6 +2,10 @@ import { styled, css } from 'styled-components';
 
 export const Wrapper = styled.header`
   padding: 0 0 10.4rem;
+
+  @media (max-width: 767px) {
+    padding: 0 0 4.8rem;
+  }
 `;
 
 export const Row = styled.div`
@@ -18,6 +22,10 @@ export const Menu = styled.nav`
   gap: 1.6rem;
   border-radius: 3rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.15);
+
+  @media (max-width: 1023px) {
+    display: none;
+  }
 `;
 
 export const MenuItem = styled.span<{ $active: boolean }>`
@@ -47,4 +55,8 @@ export const Buttons = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.8rem;
+
+  @media (max-width: 1023px) {
+    display: none;
+  }
 `;

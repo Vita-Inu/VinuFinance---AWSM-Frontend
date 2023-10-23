@@ -6,6 +6,10 @@ const StyledContainer = styled.div`
   max-width: 144rem;
   padding: 0 8rem;
   margin: 0 auto;
+
+  @media (max-width: 767px) {
+    padding: 0 2.4rem;
+  }
 `;
 
 export const Container = (props: PropsWithChildren) => (

@@ -46,7 +46,11 @@ export function Header() {
                 </Link>
               ))}
             </Menu>
-            {!address && <ConnectButton />}
+            {!address && (
+              <Buttons>
+                <ConnectButton />
+              </Buttons>
+            )}
             {address && (
               <Buttons>
                 <UserActions address={address} />
