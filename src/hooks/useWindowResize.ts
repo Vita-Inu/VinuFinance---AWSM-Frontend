@@ -18,6 +18,8 @@ export const useWindowResize = () => {
 
     window.addEventListener('resize', updateWindowSize);
 
+    updateWindowSize();
+
     return () => {
       window.removeEventListener('resize', updateWindowSize);
     };
@@ -27,5 +29,6 @@ export const useWindowResize = () => {
     width: size.width,
     height: size.height,
     isMobileSize: size.width <= 767,
+    isTabletSize: size.width <= 1023,
   };
 };

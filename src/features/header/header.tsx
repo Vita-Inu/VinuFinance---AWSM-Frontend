@@ -5,31 +5,20 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { Logo } from '@/components/logo';
 import { Container } from '@/components/container';
-import { ROUTE } from '@/utils';
+import { ROUTE, URLS } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
 import { UserActions, Notifications } from '@/features/dropdowns';
+import { MobileMenu } from '@/features/mobileMenu';
+import { useWindowResize } from '@/hooks';
 
 import { Menu, MenuItem, Row, Wrapper, Buttons } from './components';
-
-const URLS = [
-  {
-    url: ROUTE.BORROW,
-    label: 'Borrow',
-  },
-  {
-    url: ROUTE.LOANS,
-    label: 'Manage Loans',
-  },
-  {
-    url: ROUTE.LIQUIDITY_PROVIDERS,
-    label: 'LP',
-  },
-];
 
 export function Header() {
   const { address } = useAccount();
 
   const pathname = usePathname();
+
+  const { isTabletSize } = useWindowResize();
 
   return (
     <>
@@ -57,6 +46,7 @@ export function Header() {
                 <Notifications />
               </Buttons>
             )}
+            {isTabletSize && <MobileMenu />}
           </Row>
         </Container>
       </Wrapper>
