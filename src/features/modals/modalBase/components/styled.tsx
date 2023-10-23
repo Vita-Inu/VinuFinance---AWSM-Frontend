@@ -31,6 +31,12 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 767px) {
+    max-width: 100%;
+    padding: 0;
+    justify-content: flex-end;
+  }
 `;
 
 export const Box = styled.div`
@@ -40,6 +46,12 @@ export const Box = styled.div`
   background: #2d2635;
   overflow: auto;
   padding: 3.2rem;
+
+  @media (max-width: 767px) {
+    max-height: 100%;
+    border-radius: 0.8rem 0.8rem 0 0;
+    padding: 1.6rem 2.4rem 4.2rem;
+  }
 `;
 
 export const Top = styled.div`
@@ -67,4 +79,8 @@ export const Content = styled.div`
   font-weight: 300;
   line-height: 160%;
   margin-top: 4rem;
+
+  @media (max-width: 767px) {
+    margin-top: 2.4rem;
+  }
 `;

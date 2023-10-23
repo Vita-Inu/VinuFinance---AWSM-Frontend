@@ -6,6 +6,11 @@ export const Agreements = styled.div`
   flex-direction: column;
   gap: 2.4rem;
   margin-top: 3.2rem;
+
+  @media (max-width: 767px) {
+    gap: 1.6rem;
+    margin-top: 2.4rem;
+  }
 `;
 
 export const Link = styled(NextLink)`
@@ -16,5 +21,5 @@ export const Link = styled(NextLink)`
 export const Buttons = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.4rem;
 `;
