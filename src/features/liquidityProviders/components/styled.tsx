@@ -1,6 +1,11 @@
 import { css, styled } from 'styled-components';
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.div`
+  @media (max-width: 1023px) {
+    max-width: 73rem;
+    margin: 0 auto;
+  }
+`;
 
 export const Filters = styled.div`
   display: flex;
@@ -18,6 +23,10 @@ export const Filter = styled.div<{ $active?: boolean }>`
   border-bottom: 0.1rem solid transparent;
   transition: 0.2s ease-in-out;
 
+  @media (max-width: 767px) {
+    font-size: 1.8rem;
+  }
+
   &:hover {
     color: #fff;
   }
@@ -33,4 +42,8 @@ export const Filter = styled.div<{ $active?: boolean }>`
 
 export const List = styled.div`
   margin-top: 4.8rem;
+
+  @media (max-width: 767px) {
+    margin-top: 2.4rem;
+  }
 `;

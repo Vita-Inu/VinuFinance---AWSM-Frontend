@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const Wrapper = styled.div`
   padding: 2.4rem 0;
@@ -16,7 +16,13 @@ export const Cells = styled.div`
   row-gap: 1.2rem;
 `;
 
-export const Cell = styled.div``;
+export const Cell = styled.div<{ $fullWidth?: boolean }>`
+  ${(props) =>
+    props.$fullWidth &&
+    css`
+      grid-column: span 2;
+    `}
+`;
 
 export const Label = styled.div`
   color: rgba(255, 255, 255, 0.45);
@@ -24,6 +30,7 @@ export const Label = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 1.8;
+  margin-bottom: 0.4rem;
 `;
 
 export const Value = styled.div`
@@ -32,7 +39,6 @@ export const Value = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 1.8;
-  margin-top: 0.4rem;
 `;
 
 export const Explain = styled.div`
@@ -44,6 +50,5 @@ export const Explain = styled.div`
 `;
 
 export const Buttons = styled.div`
-  grid-column: span 2;
   margin-top: 1.2rem;
 `;

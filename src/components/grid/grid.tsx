@@ -15,8 +15,10 @@ export function Grid<T extends { [key: string]: unknown }>({
   return (
     <Wrapper>
       <Cells>
-        {cells.map(({ render }) => (
-          <Cell key={uuidV4()}>{render(data)}</Cell>
+        {cells.map(({ render, fullWidth }) => (
+          <Cell key={uuidV4()} $fullWidth={fullWidth}>
+            {render(data)}
+          </Cell>
         ))}
       </Cells>
     </Wrapper>
