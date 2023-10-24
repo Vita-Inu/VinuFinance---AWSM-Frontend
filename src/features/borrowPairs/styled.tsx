@@ -5,4 +5,8 @@ export const Pairs = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 1.6rem;
   max-width: 73rem;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
 `;

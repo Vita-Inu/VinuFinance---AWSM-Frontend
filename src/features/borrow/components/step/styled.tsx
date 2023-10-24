@@ -10,6 +10,10 @@ export const Top = styled.div`
 
 export const Content = styled.div`
   margin-top: 4.2rem;
+
+  @media (max-width: 767px) {
+    margin-top: 2.4rem;
+  }
 `;
 
 export const TitleGroup = styled.div`
@@ -34,6 +38,12 @@ export const Bubble = styled.div`
   font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.054rem;
+
+  @media (max-width: 767px) {
+    width: 3.2rem;
+    height: 3.2rem;
+    font-size: 1.4rem;
+  }
 `;
 
 export const Title = styled.div`
@@ -42,6 +52,10 @@ export const Title = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 180%; /* 36px */
+
+  @media (max-width: 767px) {
+    font-size: 1.8rem;
+  }
 `;
 
 export const Rest = styled.div``;

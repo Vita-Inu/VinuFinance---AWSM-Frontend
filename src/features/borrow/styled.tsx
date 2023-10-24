@@ -5,6 +5,13 @@ export const Grid = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 6rem;
+
+  @media (max-width: 1440px) {
+    flex-direction: column;
+    max-width: 73rem;
+    margin: 0 auto;
+    gap: 2.4rem;
+  }
 `;
 
 export const SetupCol = styled.div`
@@ -12,16 +19,18 @@ export const SetupCol = styled.div`
   max-width: 82rem;
   display: grid;
   gap: 6.4rem;
+
+  @media (max-width: 1440px) {
+    max-width: 100%;
+    gap: 3.2rem;
+  }
 `;
 
 export const ConfirmCol = styled.div`
   width: 100%;
   max-width: 38rem;
-`;
 
-export const Pairs = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.6rem;
-  max-width: 73rem;
+  @media (max-width: 1440px) {
+    max-width: 100%;
+  }
 `;

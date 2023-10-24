@@ -1,87 +1,14 @@
-import NextImage from 'next/image';
+import { useState } from 'react';
 
-import {
-  Table,
-  Explain,
-  Value,
-  ValueWithExplain,
-  Column,
-} from '@/components/table';
+import { useWindowResize } from '@/hooks';
 
-import CheckIcon from './assets/check.svg';
 import { Box } from './styled';
+import { Loan } from './types';
+import { DesktopTable, MobileTable } from './components';
 
-type Row = {
-  active: boolean;
-  borrowingPeriod: string;
-  loanAmount: ValueWithExplain;
-  repaymentAmount: ValueWithExplain;
-  termRate: ValueWithExplain;
-  ltv: string;
-  maxLoan: ValueWithExplain;
-};
-
-const COLUMNS: Column<Row>[] = [
+const DATA: Loan[] = [
   {
-    label: '',
-    key: 'active',
-    render: (row) =>
-      row.active && (
-        <NextImage width={24} height={24} src={CheckIcon} alt={'check icon'} />
-      ),
-  },
-  {
-    label: 'Borrowing Period',
-    key: 'borrowingPeriod',
-  },
-  {
-    label: 'Loan Amount',
-    key: 'loanAmount',
-    render: (row) => (
-      <>
-        <Value>{row.loanAmount.value}</Value>
-        <Explain>{row.loanAmount.explain}</Explain>
-      </>
-    ),
-  },
-  {
-    label: 'Repayment amount',
-    key: 'repaymentAmount',
-    render: (row) => (
-      <>
-        <Value>{row.repaymentAmount.value}</Value>
-        <Explain>{row.repaymentAmount.explain}</Explain>
-      </>
-    ),
-  },
-  {
-    label: 'Term Rate',
-    key: 'termRate',
-    render: (row) => (
-      <>
-        <Value>{row.termRate.value}</Value>
-        <Explain>{row.termRate.explain}</Explain>
-      </>
-    ),
-  },
-  {
-    label: 'LTV',
-    key: 'ltv',
-  },
-  {
-    label: 'Max. Loan Per Coll Unit',
-    key: 'maxLoan',
-    render: (row) => (
-      <>
-        <Value>{row.maxLoan.value}</Value>
-        <Explain>{row.maxLoan.explain}</Explain>
-      </>
-    ),
-  },
-];
-
-const DATA: Row[] = [
-  {
+    id: '1',
     active: true,
     borrowingPeriod: '90 days',
     loanAmount: {
@@ -103,6 +30,7 @@ const DATA: Row[] = [
     },
   },
   {
+    id: '2',
     active: false,
     borrowingPeriod: '90 days',
     loanAmount: {
@@ -126,9 +54,23 @@ const DATA: Row[] = [
 ];
 
 export function BorrowLoan() {
+  const [loans, setLoans] = useState<Loan[]>(DATA);
+
+  const onSelect = (loan: Loan) => {
+    setLoans((prev) =>
+      prev.map((prevLoan) => ({
+        ...prevLoan,
+        active: prevLoan.id === loan.id,
+      })),
+    );
+  };
+
+  const { isMobileSize } = useWindowResize();
+
   return (
     <Box>
-      <Table<Row> columns={COLUMNS} data={DATA} />
+      {!isMobileSize && <DesktopTable data={loans} />}
+      {isMobileSize && <MobileTable onSelect={onSelect} data={loans} />}
     </Box>
   );
 }

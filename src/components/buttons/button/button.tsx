@@ -30,6 +30,10 @@ const StyledButton = styled.div<{
   color: ${(props) => props.$text};
   transition: 0.2s ease-in-out;
 
+  @media (max-width: 767px) {
+    font-size: 1.4rem;
+  }
+
   &:hover {
     background: ${(props) => props.$backgroundHovered};
   }

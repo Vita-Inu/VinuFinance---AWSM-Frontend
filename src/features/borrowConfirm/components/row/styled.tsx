@@ -7,6 +7,10 @@ export const Wrapper = styled.div`
   padding: 1.8rem 0 2.4rem;
   border-top: 0.1rem solid rgba(255, 255, 255, 0.15);
 
+  @media (max-width: 767px) {
+    padding: 1.2rem 0 2.4rem;
+  }
+
   &:first-child {
     padding-top: 0;
     border-top: none;
@@ -23,6 +27,10 @@ export const Label = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 1;
+
+  @media (max-width: 767px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export const Value = styled.div`

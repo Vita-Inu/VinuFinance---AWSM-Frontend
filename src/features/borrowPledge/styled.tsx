@@ -10,9 +10,20 @@ export const Wrapper = styled.div`
   border-radius: 1.2rem;
   background: rgba(223, 206, 253, 0.15);
   max-width: 73rem;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1.8rem;
+  }
 `;
 
-export const Box = styled.div``;
+export const Box = styled.div`
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+`;
 
 export const Amount = styled.div`
   display: flex;
@@ -36,6 +47,10 @@ export const Value = styled.input`
   padding: 0;
   margin: 0;
 
+  @media (max-width: 767px) {
+    font-size: 2.4rem;
+  }
+
   &:focus {
     outline: none;
   }
@@ -54,6 +69,10 @@ export const Currency = styled.div`
   font-weight: 400;
   line-height: 100%;
   letter-spacing: -0.108rem;
+
+  @media (max-width: 767px) {
+    font-size: 2.4rem;
+  }
 `;
 
 export const Fiat = styled.div`
@@ -64,12 +83,21 @@ export const Fiat = styled.div`
   font-weight: 400;
   line-height: 100%;
   letter-spacing: -0.048rem;
+
+  @media (max-width: 767px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export const Helpers = styled.div`
   display: flex;
   align-content: center;
   gap: 0.8rem;
+
+  @media (max-width: 767px) {
+    margin-top: 0.8rem;
+    justify-content: flex-end;
+  }
 `;
 
 export const Balance = styled.div`
@@ -85,4 +113,8 @@ export const Balance = styled.div`
   font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.048rem;
+
+  @media (max-width: 767px) {
+    font-size: 1.4rem;
+  }
 `;
