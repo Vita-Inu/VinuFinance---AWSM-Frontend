@@ -7,12 +7,14 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 100;
+  overflow: auto;
+  display: flex;
 `;
 
 export const Background = styled.div`
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -21,21 +23,16 @@ export const Background = styled.div`
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
   max-width: 61.2rem;
   position: relative;
   z-index: 1;
-  margin: 0 auto;
+  margin: auto;
   padding: 3.3rem 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   @media (max-width: 767px) {
     max-width: 100%;
     padding: 0;
-    justify-content: flex-end;
+    margin: auto 0 0;
   }
 `;
 
