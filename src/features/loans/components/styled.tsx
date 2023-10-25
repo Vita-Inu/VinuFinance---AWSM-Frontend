@@ -1,6 +1,11 @@
 import { css, styled } from 'styled-components';
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.div`
+  @media (max-width: 1023px) {
+    max-width: 73rem;
+    margin: 0 auto;
+  }
+`;
 
 export const Filters = styled.div`
   display: flex;

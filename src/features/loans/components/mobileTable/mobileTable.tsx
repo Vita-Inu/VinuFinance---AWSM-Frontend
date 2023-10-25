@@ -69,6 +69,7 @@ const CELLS: DataCell<Loan>[] = [
     ),
   },
   {
+    fullWidth: true,
     render: () => (
       <>
         <Buttons>
