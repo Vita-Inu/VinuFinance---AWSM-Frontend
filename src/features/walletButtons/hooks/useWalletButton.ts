@@ -8,11 +8,11 @@ type Props = {
 };
 
 export const useWalletButton = ({ connector, onSuccess }: Props) => {
-  const { connect } = useConnect({
+  const { connect, pendingConnector } = useConnect({
     connector,
     onSuccess,
     chainId: mainnet.id,
   });
 
-  return { connect };
+  return { connect, isConnecting: !!pendingConnector };
 };

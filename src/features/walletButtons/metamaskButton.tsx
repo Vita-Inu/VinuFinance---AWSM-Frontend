@@ -10,13 +10,14 @@ type Props = {
 };
 
 export function MetamaskButton({ disabled, onConnect }: Props) {
-  const { connect } = useWalletButton({
+  const { connect, isConnecting } = useWalletButton({
     connector: new MetaMaskConnector(),
     onSuccess: onConnect,
   });
 
   return (
     <WalletButton
+      connecting={isConnecting}
       disabled={disabled}
       onClick={connect}
       icon={{

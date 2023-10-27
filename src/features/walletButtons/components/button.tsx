@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { Button, Text, Icon } from './styled';
+import { Button, Text, Icon, Loader } from './styled';
 
 type Props = {
   icon: {
@@ -12,13 +12,26 @@ type Props = {
   children: ReactNode;
   onClick: VoidFunction;
   disabled?: boolean;
+  connecting?: boolean;
 };
 
-export const WalletButton = ({ children, icon, disabled, ...rest }: Props) => {
+export const WalletButton = ({
+  children,
+  icon,
+  disabled,
+  connecting,
+  ...rest
+}: Props) => {
   return (
-    <Button {...rest} $disabled={disabled} role={'button'}>
+    <Button
+      {...rest}
+      $loading={connecting}
+      $disabled={disabled}
+      role={'button'}
+    >
       <Icon {...icon} />
       <Text>{children}</Text>
+      {connecting && <Loader />}
     </Button>
   );
 };
