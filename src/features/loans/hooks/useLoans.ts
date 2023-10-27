@@ -1,8 +1,11 @@
+import { v4 as uuidV4 } from 'uuid';
+
 import { CURRENCY } from '@/utils/currency';
 
 import { Loan } from '../types';
 
 const FAKE_ROW: Loan = {
+  id: '1',
   loan: CURRENCY.RETH,
   loanId: CURRENCY.RPL,
   borrowed: {
@@ -25,7 +28,11 @@ const FAKE_ROW: Loan = {
 
 export const useLoans = (filter?: string) => {
   const data: Loan[] =
-    filter === 'PAST_LOANS' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
+    filter === 'PAST_LOANS'
+      ? [FAKE_ROW]
+      : Array(9)
+          .fill(FAKE_ROW)
+          .map((item) => ({ ...item, id: uuidV4() }));
 
   return { data };
 };

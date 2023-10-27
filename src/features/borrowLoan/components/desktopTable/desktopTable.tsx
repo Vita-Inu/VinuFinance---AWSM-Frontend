@@ -4,16 +4,18 @@ import { Column, Explain, Table, Value } from '@/components/table';
 
 import { Loan } from '../../types';
 
+import { CheckBox } from './styled';
 import CheckIcon from './assets/check.svg';
 
 const COLUMNS: Column<Loan>[] = [
   {
     label: '',
     key: 'active',
-    render: (row) =>
-      row.active && (
+    render: (row, state) => (
+      <CheckBox $hovered={state.hovered} $active={row.active}>
         <NextImage width={24} height={24} src={CheckIcon} alt={'check icon'} />
-      ),
+      </CheckBox>
+    ),
   },
   {
     label: 'Borrowing Period',
@@ -67,8 +69,9 @@ const COLUMNS: Column<Loan>[] = [
 
 type Props = {
   data: Loan[];
+  onSelect: (loan: Loan) => void;
 };
 
-export function DesktopTable({ data }: Props) {
-  return <Table<Loan> columns={COLUMNS} data={data} />;
+export function DesktopTable({ data, onSelect }: Props) {
+  return <Table<Loan> columns={COLUMNS} data={data} onRowClick={onSelect} />;
 }

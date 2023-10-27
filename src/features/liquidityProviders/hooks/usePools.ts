@@ -1,7 +1,10 @@
+import { v4 as uuidV4 } from 'uuid';
+
 import { LoanProvider } from '@/features/liquidityProviders/types';
 import { CURRENCY } from '@/utils/currency';
 
 const FAKE_ROW: LoanProvider = {
+  id: '1',
   loanCurrency: CURRENCY.RETH,
   collateralCurrency: CURRENCY.RPL,
   totalLiquidity: {
@@ -26,7 +29,11 @@ const FAKE_ROW: LoanProvider = {
 
 export const usePools = (filter?: string) => {
   const data: LoanProvider[] =
-    filter === 'MY_POOLS' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
+    filter === 'MY_POOLS'
+      ? [FAKE_ROW]
+      : Array(9)
+          .fill(FAKE_ROW)
+          .map((item) => ({ ...item, id: uuidV4() }));
 
   return { data };
 };

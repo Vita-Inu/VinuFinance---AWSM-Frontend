@@ -69,7 +69,7 @@ export function BorrowLoan() {
 
   return (
     <Box>
-      {!isMobileSize && <DesktopTable data={loans} />}
+      {!isMobileSize && <DesktopTable onSelect={onSelect} data={loans} />}
       {isMobileSize && <MobileTable onSelect={onSelect} data={loans} />}
     </Box>
   );

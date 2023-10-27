@@ -1,4 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
+import { useState } from 'react';
 
 import {
   Table as STable,
@@ -13,13 +14,25 @@ import { Column } from './types';
 
 type Props<T> = {
   columns: Column<T>[];
-  data: T[];
+  data: (T & { id: string })[];
+  onRowClick?: (val: T) => void;
 };
 
 export function Table<T extends { [key: string]: unknown }>({
   data,
   columns,
+  onRowClick,
 }: Props<T>) {
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+
+  const onRowLeave = (item: { id: string }) => {
+    setHoveredItemId((prev) => (prev !== item.id ? prev : null));
+  };
+
+  const onRowEnter = (item: { id: string }) => {
+    setHoveredItemId((prev) => (prev !== item.id ? item.id : prev));
+  };
+
   return (
     <STable>
       <Head>
@@ -31,10 +44,17 @@ export function Table<T extends { [key: string]: unknown }>({
       </Head>
       <Body>
         {data.map((item) => (
-          <Row key={uuidV4()}>
+          <Row
+            key={item.id}
+            $clickable={!!onRowClick}
+            onClick={() => onRowClick?.(item)}
+            onMouseEnter={() => onRowEnter(item)}
+            onMouseLeave={() => onRowLeave(item)}
+          >
             {columns.map(({ render, key }) => (
               <BodyCell key={uuidV4()}>
-                {!!render && render(item)}
+                {!!render &&
+                  render(item, { hovered: item.id === hoveredItemId })}
                 {!render && <Value>{item[key]?.toString()}</Value>}
               </BodyCell>
             ))}

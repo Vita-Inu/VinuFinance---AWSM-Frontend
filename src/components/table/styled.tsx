@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const Table = styled.table`
   width: 100%;
@@ -10,10 +10,16 @@ export const Head = styled.thead``;
 
 export const Body = styled.tbody``;
 
-export const Row = styled.tr`
+export const Row = styled.tr<{ $clickable?: boolean }>`
   &:not(:first-child) {
     border-top: 0.1rem solid rgba(255, 255, 255, 0.15);
   }
+
+  ${(props) =>
+    props.$clickable &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 export const HeadCell = styled.th`
