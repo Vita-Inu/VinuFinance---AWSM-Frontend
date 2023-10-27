@@ -1,49 +1,26 @@
-import { useState } from 'react';
-
-import { Container } from '@/components/container';
 import { useWindowResize } from '@/hooks';
+import { ListContainer } from '@/features/listContainer';
+import { useListFilter } from '@/features/listContainer/hooks';
 
 import { usePools } from './hooks';
-import {
-  DesktopTable,
-  MobileTable,
-  Filter,
-  Filters,
-  List,
-  Wrapper,
-} from './components';
+import { DesktopTable, MobileTable } from './components';
 
 export function LiquidityProviders() {
-  const [filterKey, setFilterKey] = useState<string>();
+  const { onFilter, filters, currentFilter } = useListFilter([
+    { label: 'All pools', value: 'ALL_POOLS' },
+    { label: 'My pools', value: 'MY_POOLS' },
+  ]);
 
-  const { data } = usePools(filterKey);
+  const { data } = usePools(currentFilter);
 
   const { isTabletSize } = useWindowResize();
 
   return (
-    <Container>
-      <Wrapper>
-        <Filters>
-          <Filter
-            $active={!filterKey}
-            role={'button'}
-            onClick={() => setFilterKey(undefined)}
-          >
-            All pools
-          </Filter>
-          <Filter
-            $active={filterKey === 'CREATED'}
-            role={'button'}
-            onClick={() => setFilterKey('CREATED')}
-          >
-            My pools
-          </Filter>
-        </Filters>
-        <List>
-          {!isTabletSize && <DesktopTable data={data} />}
-          {isTabletSize && <MobileTable data={data} />}
-        </List>
-      </Wrapper>
-    </Container>
+    <ListContainer filters={filters} onFilter={onFilter}>
+      <>
+        {!isTabletSize && <DesktopTable data={data} />}
+        {isTabletSize && <MobileTable data={data} />}
+      </>
+    </ListContainer>
   );
 }

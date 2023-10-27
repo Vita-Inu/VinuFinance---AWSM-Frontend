@@ -26,7 +26,7 @@ const FAKE_ROW: LoanProvider = {
 
 export const usePools = (filter?: string) => {
   const data: LoanProvider[] =
-    filter === 'CREATED' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
+    filter === 'MY_POOLS' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
 
   return { data };
 };

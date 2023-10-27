@@ -25,7 +25,7 @@ const FAKE_ROW: Loan = {
 
 export const useLoans = (filter?: string) => {
   const data: Loan[] =
-    filter === 'CLOSED' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
+    filter === 'PAST_LOANS' ? [FAKE_ROW] : Array(9).fill(FAKE_ROW);
 
   return { data };
 };
