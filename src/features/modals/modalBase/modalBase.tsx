@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 
@@ -21,11 +21,17 @@ type Props = {
 };
 
 function ModalContainer({ children, title, onClose }: Props) {
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <Wrapper>
-      <Background onClick={onClose} />
+      <Background $visible={mounted} onClick={onClose} />
       <Container>
-        <Box>
+        <Box $visible={mounted}>
           <Top>
             <Title>{title}</Title>
             <Close role={'button'} onClick={onClose}>

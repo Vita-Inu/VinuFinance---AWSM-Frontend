@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const Wrapper = styled.div`
   position: fixed;
@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   display: flex;
 `;
 
-export const Background = styled.div`
+export const Background = styled.div<{ $visible?: boolean }>`
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
   position: fixed;
@@ -19,6 +19,14 @@ export const Background = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  transition: 0.2s ease-in-out;
+  opacity: 0;
+
+  ${(props) =>
+    props.$visible &&
+    css`
+      opacity: 1;
+    `}
 `;
 
 export const Container = styled.div`
@@ -36,19 +44,30 @@ export const Container = styled.div`
   }
 `;
 
-export const Box = styled.div`
+export const Box = styled.div<{ $visible?: boolean }>`
   width: 100%;
   max-height: 69.2rem;
   border-radius: 8px;
   background: #2d2635;
   overflow: auto;
   padding: 3.2rem;
+  transition: 0.2s ease-in-out;
+  opacity: 0;
+  transform: translateY(5rem);
+  transition-delay: 0.2s;
 
   @media (max-width: 767px) {
     max-height: 100%;
     border-radius: 0.8rem 0.8rem 0 0;
     padding: 1.6rem 2.4rem 4.2rem;
   }
+
+  ${(props) =>
+    props.$visible &&
+    css`
+      opacity: 1;
+      transform: translateY(0);
+    `}
 `;
 
 export const Top = styled.div`
