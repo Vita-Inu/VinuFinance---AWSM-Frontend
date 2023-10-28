@@ -11,11 +11,15 @@ export const Wrapper = styled.div`
 
 export const Box = styled.div`
   background-color: #150d1d;
-  padding: 2.4rem 2.4rem 3.6rem;
+  padding: 4.2rem 8rem 6.3rem;
   height: 100%;
   overflow: auto;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 767px) {
+    padding: 2.4rem 2.4rem 3.6rem;
+  }
 `;
 
 export const Top = styled.div`
