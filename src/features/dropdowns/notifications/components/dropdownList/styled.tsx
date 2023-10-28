@@ -7,6 +7,31 @@ export const Wrapper = styled.div`
   height: 100%;
 `;
 
+export const Top = styled.div`
+  margin-bottom: 2.4rem;
+  display: none;
+
+  @media (max-width: 1023px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+`;
+
+export const Heading = styled.div`
+  color: #fff;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.8;
+`;
+
+export const Close = styled.div`
+  padding: 0.5rem;
+  cursor: pointer;
+`;
+
 export const Items = styled.div`
   display: flex;
   flex-direction: column;

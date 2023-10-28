@@ -7,14 +7,19 @@ import { Wrapper, Box } from './styled';
 type Props = {
   notifications: Notification[];
   onArchive: VoidFunction;
+  onClose: VoidFunction;
 };
 
-export function Dropdown({ notifications, onArchive }: Props) {
+export function Dropdown({ notifications, onArchive, onClose }: Props) {
   return (
     <Wrapper>
       <Box>
         {!!notifications.length && (
-          <DropdownList notifications={notifications} onArchive={onArchive} />
+          <DropdownList
+            notifications={notifications}
+            onArchive={onArchive}
+            onClose={onClose}
+          />
         )}
         {!notifications.length && <DropdownEmpty />}
       </Box>

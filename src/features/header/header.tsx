@@ -35,18 +35,23 @@ export function Header() {
                 </Link>
               ))}
             </Menu>
-            {!address && (
+            {!isTabletSize && (
               <Buttons>
-                <ConnectButton />
+                {!address && <ConnectButton />}
+                {address && (
+                  <>
+                    <UserActions address={address} />
+                    <Notifications />
+                  </>
+                )}
               </Buttons>
             )}
-            {address && (
+            {isTabletSize && (
               <Buttons>
-                <UserActions address={address} />
-                <Notifications />
+                {address && <Notifications />}
+                <MobileMenu />
               </Buttons>
             )}
-            {isTabletSize && <MobileMenu />}
           </Row>
         </Container>
       </Wrapper>

@@ -55,8 +55,4 @@ export const Buttons = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.8rem;
-
-  @media (max-width: 1023px) {
-    display: none;
-  }
 `;

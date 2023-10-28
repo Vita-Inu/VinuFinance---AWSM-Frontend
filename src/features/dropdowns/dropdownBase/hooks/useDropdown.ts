@@ -1,28 +1,44 @@
-import { RefObject, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
+
+import { useWindowResize } from '@/hooks';
 
 export const useDropdown = (ref: RefObject<HTMLDivElement>) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const { isTabletSize } = useWindowResize();
 
   const showDropdown = () => setIsVisible(true);
   const hideDropdown = () => setIsVisible(false);
 
   const toggleDropdown = () => setIsVisible((prev) => !prev);
 
-  const eventHandler = (evt: MouseEvent) => {
-    if (!ref.current) return;
+  useEffect(() => {
+    if (isTabletSize) return;
 
-    const clickedEl = evt.target as Node;
+    const eventHandler = (evt: MouseEvent) => {
+      if (!ref.current) return;
 
-    if (ref.current.contains(clickedEl)) return;
+      const clickedEl = evt.target as Node;
 
-    hideDropdown();
-  };
+      if (ref.current.contains(clickedEl)) return;
+
+      hideDropdown();
+    };
+
+    document.addEventListener('mouseup', eventHandler);
+
+    return () => {
+      document.removeEventListener('mouseup', eventHandler);
+    };
+  }, [isTabletSize, ref]);
+
+  const anchor = isTabletSize ? document.querySelector('main') : ref.current;
 
   return {
     isVisible,
     showDropdown,
     hideDropdown,
     toggleDropdown,
-    eventHandler,
+    anchor,
   };
 };
