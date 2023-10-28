@@ -1,9 +1,13 @@
 import { Icon, Wrapper } from './styled';
 import NotificationIcon from './assets/notifications.svg';
 
-export function Button() {
+type Props = {
+  isUnread?: boolean;
+};
+
+export function Button({ isUnread }: Props) {
   return (
-    <Wrapper>
+    <Wrapper $isUnread={isUnread}>
       <Icon
         src={NotificationIcon}
         alt={'notifications'}
