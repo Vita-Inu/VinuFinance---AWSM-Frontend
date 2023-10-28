@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import NextImage from 'next/image';
 
 export const Wrapper = styled.div`
@@ -31,6 +31,18 @@ export const Item = styled.div`
 `;
 
 export const Icon = styled(NextImage)``;
+
+export const Copied = styled(NextImage)<{ $visible?: boolean }>`
+  margin-left: auto;
+  transition: 0.2s ease-in-out;
+  opacity: 0;
+
+  ${(props) =>
+    props.$visible &&
+    css`
+      opacity: 1;
+    `}
+`;
 
 export const Text = styled.div`
   color: #fff;

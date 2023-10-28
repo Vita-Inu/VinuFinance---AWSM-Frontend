@@ -13,7 +13,7 @@ type Props = {
 };
 
 export function UserActions({ address }: Props) {
-  const { copyAddress, shortAddress } = useAddress(address);
+  const { copyAddress, shortAddress, isCopied } = useAddress(address);
 
   const { disconnect } = useDisconnect();
 
@@ -28,7 +28,13 @@ export function UserActions({ address }: Props) {
       button={<Button>{shortAddress}</Button>}
       onButtonClick={toggleDropdown}
       onClose={hideDropdown}
-      dropdown={<Dropdown onLogout={disconnect} onCopyAddress={copyAddress} />}
+      dropdown={
+        <Dropdown
+          onLogout={disconnect}
+          onCopyAddress={copyAddress}
+          isAddressCopied={isCopied}
+        />
+      }
       dropdownVisible={isVisible}
       dropdownAnchor={anchor}
     />
