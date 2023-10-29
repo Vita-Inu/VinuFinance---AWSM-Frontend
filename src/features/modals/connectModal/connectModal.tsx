@@ -13,10 +13,14 @@ type Props = {
 export function ConnectModal({ onClose }: Props) {
   const { agreements, handleAgreementChange, canLogin } = useConnectModal();
 
+  const haveMetaMask = !!window?.ethereum?.isMetaMask;
+
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
       <Buttons>
-        <MetamaskButton disabled={!canLogin} onConnect={onClose} />
+        {haveMetaMask && (
+          <MetamaskButton disabled={!canLogin} onConnect={onClose} />
+        )}
         <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
       </Buttons>
       <Agreements>
