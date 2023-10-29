@@ -37,7 +37,7 @@ export const Close = styled.div`
 `;
 
 export const ScrollBar = styled(SimpleBar)`
-  height: 100%;
+  height: 24.3rem;
   padding-right: 2rem;
 
   @media (max-width: 1023px) {
