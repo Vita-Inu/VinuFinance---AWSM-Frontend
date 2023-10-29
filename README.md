@@ -21,28 +21,27 @@ npm install
 npm run dev
 ```
 
-## Deployment
-
-TBD
-
 ## Conventions
 
 ### Project structure
 
-//TODO:: Remake since we will drop `app` feature...
-
 ```
 - public
 - src
-  - components # Shared UI components with no logic
-  - features # Shared component which use multiple UI components or have any kind of logic.
-    - components # UI Components made for this single feature
-  - app
-    - page.tsx # Index page
-    - borrow
-      - components # UI components which are related only to Borrow page
-      - features # Components which have some logic related only to Borrow page
-      - page.tsx # Borrow page
+  - components # Shared UI components with no business logic
+    - component
+      - styled.tsx # Place to keep styled components.
+      - index.tsx # Everything what goes outside of feature scope should be exported from index file.
+  - features # Shared component which use multiple UI components or have any kind of business logic.
+    - feature
+      - components # UI Components made for this single feature
+        - component
+        - styled.tsx
+      - styled.tsx # Styled components can be kept near main component or inside "components" folder.
+      - hooks
+      - types
+      - index.tsx # Everything what goes outside of feature scope should be exported from index file.
+  - pages # We are using `nextjs` pages router
 ```
 
 ### Naming
