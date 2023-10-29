@@ -15,6 +15,17 @@ export const Inputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.8rem;
+
+  @media (max-width: 767px) {
+    padding-top: 2.8rem;
+  }
+`;
+
+export const Top = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
 `;
 
 export const Title = styled.div`
@@ -25,7 +36,15 @@ export const Title = styled.div`
   line-height: 1.8;
 `;
 
+export const Close = styled.div`
+  padding: 0.5rem;
+  display: none;
+
+  @media (max-width: 1023px) {
+    display: block;
+  }
+`;
+
 export const Buttons = styled.div`
-  padding-top: 4rem;
-  margin-top: auto;
+  padding-top: 2.4rem;
 `;

@@ -1,31 +1,58 @@
-import { useState } from 'react';
+import { useRef } from 'react';
+import NextImage from 'next/image';
 
-import { Button } from '@/components/buttons';
+import { Button, BUTTON_PRESET } from '@/components/buttons';
 
-import { Popup, Input, Box, Icon, Title, Buttons, Inputs } from './components';
+import { usePopup } from './hooks';
+import {
+  Box,
+  Buttons,
+  Icon,
+  Input,
+  Inputs,
+  Popup,
+  Title,
+  Top,
+  Close,
+} from './components';
 import SettingsIcon from './assets/settings.svg';
+import CloseIcon from './assets/close.svg';
 
 export function BorrowSettings() {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  const { isVisible, togglePopup, hidePopup, anchor } = usePopup(popupRef);
+
+  const onClick = () => {
+    //NOTE:: Save changed settings
+    hidePopup();
+  };
 
   return (
-    <Box>
+    <Box ref={popupRef}>
       <Icon
         src={SettingsIcon}
         alt={'settings'}
         width={20}
         height={20}
         role={'button'}
-        onClick={() => setShowModal((prevState) => !prevState)}
+        onClick={togglePopup}
       />
-      <Popup visible={showModal}>
-        <Title>Transaction Settings</Title>
+      <Popup visible={isVisible} anchor={anchor} onClose={hidePopup}>
+        <Top>
+          <Title>Transaction Settings</Title>
+          <Close onClick={hidePopup}>
+            <NextImage src={CloseIcon} alt={'close'} width={14} height={14} />
+          </Close>
+        </Top>
         <Inputs>
           <Input label={'Slippage Tolerance Loan Amount'} />
           <Input label={'Transaction Deadline'} />
         </Inputs>
         <Buttons>
-          <Button>Apply</Button>
+          <Button preset={BUTTON_PRESET.PINK} onClick={onClick}>
+            Apply
+          </Button>
         </Buttons>
       </Popup>
     </Box>
