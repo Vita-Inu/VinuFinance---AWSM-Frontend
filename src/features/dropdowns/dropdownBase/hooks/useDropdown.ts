@@ -7,10 +7,26 @@ export const useDropdown = (ref: RefObject<HTMLDivElement>) => {
 
   const { isTabletSize } = useWindowResize();
 
-  const showDropdown = () => setIsVisible(true);
-  const hideDropdown = () => setIsVisible(false);
+  const showDropdown = () => {
+    setIsVisible(true);
 
-  const toggleDropdown = () => setIsVisible((prev) => !prev);
+    if (isTabletSize) {
+      document.body.style.overflow = 'hidden';
+    }
+  };
+  const hideDropdown = () => {
+    setIsVisible(false);
+    document.body.style.overflow = '';
+  };
+
+  const toggleDropdown = () => {
+    if (isVisible) {
+      hideDropdown();
+      return;
+    }
+
+    showDropdown();
+  };
 
   useEffect(() => {
     if (isTabletSize) return;

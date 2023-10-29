@@ -9,14 +9,24 @@ export const usePopup = (ref: RefObject<HTMLDivElement>) => {
 
   const showPopup = () => {
     setIsVisible(true);
+
+    if (isTabletSize) {
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const hidePopup = () => {
     setIsVisible(false);
+    document.body.style.overflow = '';
   };
 
   const togglePopup = () => {
-    setIsVisible((prev) => !prev);
+    if (isVisible) {
+      hidePopup();
+      return;
+    }
+
+    showPopup();
   };
 
   useEffect(() => {

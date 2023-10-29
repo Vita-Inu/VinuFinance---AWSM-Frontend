@@ -39,6 +39,7 @@ export const Title = styled.div`
 export const Close = styled.div`
   padding: 0.5rem;
   display: none;
+  cursor: pointer;
 
   @media (max-width: 1023px) {
     display: block;

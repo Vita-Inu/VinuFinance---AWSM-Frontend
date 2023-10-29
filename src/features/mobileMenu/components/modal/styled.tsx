@@ -30,6 +30,7 @@ export const Top = styled.div`
 
 export const Close = styled.div`
   padding: 0 1rem;
+  cursor: pointer;
 `;
 
 export const Content = styled.div`
