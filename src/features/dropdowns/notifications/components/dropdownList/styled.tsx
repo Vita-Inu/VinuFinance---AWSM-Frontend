@@ -1,14 +1,18 @@
 import { styled } from 'styled-components';
+import SimpleBar from 'simplebar-react';
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3.2rem;
   height: 100%;
+
+  @media (max-width: 1023px) {
+    gap: 2.4rem;
+  }
 `;
 
 export const Top = styled.div`
-  margin-bottom: 2.4rem;
   display: none;
 
   @media (max-width: 1023px) {
@@ -32,11 +36,19 @@ export const Close = styled.div`
   cursor: pointer;
 `;
 
+export const ScrollBar = styled(SimpleBar)`
+  height: 100%;
+  padding-right: 2rem;
+
+  @media (max-width: 1023px) {
+    height: 25.1rem;
+  }
+`;
+
 export const Items = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-  overflow: auto;
 `;
 
 export const Item = styled.div`

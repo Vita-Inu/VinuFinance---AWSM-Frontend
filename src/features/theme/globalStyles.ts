@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+import 'simplebar-react/dist/simplebar.min.css';
+
 export const GlobalStyles = createGlobalStyle`
   *,
   *::before,

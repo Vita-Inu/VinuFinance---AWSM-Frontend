@@ -18,6 +18,7 @@ import {
   Top,
   Close,
   Heading,
+  ScrollBar,
 } from './styled';
 
 type Props = {
@@ -35,17 +36,19 @@ export function DropdownList({ notifications, onArchive, onClose }: Props) {
           <NextImage src={CloseIcon} alt={'close'} width={14} height={14} />
         </Close>
       </Top>
-      <Items>
-        {notifications.map(({ icon, title, date }) => (
-          <Item key={uuidV4()}>
-            <Icon $icon={icon} />
-            <Texts>
-              <Title>{title}</Title>
-              <Date>{date}</Date>
-            </Texts>
-          </Item>
-        ))}
-      </Items>
+      <ScrollBar forceVisible='y' autoHide={false}>
+        <Items>
+          {notifications.map(({ icon, title, date }) => (
+            <Item key={uuidV4()}>
+              <Icon $icon={icon} />
+              <Texts>
+                <Title>{title}</Title>
+                <Date>{date}</Date>
+              </Texts>
+            </Item>
+          ))}
+        </Items>
+      </ScrollBar>
       <Buttons>
         <Button preset={BUTTON_PRESET.PURPLE} onClick={onArchive}>
           Archive All
