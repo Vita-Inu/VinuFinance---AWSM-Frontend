@@ -13,6 +13,11 @@ export const Wrapper = styled.div<{ $isUnread?: boolean }>`
   transition: 0.2s ease-in-out;
   position: relative;
 
+  @media (max-width: 1023px) {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 0.15);
   }
@@ -29,6 +34,11 @@ export const Wrapper = styled.div<{ $isUnread?: boolean }>`
         height: 1.2rem;
         background-color: #fe5f55;
         border-radius: 50%;
+
+        @media (max-width: 1023px) {
+          width: 0.6rem;
+          height: 0.6rem;
+        }
       }
     `}
 `;

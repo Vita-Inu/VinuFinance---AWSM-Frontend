@@ -1,3 +1,5 @@
+import { useWindowResize } from '@/hooks';
+
 import { Icon, Wrapper } from './styled';
 import NotificationIcon from './assets/notifications.svg';
 
@@ -6,13 +8,15 @@ type Props = {
 };
 
 export function Button({ isUnread }: Props) {
+  const { isTabletSize } = useWindowResize();
+
   return (
     <Wrapper $isUnread={isUnread}>
       <Icon
         src={NotificationIcon}
         alt={'notifications'}
-        width={20}
-        height={20}
+        width={isTabletSize ? 15 : 20}
+        height={isTabletSize ? 15 : 20}
       />
     </Wrapper>
   );

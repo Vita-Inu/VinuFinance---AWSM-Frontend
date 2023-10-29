@@ -1,6 +1,15 @@
 import { css, styled } from 'styled-components';
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
+export const Content = styled.div`
+  margin: auto 0;
+`;
 
 export const Items = styled.div`
   display: flex;
@@ -29,4 +38,10 @@ export const Item = styled.span<{ $active?: boolean }>`
     css`
       background-color: #38313f;
     `}
+`;
+
+export const Bottom = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
 `;

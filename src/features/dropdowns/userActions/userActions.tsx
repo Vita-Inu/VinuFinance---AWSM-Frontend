@@ -30,6 +30,7 @@ export function UserActions({ address }: Props) {
       onClose={hideDropdown}
       dropdown={
         <Dropdown
+          onClose={hideDropdown}
           onLogout={disconnect}
           onCopyAddress={copyAddress}
           isAddressCopied={isCopied}

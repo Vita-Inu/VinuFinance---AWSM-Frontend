@@ -26,4 +26,8 @@ export const Text = styled.div`
   line-height: 1.5;
 `;
 
-export const Arrow = styled(NextImage)``;
+export const Arrow = styled(NextImage)`
+  @media (max-width: 1023px) {
+    transform: rotate(180deg);
+  }
+`;

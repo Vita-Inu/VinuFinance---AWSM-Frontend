@@ -21,4 +21,8 @@ export const GlobalStyles = createGlobalStyle`
   *[role=button] {
     cursor: pointer;
   }
+  
+  svg {
+    display: block;
+  }
 `;

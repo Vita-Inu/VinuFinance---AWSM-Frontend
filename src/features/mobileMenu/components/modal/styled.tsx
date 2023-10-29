@@ -18,7 +18,7 @@ export const Box = styled.div`
   flex-direction: column;
 
   @media (max-width: 767px) {
-    padding: 2.4rem 2.4rem 3.6rem;
+    padding: 2.4rem 2.4rem;
   }
 `;
 
@@ -33,7 +33,7 @@ export const Close = styled.div`
 `;
 
 export const Content = styled.div`
-  padding: 3.2rem 0;
+  padding: 3.2rem 0 0;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
