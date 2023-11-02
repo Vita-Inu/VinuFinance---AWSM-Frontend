@@ -1,9 +1,10 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { configureChains, createConfig, WagmiConfig, mainnet } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
+import {vinuChain} from "@/const";
 
 const { publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
+  [vinuChain],
   [publicProvider()], //TODO::Maybe there is access for private provider???
 );
 
