@@ -2,13 +2,14 @@ import { Box, Text, Bubbles, Bubble } from './styled';
 
 type Props = {
   pairs: [string, string];
-  onClick: VoidFunction;
+  onClick: Function;
   active: boolean;
+  id: number;
 };
 
-export function Pair({ pairs, active, onClick }: Props) {
+export function Pair({ pairs, active, onClick, id }: Props) {
   return (
-    <Box $active={active} role={'button'} onClick={onClick}>
+    <Box $active={active} role={'button'} onClick={() => onClick(id)}>
       <Bubbles>
         <Bubble />
         <Bubble />
