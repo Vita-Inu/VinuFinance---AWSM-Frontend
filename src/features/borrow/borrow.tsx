@@ -10,13 +10,22 @@ import {BorrowLoan} from '../borrowLoan';
 
 import {Step} from './components';
 import {Grid, SetupCol, ConfirmCol} from './styled';
-import {useAccount, useBlockNumber, useContractRead, useContractReads, useNetwork, usePublicClient} from "wagmi";
+import {
+    useAccount,
+    useBlockNumber,
+    useContractRead,
+    useContractReads,
+    useContractWrite,
+    useNetwork,
+    usePublicClient, useWaitForTransaction
+} from "wagmi";
 import {CHAIN_INFO, IControllerAbi, IErc20Abi, IPoolAbi} from "@/const";
 import {sha256} from "@noble/hashes/sha256";
 import {etherUnits, formatEther, getContract, parseAbiItem, parseEther, parseUnits} from "viem";
 import {useDebounce} from "@/hooks/useDebounce";
 import {watchBlockNumber, watchReadContracts} from "@wagmi/core";
 import {watchBlocks} from "viem/actions";
+import {pullAllWith} from "lodash-es";
 
 type PoolInfo = {
     0: `0x{string}`;
@@ -49,10 +58,10 @@ type Token = {
 }
 
 type SimulatedLoan = {
-    0: number; // loan amnt
-    1: number; // repayment amnt
-    2: number; // reclaimable amnt
-    3: number; // total fees
+    0: bigint; // loan amnt
+    1: bigint; // repayment amnt
+    2: bigint; // reclaimable amnt
+    3: bigint; // total fees
     error: string; // optional
 }
 
@@ -62,6 +71,8 @@ export type PoolAndSimulationResult = {
     loanToken: Token;
     collToken: Token;
 }
+
+const ZERO = BigInt(0)
 
 export function Borrow() {
     // The logic here is: use has 2 inputs:
@@ -91,6 +102,7 @@ export function Borrow() {
     let [currentPair, setCurrentPair] = useState<Pair>()
     let pairRef = useRef<Pair>()
     let [collBalance, setCollBalance] = useState('0')
+    let [collAllowance, setCollAllowance] = useState<bigint>(ZERO) // raw
     let [simulatedLoans, setSimulatedLoans] = useState<PoolAndSimulationResult[]>()
     let [selectedLoan, setSelectedLoan] = useState<PoolAndSimulationResult>()
     let client = usePublicClient()
@@ -245,10 +257,16 @@ export function Borrow() {
             abi: IErc20Abi,
             publicClient: client
         })
-        await contract.read.balanceOf([address]).then(balance => {
+        contract.read.balanceOf([address]).then(balance => {
             balance = balance as number
             setCollBalance((balance as bigint / BigInt(10 ** collToken.decimals)).toString())
         })
+        if (selectedLoan != undefined) {
+            contract.read.allowance([address, selectedLoan?.pool.address]).then(allowance => {
+                let allowance1 = allowance as bigint
+                setCollAllowance(allowance1)
+            })
+        }
     }
 
     const simulateLoans = async () => {
@@ -262,10 +280,10 @@ export function Borrow() {
                 // loan too small
                 return {
                     error: 'Loan too small',
-                    0: 0,
-                    1: 0,
-                    2: 0,
-                    3: 0
+                    0: ZERO,
+                    1: ZERO,
+                    2: ZERO,
+                    3: ZERO
                 }
             }
             let contract = getContract({
@@ -274,7 +292,7 @@ export function Borrow() {
                 publicClient: client
             })
             return contract.read.loanTerms([rawValue]).then(terms => {
-                let newTerms = terms as number[]
+                let newTerms = terms as bigint[]
                 return {
                     error: '',
                     0: newTerms[0],
@@ -285,10 +303,10 @@ export function Borrow() {
             }).catch(err => {
                 return {
                     error: err.error,
-                    0: 0,
-                    1: 0,
-                    2: 0,
-                    3: 0
+                    0: ZERO,
+                    1: ZERO,
+                    2: ZERO,
+                    3: ZERO
                 }
             }) as Promise<SimulatedLoan> // in case of a failure, show 0s
         }))
@@ -306,8 +324,54 @@ export function Borrow() {
         setSelectedLoan(pool)
     }
 
+    const {data: dataBorrow, isLoading: isLoadingBorrow, isSuccess: isSuccessBorrow, write: writeBorrow} = useContractWrite({
+        abi: IPoolAbi,
+        functionName: 'borrow',
+        onError: error => {console.log('semikek', error)},
+        onSuccess: sentTxResult => {setCurrentTx(sentTxResult.hash)}
+    })
+
+    const {data: dataApprove, isLoading: isLoadingApprove, isSuccess: isSuccessApprove, write: writeApprove} = useContractWrite({
+        abi: IErc20Abi,
+        functionName: 'approve',
+        onError: error => {console.log('semikek', error)},
+        onSuccess: sentTxResult => {setCurrentTx(sentTxResult.hash)}
+    })
+
+    let [currentTx, setCurrentTx] = useState<`0x{string}`| undefined>()
+    const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
+
     async function borrow() {
-        console.log('finna borrow')
+        let collToken = tokens.find(x => x.address == currentPair?.collAddress)
+        let rawValue = parseUnits(value, collToken!.decimals)
+        if (collAllowance < rawValue) {
+            writeApprove({
+                args: [
+                    selectedLoan?.pool.address,
+                    rawValue
+                ],
+                // @ts-ignore
+                address: selectedLoan?.collToken.address,
+            })
+        } else {
+            writeBorrow({
+                args: [
+                    address,
+                    rawValue,
+                    // minLoanLimit: basically slippage
+                    // set it to 99%
+                    selectedLoan?.loan[0]! * BigInt(99) / BigInt(100),
+                    // max repay limit: 1% slippage, so 101
+                    selectedLoan?.loan[1]! * BigInt(101) / BigInt(100),
+                    // deadline: current ts + 600 (10 mins)
+                    Math.floor(Date.now() / 1000) + 600,
+                    // referral code
+                    0
+                ],
+                // @ts-ignore
+                address: selectedLoan?.pool.address,
+            })
+        }
     }
 
     console.log('render')
@@ -350,10 +414,11 @@ export function Borrow() {
                             title={'Check Details & Confirm'}
                             appendItem={<BorrowSettings/>}
                         >
-                            <p>loa</p>
                             <BorrowConfirm
+                                isLoading={isLoadingApprove || isLoadingBorrow || isLoadingTxConfirmation}
                                 onconfirmed={borrow}
                                 pool={selectedLoan}
+                                allowance={collAllowance}
                                 inputAmnt={parseUnits(value, selectedLoan.collToken.decimals)}
                             />
                         </Step>}
