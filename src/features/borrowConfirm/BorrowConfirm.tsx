@@ -75,7 +75,6 @@ export function BorrowConfirm({pool, inputAmnt, onconfirmed}: Props) {
                 error={pool.loan.error}
                 onclick={onconfirmed}
             />
-            <Referral/>
         </Box>
     );
 }
