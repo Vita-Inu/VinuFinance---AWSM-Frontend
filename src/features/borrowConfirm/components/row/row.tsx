@@ -6,7 +6,7 @@ type Props = {
   label: string;
   value: string | null;
   explain: string | null;
-  dateTime: { date: string; time: string } | null;
+  dateTime: Date | null;
 };
 
 export function Row({ explain, label, value, dateTime }: Props) {
@@ -16,7 +16,7 @@ export function Row({ explain, label, value, dateTime }: Props) {
       <ValueBox>
         {value && <Value>{value}</Value>}
         {explain && <Explain>{explain}</Explain>}
-        {dateTime && <DateTime date={dateTime.date} time={dateTime.time} />}
+        {dateTime && <DateTime date={dateTime}/>}
       </ValueBox>
     </Wrapper>
   );
