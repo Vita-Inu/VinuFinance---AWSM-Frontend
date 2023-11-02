@@ -9,9 +9,11 @@ type Props = {
     inputAmnt: bigint;
     pool: PoolAndSimulationResult;
     onconfirmed: VoidFunction;
+    isLoading: boolean;
+    allowance: bigint;
 }
 
-export function BorrowConfirm({pool, inputAmnt, onconfirmed}: Props) {
+export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowance}: Props) {
     let collateralAmnt = parseFloat(formatUnits(BigInt(inputAmnt.toString()), pool.collToken.decimals))
     let borrowAmnt = parseFloat(formatUnits(BigInt(pool.loan[0].toString()), pool.loanToken.decimals))
     let data = [
@@ -67,6 +69,8 @@ export function BorrowConfirm({pool, inputAmnt, onconfirmed}: Props) {
                 ))}
             </Rows>
             <Button
+                needsApproval={allowance < inputAmnt}
+                loading={isLoading}
                 enabled={pool.loan.error == ''}
                 borrowedAmnt={borrowAmnt}
                 collateralAmnt={collateralAmnt}
