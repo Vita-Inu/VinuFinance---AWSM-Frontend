@@ -13,9 +13,16 @@ type Props = {
     loading: boolean;
     error: string;
     onclick: VoidFunction;
+    needsApproval: boolean;
 }
 
 export function Button(props: Props) {
+    let displayText = ''
+    if (props.needsApproval) {
+        displayText = `Approve ${props.collateralAmnt.toFixed(3)} ${props.collateralToken}`
+    } else {
+        displayText = `Borrow ${props.borrowedAmnt.toFixed(3)} ${props.borrowedToken} for ${props.collateralAmnt.toFixed(3)} ${props.collateralToken}`
+    }
     return (
         <Wrapper>
             {!props.enabled && !props.loading &&
@@ -26,7 +33,7 @@ export function Button(props: Props) {
             }
             {props.enabled && !props.loading &&
                 <DefaultButton onClick={props.onclick} preset={BUTTON_PRESET.WHITE}>
-                    Borrow {props.borrowedAmnt.toFixed(3)} {props.borrowedToken} for {props.collateralAmnt.toFixed(3)} {props.collateralToken}
+                    {displayText}
                 </DefaultButton>
             }
             {props.loading &&
