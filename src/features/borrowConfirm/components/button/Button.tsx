@@ -30,8 +30,8 @@ export function Button(props: Props) {
                 </DefaultButton>
             }
             {props.loading &&
+                // todo: make this like a spinner thing or other
                 <DefaultButton disabled={true}>
-                    // todo: make this like a spinner thing or other
                     Loading...
                 </DefaultButton>
             }
