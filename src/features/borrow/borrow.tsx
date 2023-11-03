@@ -27,18 +27,13 @@ import {watchBlockNumber, watchReadContracts} from "@wagmi/core";
 import {watchBlocks} from "viem/actions";
 import {pullAllWith} from "lodash-es";
 import {getPools, Pool} from "@/utils/getPools";
+import {getErc20sFromPools, Tokens} from "@/utils/getErc20sFromPools";
 
 type Pair = {
     collAddress: `0x{string}`;
     collName: string;
     loanAddress: `0x{string}`;
     loanName: string;
-}
-
-type Token = {
-    address: `0x{string}`;
-    decimals: number;
-    symbol: string;
 }
 
 type SimulatedLoan = {
@@ -52,8 +47,14 @@ type SimulatedLoan = {
 export type PoolAndSimulationResult = {
     pool: Pool;
     loan: SimulatedLoan;
-    loanToken: Token;
-    collToken: Token;
+    loanToken: {
+        decimals: number;
+        symbol: string;
+    };
+    collToken: {
+        decimals: number;
+        symbol: string
+    };
 }
 
 const ZERO = BigInt(0)
@@ -81,7 +82,7 @@ export function Borrow() {
     };
 
     let [pools, setPools] = useState<Pool[]>([])
-    let [tokens, setTokens] = useState<Token[]>([])
+    let [tokens, setTokens] = useState<Tokens>()
     let [pairs, setPairs] = useState<Pair[]>([])
     let [currentPair, setCurrentPair] = useState<Pair>()
     let pairRef = useRef<Pair>()
@@ -117,35 +118,16 @@ export function Borrow() {
             let pools = await getPools(client, chain.id)
             setPools(pools)
 
-            // @ts-ignore
-            let allErcTokens = pools.map(x => x.info[0]).concat(pools.map(x => x.info[1])).map(x => getContract({
-                address: x,
-                publicClient: client,
-                abi: IErc20Abi
-            }));
-            let ercDecimals = await Promise.all(allErcTokens.map(x => {
-                return x.read.decimals() as Promise<number>
-            }))
-            let ercSymbols = await Promise.all(allErcTokens.map(x => {
-                return x.read.symbol() as Promise<string>
-            }))
-            // set erc20 tokens info
-            let tokensInfo = allErcTokens.map((token, index) => {
-                return {
-                    address: token.address,
-                    symbol: ercSymbols[index],
-                    decimals: ercDecimals[index]
-                }
-            })
-            setTokens(tokensInfo)
+            let tokens = await getErc20sFromPools(client, chain.id, pools)
+            setTokens(tokens)
 
             // get unique pairs
             let pairsInfo = pools.map((x, index) => {
                 return {
                     collAddress: x.info[1],
-                    collName: tokensInfo.find(y => y.address == x.info[1])!.symbol,
+                    collName: tokens.get(x.info[1])!.symbol,
                     loanAddress: x.info[0],
-                    loanName: tokensInfo.find(y => y.address == x.info[0])!.symbol,
+                    loanName: tokens.get(x.info[0])!.symbol,
                 }
             }).filter(
                 (thing, i, arr) => arr.findIndex(t => t.collAddress + t.loanAddress === thing.collAddress + thing.loanAddress) === i
@@ -180,7 +162,8 @@ export function Borrow() {
 
     const updateBalance = async () => {
         if (currentPair == undefined) return
-        let collToken = tokens.find(x => x.address == currentPair?.collAddress)!
+        if (tokens == undefined) return
+        let collToken = tokens.get(currentPair.collAddress)!
         let contract = getContract({
             address: currentPair.collAddress,
             abi: IErc20Abi,
@@ -200,7 +183,8 @@ export function Borrow() {
 
     const simulateLoans = async (shouldSetLoading: boolean) => {
         if (currentPair == undefined) return
-        let collToken = tokens.find(x => x.address == currentPair!.collAddress)! // we know it exists for sure
+        if (tokens == undefined) return
+        let collToken = tokens.get(currentPair.collAddress)!
         let rawValue = parseUnits(value, collToken.decimals)
         let relatedPools = pools.filter(x => x.info[1] == currentPair!.collAddress
             && x.info[0] == currentPair!.loanAddress)
@@ -242,11 +226,13 @@ export function Borrow() {
         }))
         if (shouldSetLoading) setIsSimulatingPools(false)
         setSimulatedLoans(simulatedLoans.map((loan, index) => {
+            let loanToken = tokens!.get(relatedPools[index].info[0])!
+            let collToken = tokens!.get(relatedPools[index].info[1])!
             return {
                 pool: relatedPools[index],
                 loan,
-                loanToken: tokens.find(y => y.address == relatedPools[index].info[0])!,
-                collToken: tokens.find(y => y.address == relatedPools[index].info[1])!,
+                loanToken,
+                collToken
             }
         }))
     }
@@ -292,7 +278,9 @@ export function Borrow() {
     let [isSimulatingPools, setIsSimulatingPools] = useState<boolean>(false)
 
     async function borrow() {
-        let collToken = tokens.find(x => x.address == currentPair?.collAddress)
+        if (tokens == undefined) return
+        if (currentPair == undefined) return
+        let collToken = tokens.get(currentPair.collAddress)
         let rawValue = parseUnits(value, collToken!.decimals)
         if (collAllowance < rawValue) {
             writeApprove({
