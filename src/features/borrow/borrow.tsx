@@ -48,10 +48,12 @@ export type PoolAndSimulationResult = {
     pool: Pool;
     loan: SimulatedLoan;
     loanToken: {
+        address: `0x{string}`;
         decimals: number;
         symbol: string;
     };
     collToken: {
+        address: `0x{string}`;
         decimals: number;
         symbol: string
     };
@@ -226,8 +228,14 @@ export function Borrow() {
         }))
         if (shouldSetLoading) setIsSimulatingPools(false)
         setSimulatedLoans(simulatedLoans.map((loan, index) => {
-            let loanToken = tokens!.get(relatedPools[index].info[0])!
-            let collToken = tokens!.get(relatedPools[index].info[1])!
+            let loanToken = {
+                ...tokens!.get(relatedPools[index].info[0])!,
+                address: relatedPools[index].info[0]
+            }
+            let collToken = {
+                ...tokens!.get(relatedPools[index].info[1])!,
+                address: relatedPools[index].info[1]
+            }
             return {
                 pool: relatedPools[index],
                 loan,
