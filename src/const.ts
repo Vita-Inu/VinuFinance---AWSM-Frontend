@@ -1,5 +1,6 @@
 import {Chain} from '@wagmi/core'
 import Dict = NodeJS.Dict;
+import {Abi} from "viem";
 
 export const vinuChain = {
     id: 207,
@@ -39,7 +40,7 @@ export const CHAIN_INFO: {[id:number]: ChainInfo} = {
     },
 }
 
-export const IPoolAbi = [
+export const IPoolAbi: Abi = [
     {
         "anonymous": false,
         "inputs": [
@@ -747,7 +748,7 @@ export const IPoolAbi = [
     }
 ]
 
-export const IErc20Abi = [
+export const IErc20Abi: Abi = [
     {
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -1038,7 +1039,7 @@ export const IErc20Abi = [
     }
 ]
 
-export const IControllerAbi = [
+export const IControllerAbi: Abi = [
     {
         "inputs": [
             {
