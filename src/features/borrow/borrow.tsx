@@ -121,7 +121,7 @@ export function Borrow() {
         let newBlock = block.data as bigint
         if (newBlock != lastBlock) {
             setLastBlock(newBlock)
-            updateOnchainData()
+            updateOnchainData(false)
         }
     }, [block]);
 
@@ -237,11 +237,11 @@ export function Borrow() {
 
     // simulate loans on pair/value change
     useEffect(() => {
-        updateOnchainData()
+        updateOnchainData(true)
     }, [currentPair, value]);
 
-    const updateOnchainData = async () => {
-        simulateLoans().catch(err => {
+    const updateOnchainData = async (shouldSetIsLoading: boolean) => {
+        simulateLoans(shouldSetIsLoading).catch(err => {
             console.log('Caught an exception simulating loans:', err)
         })
         updateBalance().catch(err => {
@@ -269,12 +269,13 @@ export function Borrow() {
         }
     }
 
-    const simulateLoans = async () => {
+    const simulateLoans = async (shouldSetLoading: boolean) => {
         if (currentPair == undefined) return
         let collToken = tokens.find(x => x.address == currentPair!.collAddress)! // we know it exists for sure
         let rawValue = parseUnits(value, collToken.decimals)
         let relatedPools = pools.filter(x => x.info[1] == currentPair!.collAddress
             && x.info[0] == currentPair!.loanAddress)
+        if (shouldSetLoading) setIsSimulatingPools(true)
         let simulatedLoans = await Promise.all(relatedPools.map(x => {
             if (x.info[3] > rawValue) {
                 // loan too small
@@ -310,6 +311,7 @@ export function Borrow() {
                 }
             }) as Promise<SimulatedLoan> // in case of a failure, show 0s
         }))
+        if (shouldSetLoading) setIsSimulatingPools(false)
         setSimulatedLoans(simulatedLoans.map((loan, index) => {
             return {
                 pool: relatedPools[index],
@@ -340,6 +342,7 @@ export function Borrow() {
 
     let [currentTx, setCurrentTx] = useState<`0x{string}`| undefined>()
     const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
+    let [isSimulatingPools, setIsSimulatingPools] = useState<boolean>(false)
 
     async function borrow() {
         let collToken = tokens.find(x => x.address == currentPair?.collAddress)
@@ -415,7 +418,7 @@ export function Borrow() {
                             appendItem={<BorrowSettings/>}
                         >
                             <BorrowConfirm
-                                isLoading={isLoadingApprove || isLoadingBorrow || isLoadingTxConfirmation}
+                                isLoading={isLoadingApprove || isLoadingBorrow || isLoadingTxConfirmation || isSimulatingPools}
                                 onconfirmed={borrow}
                                 pool={selectedLoan}
                                 allowance={collAllowance}
