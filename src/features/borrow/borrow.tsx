@@ -287,7 +287,7 @@ export function Borrow() {
         }
     })
 
-    let [currentTx, setCurrentTx] = useState<`0x{string}` | undefined>()
+    let [currentTx, setCurrentTx] = useState<`0x{string}`>()
     const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
     let [isSimulatingPools, setIsSimulatingPools] = useState<boolean>(false)
 
