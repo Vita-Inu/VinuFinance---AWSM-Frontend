@@ -114,7 +114,7 @@ export function Borrow() {
         const fetchPools = async () => {
             if (!chain) return
 
-            let pools = await getPools(client)
+            let pools = await getPools(client, chain.id)
             setPools(pools)
 
             // @ts-ignore
