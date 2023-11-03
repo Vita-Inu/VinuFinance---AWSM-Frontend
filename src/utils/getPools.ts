@@ -1,5 +1,7 @@
 import {getContract, parseAbiItem, PublicClient} from "viem";
 import {CHAIN_INFO, IControllerAbi, IPoolAbi} from "@/const";
+import {multicall} from "@wagmi/core";
+import {info} from "next/dist/build/output/log";
 
 export type PoolInfo = {
     0: `0x{string}`;
@@ -18,7 +20,7 @@ export type Pool = {
     info: PoolInfo;
 }
 
-export async function getPools(client: PublicClient): Promise<Pool[]> {
+export async function getPools(client: PublicClient, chainId: number): Promise<Pool[]> {
     let logs = await client.getLogs({
         event: parseAbiItem('event NewSubPool(address loanCcyToken,address collCcyToken,uint256 loanTenor,uint256 maxLoanPerColl,uint256 r1,uint256 r2,uint256 liquidityBnd1,uint256 liquidityBnd2,uint256 minLoan,uint256 creatorFee,address poolController,uint96 rewardCoefficient)'),
         fromBlock: 'earliest'
@@ -26,39 +28,49 @@ export async function getPools(client: PublicClient): Promise<Pool[]> {
 
     // gather potential pool addresses where controller is our controller
     let potentialPools = logs.filter(x => {
-        let chunks = x.data.substring(2).match(/.{1,64}/g)
-        if (chunks == null) return false
-        // @ts-ignore
-        return chunks.length == 12 && chunks[10].endsWith(CHAIN_INFO[chain.id].CONTROLLER.substring(2))
+        return x.args.poolController == CHAIN_INFO[chainId].CONTROLLER
     })
 
     let controller = getContract({
         // @ts-ignore
-        address: CHAIN_INFO[chain.id].CONTROLLER,
+        address: CHAIN_INFO[chainId].CONTROLLER,
         abi: IControllerAbi,
         publicClient: client
     })
 
     // get whitelist boolean for every pool
-    let whitelists = await Promise.all(potentialPools.map(x => {
-        return controller.read.poolWhitelisted([x.address]) as Promise<boolean>
-    }))
+    // use multicall yeah
+    let whitelists = await multicall({
+        // @ts-ignore
+        contracts: potentialPools.map(x => {
+            return {
+                address: CHAIN_INFO[chainId].CONTROLLER,
+                abi: IControllerAbi,
+                functionName: 'poolWhitelisted',
+                args: [x.address]
+            }
+        })
+    })
 
-    let pools = potentialPools.filter((pool, index) => whitelists[index]).map(x => getContract({
+    let pools = potentialPools.filter((pool, index) => whitelists[index].result).map(x => getContract({
         address: x.address,
         abi: IPoolAbi,
-        publicClient: client
     }))
-
     // gather infos using contract.getPoolInfo
-    let infos = await Promise.all(pools.map(x => {
-        return x.read.getPoolInfo() as Promise<PoolInfo>
-    }))
+    let infos = await multicall({
+        // @ts-ignore
+        contracts: pools.map(x => {
+            return {
+                ...x,
+                functionName: 'getPoolInfo'
+            }
+        })
+    })
 
     return infos.map((info, index) => {
         return {
             address: pools[index].address as `0x{string}`, // we know this for sure
-            info
+            info: info.result as PoolInfo
         }
     })
 }
