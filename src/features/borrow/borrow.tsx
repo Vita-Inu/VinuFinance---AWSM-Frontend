@@ -26,23 +26,7 @@ import {useDebounce} from "@/hooks/useDebounce";
 import {watchBlockNumber, watchReadContracts} from "@wagmi/core";
 import {watchBlocks} from "viem/actions";
 import {pullAllWith} from "lodash-es";
-
-type PoolInfo = {
-    0: `0x{string}`;
-    1: `0x{string}`;
-    2: number; // maxLoanPerColl
-    3: number; // minLoan
-    4: number; // loanTenor
-    5: number; // totalLiquidity
-    6: number; // totalLpShares
-    7: number; // rewardCoefficient
-    8: number; // loanIdx
-}
-
-type Pool = {
-    address: `0x{string}`;
-    info: PoolInfo;
-}
+import {getPools, Pool} from "@/utils/getPools";
 
 type Pair = {
     collAddress: `0x{string}`;
@@ -130,66 +114,11 @@ export function Borrow() {
         const fetchPools = async () => {
             if (!chain) return
 
-            let logs = await client.getLogs({
-                event: parseAbiItem('event NewSubPool(address loanCcyToken,address collCcyToken,uint256 loanTenor,uint256 maxLoanPerColl,uint256 r1,uint256 r2,uint256 liquidityBnd1,uint256 liquidityBnd2,uint256 minLoan,uint256 creatorFee,address poolController,uint96 rewardCoefficient)'),
-                fromBlock: 'earliest'
-            })
-
-            // gather potential pool addresses where controller is our controller
-            let potentialPools = logs.filter(x => {
-                let chunks = x.data.substring(2).match(/.{1,64}/g)
-                if (chunks == null) return false
-                // @ts-ignore
-                return chunks.length == 12 && chunks[10].endsWith(CHAIN_INFO[chain.id].CONTROLLER.substring(2))
-            })
-
-            // dont use getCode, just show whitelisted addresses
-            /*
-            // use eth_getCode to make sure its a real pool and not a malicious one
-            let bytecodes = await Promise.all(potentialPools.map(x => client.getBytecode({address: x.address})))
-            let hashes = bytecodes.map(x => {
-                if (!x) return ''
-                return Buffer.from(sha256(x)).toString('hex');
-            })
-
-            // filter by allowed hashes and convert into contract instances
-            // @ts-ignore
-            let pools = potentialPools.filter((pool, index) => CHAIN_INFO[chain.id].ALLOWED_POOL_HASHES.includes(hashes[index])).map(x => getContract({
-                address: x.address,
-                abi: IPoolAbi,
-                publicClient: client
-            }))
-            */
-            let controller = getContract({
-                // @ts-ignore
-                address: CHAIN_INFO[chain.id].CONTROLLER,
-                abi: IControllerAbi,
-                publicClient: client
-            })
-            // get whitelist boolean for every pool
-            let whitelists = await Promise.all(potentialPools.map(x => {
-                return controller.read.poolWhitelisted([x.address]) as Promise<boolean>
-            }))
-            let pools = potentialPools.filter((pool, index) => whitelists[index]).map(x => getContract({
-                address: x.address,
-                abi: IPoolAbi,
-                publicClient: client
-            }))
-
-            // gather infos using contract.getPoolInfo
-            let infos = await Promise.all(pools.map(x => {
-                return x.read.getPoolInfo() as Promise<PoolInfo>
-            }))
-
-            setPools(infos.map((info, index) => {
-                return {
-                    address: pools[index].address as `0x{string}`, // we know this for sure
-                    info
-                }
-            }))
+            let pools = await getPools(client)
+            setPools(pools)
 
             // @ts-ignore
-            let allErcTokens = infos.map(x => x[0]).concat(infos.map(x => x[1])).map(x => getContract({
+            let allErcTokens = pools.map(x => x.info[0]).concat(pools.map(x => x.info[1])).map(x => getContract({
                 address: x,
                 publicClient: client,
                 abi: IErc20Abi
@@ -211,12 +140,12 @@ export function Borrow() {
             setTokens(tokensInfo)
 
             // get unique pairs
-            let pairsInfo = infos.map((x, index) => {
+            let pairsInfo = pools.map((x, index) => {
                 return {
-                    collAddress: x[1],
-                    collName: tokensInfo.find(y => y.address == x[1])!.symbol,
-                    loanAddress: x[0],
-                    loanName: tokensInfo.find(y => y.address == x[0])!.symbol,
+                    collAddress: x.info[1],
+                    collName: tokensInfo.find(y => y.address == x.info[1])!.symbol,
+                    loanAddress: x.info[0],
+                    loanName: tokensInfo.find(y => y.address == x.info[0])!.symbol,
                 }
             }).filter(
                 (thing, i, arr) => arr.findIndex(t => t.collAddress + t.loanAddress === thing.collAddress + thing.loanAddress) === i
