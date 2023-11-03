@@ -20,15 +20,24 @@ export const vinuChain = {
         etherscan: {name: 'VinuScan', url: 'https://vinuscan.com'},
         default: {name: 'VinuScan', url: 'https://vinuscan.com'},
     },
-    contracts: {},
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11'
+        }
+    },
 } as const satisfies Chain
 
-export const CHAIN_INFO = {
+export type ChainInfo = {
+    CONTROLLER: `0x{string}`,
+    ALLOWED_POOL_HASHES: readonly string[]
+}
+
+export const CHAIN_INFO: {[id:number]: ChainInfo} = {
     207: {
-        CONTROLLER: "0x0165878A594ca255338adfa4d48449f69242Eb8F".toLowerCase(),
+        CONTROLLER: '0x0165878A594ca255338adfa4d48449f69242Eb8F' as `0x{string}`,
         ALLOWED_POOL_HASHES: ["d9e68d14c5fba51abecc0eebfed5bf364a6061b2bff391e89211d87bbfde9cbb"]
     },
-} as const satisfies {}
+}
 
 export const IPoolAbi = [
     {
