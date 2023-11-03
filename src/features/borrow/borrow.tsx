@@ -326,21 +326,39 @@ export function Borrow() {
         setSelectedLoan(pool)
     }
 
-    const {data: dataBorrow, isLoading: isLoadingBorrow, isSuccess: isSuccessBorrow, write: writeBorrow} = useContractWrite({
+    const {
+        data: dataBorrow,
+        isLoading: isLoadingBorrow,
+        isSuccess: isSuccessBorrow,
+        write: writeBorrow
+    } = useContractWrite({
         abi: IPoolAbi,
         functionName: 'borrow',
-        onError: error => {console.log('semikek', error)},
-        onSuccess: sentTxResult => {setCurrentTx(sentTxResult.hash)}
+        onError: error => {
+            console.log('semikek', error)
+        },
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+        }
     })
 
-    const {data: dataApprove, isLoading: isLoadingApprove, isSuccess: isSuccessApprove, write: writeApprove} = useContractWrite({
+    const {
+        data: dataApprove,
+        isLoading: isLoadingApprove,
+        isSuccess: isSuccessApprove,
+        write: writeApprove
+    } = useContractWrite({
         abi: IErc20Abi,
         functionName: 'approve',
-        onError: error => {console.log('semikek', error)},
-        onSuccess: sentTxResult => {setCurrentTx(sentTxResult.hash)}
+        onError: error => {
+            console.log('semikek', error)
+        },
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+        }
     })
 
-    let [currentTx, setCurrentTx] = useState<`0x{string}`| undefined>()
+    let [currentTx, setCurrentTx] = useState<`0x{string}` | undefined>()
     const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
     let [isSimulatingPools, setIsSimulatingPools] = useState<boolean>(false)
 
@@ -427,6 +445,10 @@ export function Borrow() {
                         </Step>}
                 </ConfirmCol>
             </Grid>}
+            {pairs.length == 0 &&
+                <div>
+                    Loading...
+                </div>}
         </Container>
     );
 }
