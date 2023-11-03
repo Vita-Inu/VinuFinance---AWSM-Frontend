@@ -4,8 +4,8 @@ import {multicall} from "@wagmi/core";
 import {info} from "next/dist/build/output/log";
 
 export type PoolInfo = {
-    0: `0x{string}`;
-    1: `0x{string}`;
+    0: `0x{string}`; // loanToken
+    1: `0x{string}`; // collToken
     2: number; // maxLoanPerColl
     3: number; // minLoan
     4: number; // loanTenor
