@@ -10,6 +10,7 @@ type Props = {
   size?: BUTTON_SIZE;
   onClick?: VoidFunction;
   disabled?: boolean;
+  fullWidth?: boolean;
 };
 
 const StyledButton = styled.div<{
@@ -17,6 +18,7 @@ const StyledButton = styled.div<{
   $background: string;
   $backgroundHovered: string;
   $disabled?: boolean;
+  $fullWidth?: boolean;
   size?: BUTTON_SIZE;
 }>`
   padding: 1.2rem 2.4rem;
@@ -52,9 +54,15 @@ const StyledButton = styled.div<{
       background: rgba(255, 255, 255, 0.15);
       color: rgba(255, 255, 255, 0.45);
     `}
+
+  ${(props) =>
+    props.$fullWidth &&
+    css`
+      width: 100%;
+    `}
 `;
 
-export const Button = ({ preset, disabled, ...props }: Props) => {
+export const Button = ({ preset, disabled, fullWidth, ...props }: Props) => {
   const presetColors =
     (preset && presetColorMap.get(preset)) ?? DEFAULT_COLOR_PRESET;
 
@@ -62,6 +70,7 @@ export const Button = ({ preset, disabled, ...props }: Props) => {
     <StyledButton
       {...props}
       $disabled={disabled}
+      $fullWidth={fullWidth}
       $text={presetColors.text}
       $background={presetColors.background}
       $backgroundHovered={presetColors.backgroundHovered}
