@@ -29,7 +29,7 @@ import {pullAllWith} from "lodash-es";
 import {getPools, Pool} from "@/utils/getPools";
 import {getErc20sFromPools, Tokens} from "@/utils/getErc20sFromPools";
 
-type Pair = {
+export type PairType = {
     collAddress: `0x{string}`;
     collName: string;
     loanAddress: `0x{string}`;
@@ -85,9 +85,9 @@ export function Borrow() {
 
     let [pools, setPools] = useState<Pool[]>([])
     let [tokens, setTokens] = useState<Tokens>()
-    let [pairs, setPairs] = useState<Pair[]>([])
-    let [currentPair, setCurrentPair] = useState<Pair>()
-    let pairRef = useRef<Pair>()
+    let [pairs, setPairs] = useState<PairType[]>([])
+    let [currentPair, setCurrentPair] = useState<PairType>()
+    let pairRef = useRef<PairType>()
     let [collBalance, setCollBalance] = useState('0')
     let [collAllowance, setCollAllowance] = useState<bigint>(ZERO) // raw
     let [simulatedLoans, setSimulatedLoans] = useState<PoolAndSimulationResult[]>()
@@ -119,6 +119,7 @@ export function Borrow() {
 
             let pools = await getPools(client, chain.id)
             setPools(pools)
+            console.log(pools)
 
             let tokens = await getErc20sFromPools(client, chain.id, pools)
             setTokens(tokens)
@@ -257,9 +258,6 @@ export function Borrow() {
     } = useContractWrite({
         abi: IPoolAbi,
         functionName: 'borrow',
-        onError: error => {
-            console.log('semikek', error)
-        },
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
         }
@@ -273,15 +271,12 @@ export function Borrow() {
     } = useContractWrite({
         abi: IErc20Abi,
         functionName: 'approve',
-        onError: error => {
-            console.log('semikek', error)
-        },
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
         }
     })
 
-    let [currentTx, setCurrentTx] = useState<`0x{string}`>()
+    let [currentTx, setCurrentTx] = useState<`0x${string}`>()
     const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
     let [isSimulatingPools, setIsSimulatingPools] = useState<boolean>(false)
 

@@ -14,7 +14,7 @@ import { Column } from './types';
 
 type Props<T> = {
   columns: Column<T>[];
-  data: (T & { id: string })[];
+  data: (T & { uniqueId: string })[];
   onRowClick?: (val: T) => void;
 };
 
@@ -25,12 +25,12 @@ export function Table<T extends { [key: string]: unknown }>({
 }: Props<T>) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
 
-  const onRowLeave = (item: { id: string }) => {
-    setHoveredItemId((prev) => (prev !== item.id ? prev : null));
+  const onRowLeave = (item: { uniqueId: string }) => {
+    setHoveredItemId((prev) => (prev !== item.uniqueId ? prev : null));
   };
 
-  const onRowEnter = (item: { id: string }) => {
-    setHoveredItemId((prev) => (prev !== item.id ? item.id : prev));
+  const onRowEnter = (item: { uniqueId: string }) => {
+    setHoveredItemId((prev) => (prev !== item.uniqueId ? item.uniqueId : prev));
   };
 
   return (
@@ -45,7 +45,7 @@ export function Table<T extends { [key: string]: unknown }>({
       <Body>
         {data.map((item) => (
           <Row
-            key={item.id}
+            key={item.uniqueId}
             $clickable={!!onRowClick}
             onClick={() => onRowClick?.(item)}
             onMouseEnter={() => onRowEnter(item)}
