@@ -6,13 +6,13 @@ import {info} from "next/dist/build/output/log";
 export type PoolInfo = {
     0: `0x{string}`; // loanToken
     1: `0x{string}`; // collToken
-    2: number; // maxLoanPerColl
-    3: number; // minLoan
-    4: number; // loanTenor
-    5: number; // totalLiquidity
-    6: number; // totalLpShares
-    7: number; // rewardCoefficient
-    8: number; // loanIdx
+    2: bigint; // maxLoanPerColl
+    3: bigint; // minLoan
+    4: bigint; // loanTenor
+    5: bigint; // totalLiquidity
+    6: bigint; // totalLpShares
+    7: bigint; // rewardCoefficient
+    8: bigint; // loanIdx
 }
 
 export type Pool = {
