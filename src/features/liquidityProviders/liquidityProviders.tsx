@@ -1,45 +1,84 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { useWindowResize } from '@/hooks';
-import { ListContainer } from '@/features/listContainer';
-import { useListFilter } from '@/features/listContainer/hooks';
-import { LiquidityPoolModal } from '@/features/modals';
+import {useWindowResize} from '@/hooks';
+import {ListContainer} from '@/features/listContainer';
+import {useListFilter} from '@/features/listContainer/hooks';
+import {LiquidityPoolModal} from '@/features/modals';
 
-import { usePools } from './hooks';
-import { DesktopTable, MobileTable } from './components';
+import {DesktopTable, MobileTable} from './components';
+import {getPools, Pool} from "@/utils/getPools";
+import {useAccount, useNetwork, usePublicClient} from "wagmi";
+import {getErc20sFromPools} from "@/utils/getErc20sFromPools";
+
+export class PoolWithInfo {
+    pool: Pool;
+    loanCurrency: {
+        decimals: number;
+        symbol: string;
+    };
+    collCurrency: {
+        decimals: number;
+        symbol: string;
+    };
+    currentMonthlyApr: number;
+}
 
 export function LiquidityProviders() {
-  const [liquidityPoolId, setLiquidityPoolId] = useState<string | null>(null);
+    const [liquidityPoolId, setLiquidityPoolId] = useState<string | null>(null);
+    const {address} = useAccount()
+    let client = usePublicClient()
+    const {chain} = useNetwork()
 
-  const { onFilter, filters, currentFilter } = useListFilter([
-    { label: 'All pools', value: 'ALL_POOLS' },
-    { label: 'My pools', value: 'MY_POOLS' },
-  ]);
+    const {onFilter, filters, currentFilter} = useListFilter([
+        {label: 'All pools', value: 'ALL_POOLS'},
+        {label: 'My pools', value: 'MY_POOLS'},
+    ]);
 
-  const { data } = usePools(currentFilter);
+    useEffect(() => {
+        loadData().catch(err => {
+            console.log('failed to load data:', err)
+        })
+    }, []);
 
-  const { isTabletSize } = useWindowResize();
+    async function loadData() {
+        if (!chain) return
+        let pools = await getPools(client, chain.id)
+        let ercs = await getErc20sFromPools(client, chain.id, pools)
+        setData(pools.map(x => {
+            return {
+                pool: x,
+                currentMonthlyApr: 1.17 / 100,
+                loanCurrency: ercs.get(x.info[0]),
+                collCurrency: ercs.get(x.info[1])
+            }
+        }))
+        console.log(pools)
+    }
 
-  const showPoolDetails = (poolId: string) => {
-    setLiquidityPoolId(poolId);
-  };
+    const [data, setData] = useState<PoolWithInfo[]>([])
 
-  const hidePoolDetails = () => {
-    setLiquidityPoolId(null);
-  };
+    const {isTabletSize} = useWindowResize();
 
-  return (
-    <ListContainer filters={filters} onFilter={onFilter}>
-      <>
-        {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails} />}
-        {isTabletSize && <MobileTable data={data} onView={showPoolDetails} />}
-        {!!liquidityPoolId && (
-          <LiquidityPoolModal
-            onClose={hidePoolDetails}
-            poolId={liquidityPoolId}
-          />
-        )}
-      </>
-    </ListContainer>
-  );
+    const showPoolDetails = (poolId: string) => {
+        setLiquidityPoolId(poolId);
+    };
+
+    const hidePoolDetails = () => {
+        setLiquidityPoolId(null);
+    };
+
+    return (
+        <ListContainer filters={filters} onFilter={onFilter}>
+            <>
+                {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
+                {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
+                {!!liquidityPoolId && (
+                    <LiquidityPoolModal
+                        onClose={hidePoolDetails}
+                        pool={data.find(x => x.pool.address == liquidityPoolId)!}
+                    />
+                )}
+            </>
+        </ListContainer>
+    );
 }

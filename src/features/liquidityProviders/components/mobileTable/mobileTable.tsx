@@ -12,8 +12,9 @@ import {
 } from '@/components/grid';
 
 import { LoanProvider } from '../../types';
+import {PoolWithInfo} from "@/features/liquidityProviders";
 
-type Props = { data: LoanProvider[]; onView: (id: string) => void };
+type Props = { data: PoolWithInfo[]; onView: (id: string) => void };
 
 export function MobileTable({ data, onView }: Props) {
   const CELLS: DataCell<LoanProvider>[] = [
