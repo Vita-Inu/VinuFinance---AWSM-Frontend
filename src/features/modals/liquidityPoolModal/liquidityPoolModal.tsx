@@ -4,7 +4,15 @@ import { Button, BUTTON_PRESET } from '@/components/buttons';
 
 import { ModalBase } from '../modalBase';
 
-import { Cell, Describe, Grid, Label, Value, NumberInput } from './components';
+import {
+  Cell,
+  Describe,
+  Grid,
+  Label,
+  Value,
+  NumberInput,
+  RangeSlider,
+} from './components';
 
 type Props = {
   poolId: string;
@@ -13,6 +21,7 @@ type Props = {
 
 export function LiquidityPoolModal({ onClose }: Props) {
   const [inputVal, setInputVal] = useState(0);
+  const [range, setRange] = useState(30);
 
   const onInputChange = (val: string) => {
     const newVal = parseInt(val);
@@ -72,7 +81,9 @@ export function LiquidityPoolModal({ onClose }: Props) {
         <Cell>
           <NumberInput value={inputVal} onChange={onInputChange} />
         </Cell>
-        <Cell></Cell>
+        <Cell>
+          <RangeSlider value={range} onChange={setRange} />
+        </Cell>
         <Cell>
           <Button
             fullWidth

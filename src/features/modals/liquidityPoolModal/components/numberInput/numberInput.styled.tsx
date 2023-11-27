@@ -17,9 +17,6 @@ export const Boxes = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 1.1rem;
-  padding: 0.9rem 1.6rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
 `;
 
 export const Box = styled.div`
@@ -27,6 +24,9 @@ export const Box = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
 `;
 
 export const Input = styled.input.attrs({ type: 'number' })`
