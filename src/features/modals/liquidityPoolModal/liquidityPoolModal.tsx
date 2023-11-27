@@ -79,7 +79,11 @@ export function LiquidityPoolModal({ onClose }: Props) {
           </Button>
         </Cell>
         <Cell>
-          <NumberInput value={inputVal} onChange={onInputChange} />
+          <NumberInput
+            value={inputVal}
+            onChange={onInputChange}
+            onMax={() => window.alert('MAX')}
+          />
         </Cell>
         <Cell>
           <RangeSlider value={range} onChange={setRange} />

@@ -11,9 +11,10 @@ import {
 type Props = {
   value: number;
   onChange: (value: string) => void;
+  onMax: VoidFunction;
 };
 
-export function NumberInput({ onChange, value }: Props) {
+export function NumberInput({ onChange, value, onMax }: Props) {
   return (
     <Wrapper>
       <Label>Lorem Ipsum</Label>
@@ -22,7 +23,7 @@ export function NumberInput({ onChange, value }: Props) {
           <Input value={value} onChange={(evt) => onChange(evt.target.value)} />
           <Appendix>$VC</Appendix>
         </Box>
-        <Button>MAX</Button>
+        <Button onClick={onMax}>MAX</Button>
       </Boxes>
     </Wrapper>
   );

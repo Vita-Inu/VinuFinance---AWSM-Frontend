@@ -30,6 +30,7 @@ export const Box = styled.div`
 `;
 
 export const Input = styled.input.attrs({ type: 'number' })`
+  width: 100%;
   color: #fff;
   font-family: Aeonik, sans-serif;
   font-size: 16px;
