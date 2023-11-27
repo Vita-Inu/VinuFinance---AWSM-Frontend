@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Button, BUTTON_PRESET } from '@/components/buttons';
 import { ModalBase } from '../modalBase';
 const humanizeDuration = require("humanize-duration");
-import { Buttons, Cell, Describe, Grid, Label, Value } from './components';
+import { Buttons, Cell, Describe, Grid, Label, Value, NumberInput, RangeSlider } from './components';
 import {PoolWithInfo} from "@/features/liquidityProviders";
 import {formatUnits} from "viem";
 import {Explain} from "@/components/table";
@@ -12,6 +13,20 @@ type Props = {
 };
 
 export function LiquidityPoolModal({ onClose, pool }: Props) {
+  const [inputVal, setInputVal] = useState(0);
+  const [range, setRange] = useState(30);
+
+  const onInputChange = (val: string) => {
+    const newVal = parseInt(val);
+
+    if (isNaN(newVal)) {
+      setInputVal(0);
+      return;
+    }
+
+    setInputVal(newVal);
+  };
+
   return (
     <ModalBase title={'Pool details'} onClose={onClose}>
       <Grid>
@@ -34,30 +49,48 @@ export function LiquidityPoolModal({ onClose, pool }: Props) {
           <Value>{(1 + (pool.currentMonthlyApr * 12).toFixed(2))}%</Value>
           <Explain>~{(Math.pow(1 + pool.currentMonthlyApr, 12) * 100 - 100).toFixed(2)}% APY</Explain>
         </Cell>
+        <Cell>
+          <Label>Rewards</Label>
+          <Value>223 $VC</Value>
+        </Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PINK}
+            onClick={() => window.alert('Claim rewards')}
+          >
+            Claim rewards
+          </Button>
+        </Cell>
+        <Cell>
+          <NumberInput
+            value={inputVal}
+            onChange={onInputChange}
+            onMax={() => window.alert('MAX')}
+          />
+        </Cell>
+        <Cell>
+          <RangeSlider value={range} onChange={setRange} />
+        </Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PURPLE}
+            onClick={() => window.alert('Deposit')}
+          >
+            Deposit
+          </Button>
+        </Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PURPLE}
+            onClick={() => window.alert('Withdraw')}
+          >
+            Withdraw
+          </Button>
+        </Cell>
       </Grid>
-      <Buttons>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PURPLE}
-          onClick={() => window.alert('Add liquidity')}
-        >
-          Add liquidity
-        </Button>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PURPLE}
-          onClick={() => window.alert('Remove liquidity')}
-        >
-          Remove liquidity
-        </Button>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PINK}
-          onClick={() => window.alert('Claim rewards')}
-        >
-          Claim rewards
-        </Button>
-      </Buttons>
     </ModalBase>
   );
 }
