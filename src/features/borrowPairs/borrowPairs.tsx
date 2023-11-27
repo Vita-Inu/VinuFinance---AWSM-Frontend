@@ -1,28 +1,31 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
-import { Pairs } from './styled';
-import { Pair } from './components';
+import {Pairs} from './styled';
+import {Pair} from './components';
+import {PairType} from "@/features/borrow";
 
-export function BorrowPairs() {
-  const [toggle, setToggle] = useState(false);
+type Props = {
+    pairs: PairType[];
+    onIdSelect: Function;
+    selectedId: number;
+};
 
-  return (
-    <Pairs>
-      <Pair
-        active={toggle}
-        pairs={['rETH', 'RPL']}
-        onClick={() => setToggle((prevState) => !prevState)}
-      />
-      <Pair
-        active={toggle}
-        pairs={['DAI', 'gOHM']}
-        onClick={() => setToggle((prevState) => !prevState)}
-      />
-      <Pair
-        active={toggle}
-        pairs={['USDC', 'RPL']}
-        onClick={() => setToggle((prevState) => !prevState)}
-      />
-    </Pairs>
-  );
+export function BorrowPairs({pairs, onIdSelect, selectedId}: Props) {
+    const [toggle, setToggle] = useState(false);
+
+    return (
+        <Pairs>
+            {pairs.map((pair, index) => {
+                console.log(pair)
+                return <Pair
+                    key={index}
+                    names={[pair.loanName, pair.collName]}
+                    addresses={[pair.loanAddress, pair.collAddress]}
+                    onClick={onIdSelect}
+                    active={index == selectedId}
+                    id={index}
+                ></Pair>
+            })}
+        </Pairs>
+    );
 }

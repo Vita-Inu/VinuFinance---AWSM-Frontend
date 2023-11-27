@@ -11,15 +11,14 @@ const Value = styled.div`
 `;
 
 type Props = {
-  date: string;
-  time: string;
-};
+    date: Date;
+}
 
-export function DateTime({ time, date }: Props) {
+export function DateTime({date}: Props) {
   return (
     <Box>
-      <Value>{date}</Value>
-      <Value>{time}</Value>
+      <Value>{date.toDateString()}</Value>
+      <Value>{date.toLocaleTimeString()}</Value>
     </Box>
   );
 }

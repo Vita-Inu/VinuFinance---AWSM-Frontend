@@ -1,25 +1,18 @@
 import { useState } from 'react';
-
 import { Button, BUTTON_PRESET } from '@/components/buttons';
-
 import { ModalBase } from '../modalBase';
-
-import {
-  Cell,
-  Describe,
-  Grid,
-  Label,
-  Value,
-  NumberInput,
-  RangeSlider,
-} from './components';
+const humanizeDuration = require("humanize-duration");
+import { Buttons, Cell, Describe, Grid, Label, Value, NumberInput, RangeSlider } from './components';
+import {PoolWithInfo} from "@/features/liquidityProviders";
+import {formatUnits} from "viem";
+import {Explain} from "@/components/table";
 
 type Props = {
-  poolId: string;
+  pool: PoolWithInfo;
   onClose: VoidFunction;
 };
 
-export function LiquidityPoolModal({ onClose }: Props) {
+export function LiquidityPoolModal({ onClose, pool }: Props) {
   const [inputVal, setInputVal] = useState(0);
   const [range, setRange] = useState(30);
 
@@ -38,32 +31,23 @@ export function LiquidityPoolModal({ onClose }: Props) {
     <ModalBase title={'Pool details'} onClose={onClose}>
       <Grid>
         <Cell>
-          <Label>Current LTV</Label>
-          <Value>81.8%</Value>
-        </Cell>
-        <Cell>
           <Label>Loan Tenor</Label>
-          <Value>90 days</Value>
-        </Cell>
-        <Cell>
-          <Label>Total Loan Volume</Label>
-          <Value>138.62201 rETH</Value>
-          <Describe>($274,253.96)</Describe>
+          <Value>{humanizeDuration(1000 * parseInt(pool.pool.info[4].toString()))}</Value>
         </Cell>
         <Cell>
           <Label>Max. Loan Per Collateral Unit</Label>
-          <Value>0.011354088 rETH</Value>
-          <Describe>($22.46)</Describe>
+          <Value>{formatUnits(pool.pool.info[2], pool.loanCurrency.decimals)} {pool.loanCurrency.symbol}</Value>
+          <Explain>$0.0</Explain>
         </Cell>
         <Cell>
           <Label>Total Liquidity</Label>
-          <Value>0.11128082 rETH</Value>
-          <Describe>($220.16)</Describe>
+          <Value>{parseFloat(formatUnits(pool.pool.info[5], pool.collCurrency.decimals)).toFixed(2)} {pool.collCurrency.symbol}</Value>
+          <Explain>$0.0</Explain>
         </Cell>
         <Cell>
           <Label>Current APR</Label>
-          <Value>0.4009%</Value>
-          <Describe>Floored at 0.04%</Describe>
+          <Value>{(1 + (pool.currentMonthlyApr * 12).toFixed(2))}%</Value>
+          <Explain>~{(Math.pow(1 + pool.currentMonthlyApr, 12) * 100 - 100).toFixed(2)}% APY</Explain>
         </Cell>
         <Cell>
           <Label>Rewards</Label>
