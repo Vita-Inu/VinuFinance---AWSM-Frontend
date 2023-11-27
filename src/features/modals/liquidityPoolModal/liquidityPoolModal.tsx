@@ -1,8 +1,10 @@
+import { useState } from 'react';
+
 import { Button, BUTTON_PRESET } from '@/components/buttons';
 
 import { ModalBase } from '../modalBase';
 
-import { Buttons, Cell, Describe, Grid, Label, Value } from './components';
+import { Cell, Describe, Grid, Label, Value, NumberInput } from './components';
 
 type Props = {
   poolId: string;
@@ -10,6 +12,19 @@ type Props = {
 };
 
 export function LiquidityPoolModal({ onClose }: Props) {
+  const [inputVal, setInputVal] = useState(0);
+
+  const onInputChange = (val: string) => {
+    const newVal = parseInt(val);
+
+    if (isNaN(newVal)) {
+      setInputVal(0);
+      return;
+    }
+
+    setInputVal(newVal);
+  };
+
   return (
     <ModalBase title={'Pool details'} onClose={onClose}>
       <Grid>
@@ -41,30 +56,42 @@ export function LiquidityPoolModal({ onClose }: Props) {
           <Value>0.4009%</Value>
           <Describe>Floored at 0.04%</Describe>
         </Cell>
+        <Cell>
+          <Label>Rewards</Label>
+          <Value>223 $VC</Value>
+        </Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PINK}
+            onClick={() => window.alert('Claim rewards')}
+          >
+            Claim rewards
+          </Button>
+        </Cell>
+        <Cell>
+          <NumberInput value={inputVal} onChange={onInputChange} />
+        </Cell>
+        <Cell></Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PURPLE}
+            onClick={() => window.alert('Deposit')}
+          >
+            Deposit
+          </Button>
+        </Cell>
+        <Cell>
+          <Button
+            fullWidth
+            preset={BUTTON_PRESET.PURPLE}
+            onClick={() => window.alert('Withdraw')}
+          >
+            Withdraw
+          </Button>
+        </Cell>
       </Grid>
-      <Buttons>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PURPLE}
-          onClick={() => window.alert('Add liquidity')}
-        >
-          Add liquidity
-        </Button>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PURPLE}
-          onClick={() => window.alert('Remove liquidity')}
-        >
-          Remove liquidity
-        </Button>
-        <Button
-          fullWidth
-          preset={BUTTON_PRESET.PINK}
-          onClick={() => window.alert('Claim rewards')}
-        >
-          Claim rewards
-        </Button>
-      </Buttons>
     </ModalBase>
   );
 }
