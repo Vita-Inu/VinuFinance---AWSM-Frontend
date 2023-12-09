@@ -34,7 +34,7 @@ export function Loans() {
     async function loadInfo() {
         if (!chain) return
         let pools = await getPools(client, chain.id)
-        let tokens = await getErc20sFromPools(client, chain.id, pools)
+        let tokens = await getErc20sFromPools(client, chain.id, pools, address!)
 
         let borrowLogs = await client.getLogs({
             event: parseAbiItem('event Borrow(address indexed borrower,uint256 loanIdx,uint256 collateral,uint256 loanAmount,uint256 repaymentAmount,uint256 totalLpShares,uint256 indexed expiry,uint256 indexed referralCode)'),
@@ -69,6 +69,7 @@ export function Loans() {
             let collToken = tokens.get(pool.info[1])!
             let dueDate = new Date(Number(x.args.expiry) * 1000);
             return {
+                key: x.args.loanIdx!.toString(),
                 id: x.args.loanIdx!,
                 collateralTokenAddress: pool.info[1],
                 loanTokenAddress: pool.info[0],
@@ -126,6 +127,7 @@ export function Loans() {
             let loanToken = tokens.get(pool.info[0])!
             let collToken = tokens.get(pool.info[1])!
             return {
+                key: x.args.loanIdx!.toString(),
                 id: x.args.loanIdx!,
                 collateralTokenAddress: pool.info[1],
                 loanTokenAddress: pool.info[0],
@@ -163,6 +165,7 @@ export function Loans() {
 
     const loans = currentFilter === "OPEN_LOANS" ? openLoans : pastLoans;
 
+    //region WAIT_FOR_TRANSACTION
     let [currentApproveTx, setCurrentApproveTx] = useState<`0x${string}`>()
     let [currentRepayTx, setCurrentRepayTx] = useState<`0x${string}`>()
     const {data: approveData, isLoading: isLoadingApprovalTx} = useWaitForTransaction({
@@ -190,7 +193,9 @@ export function Loans() {
             loadInfo()
         }
     })
+    //endregion
 
+    //region CONTRACT WRITES
     const {
         data: dataApprove,
         isLoading: isLoadingApprove,
@@ -219,6 +224,7 @@ export function Loans() {
             // todo: show notification that user has repayed a loan
         }
     })
+    //endregion
 
     const isLoading = isLoadingApprovalTx || isLoadingRepay || isLoadingApprove || isLoadingRepaymentTx
 
@@ -228,7 +234,6 @@ export function Loans() {
     const {isTabletSize} = useWindowResize();
 
     async function repay(id: bigint, pool: `0x${string}`) {
-        console.log({id, pool});
         let loan = loans.find(x => x.id == id && x.pool == pool)!;
         let allowance = allowances[pool];
         if (allowance < loan.repaymentAmountRaw!) {
