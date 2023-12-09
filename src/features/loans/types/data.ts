@@ -2,6 +2,7 @@ import { ValueWithExplain } from '@/components/table';
 
 export type Loan = {
   id: bigint;
+  key: string;
   uniqueId: string;
   collateralTokenAddress: `0x{string}`;
   collateralTokenName: string;
