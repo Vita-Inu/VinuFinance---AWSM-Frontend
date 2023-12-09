@@ -14,23 +14,23 @@ import { Column } from './types';
 
 type Props<T> = {
   columns: Column<T>[];
-  data: (T & { uniqueId: string })[];
+  data: T[];
   onRowClick?: (val: T) => void;
 };
 
-export function Table<T extends { [key: string]: unknown }>({
+export function Table<T extends { key: string }>({
   data,
   columns,
   onRowClick,
 }: Props<T>) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
 
-  const onRowLeave = (item: { uniqueId: string }) => {
-    setHoveredItemId((prev) => (prev !== item.uniqueId ? prev : null));
+  const onRowLeave = (item: { key: string }) => {
+    setHoveredItemId((prev) => (prev !== item.key ? prev : null));
   };
 
-  const onRowEnter = (item: { uniqueId: string }) => {
-    setHoveredItemId((prev) => (prev !== item.uniqueId ? item.uniqueId : prev));
+  const onRowEnter = (item: { key: string }) => {
+    setHoveredItemId((prev) => (prev !== item.key ? item.key : prev));
   };
 
   return (
@@ -45,7 +45,7 @@ export function Table<T extends { [key: string]: unknown }>({
       <Body>
         {data.map((item) => (
           <Row
-            key={item.uniqueId}
+            key={item.key}
             $clickable={!!onRowClick}
             onClick={() => onRowClick?.(item)}
             onMouseEnter={() => onRowEnter(item)}
@@ -54,8 +54,7 @@ export function Table<T extends { [key: string]: unknown }>({
             {columns.map(({ render, key }) => (
               <BodyCell key={uuidV4()}>
                 {!!render &&
-                  render(item, { hovered: item.id === hoveredItemId })}
-                {!render && <Value>{item[key]?.toString()}</Value>}
+                  render(item, { hovered: item.key === hoveredItemId })}
               </BodyCell>
             ))}
           </Row>
