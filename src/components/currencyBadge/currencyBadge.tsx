@@ -10,11 +10,15 @@ type Props = {
 export function CurrencyBadge({address, name}: Props) {
     const matched = IconsMap.get(address);
 
-    if (!matched) return null;
-
     return (
         <Wrapper>
-            <Bubble src={matched} alt={'currency'} width={24} height={24}/>
+            {matched &&
+                <Bubble src={matched} alt={'currency'} width={24} height={24}/>
+            }
+            {!matched &&
+                // TODO: display like a question mark image or whatever
+                <></>
+            }
             <Text>{name}</Text>
         </Wrapper>
     );
