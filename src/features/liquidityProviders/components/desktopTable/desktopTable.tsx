@@ -50,10 +50,6 @@ export function DesktopTable({ data, onView }: Props) {
       )
     },
     {
-      label: 'Current LTV',
-      key: 'currentLtv',
-    },
-    {
       label: 'Max. Loan Per Collateral Unit',
       key: 'collateralUnit',
       render: (row) => (
