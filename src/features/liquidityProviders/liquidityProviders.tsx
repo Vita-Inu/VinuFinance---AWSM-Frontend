@@ -7,20 +7,32 @@ import {LiquidityPoolModal} from '@/features/modals';
 
 import {DesktopTable, MobileTable} from './components';
 import {getPools, Pool} from "@/utils/getPools";
-import {useAccount, useNetwork, usePublicClient} from "wagmi";
+import {useAccount, useContractWrite, useNetwork, usePublicClient, useWaitForTransaction, useWalletClient} from "wagmi";
 import {getErc20sFromPools} from "@/utils/getErc20sFromPools";
+import {multicall} from "@wagmi/core";
+import {CHAIN_INFO, IControllerAbi, IErc20Abi, IMulticall3Abi, IMultiClaimAbi, IPoolAbi} from "@/const";
+import {encodeFunctionData, formatUnits, getContract, multicall3Abi, parseAbiItem} from "viem";
 
 export class PoolWithInfo {
-    pool: Pool;
-    loanCurrency: {
+    key!: string;
+    pool!: Pool;
+    loanCurrency!: {
         decimals: number;
         symbol: string;
+        balance: number;
     };
-    collCurrency: {
+    collCurrency!: {
         decimals: number;
         symbol: string;
+        balance: number;
     };
-    currentMonthlyApr: number;
+    currentMonthlyApr!: number;
+    lpInfo!: any[];
+}
+
+export class Rewards {
+    collRewards!: number;
+    loanRewards!: number;
 }
 
 export function LiquidityProviders() {
@@ -34,51 +46,385 @@ export function LiquidityProviders() {
         {label: 'My pools', value: 'MY_POOLS'},
     ]);
 
+    const [isLoadingFirstTime, setIsLoadingFirstTime] = useState<boolean>(true)
+
     useEffect(() => {
         loadData().catch(err => {
             console.log('failed to load data:', err)
+            // TODO: maybe display the error to the user idk
+        }).finally(() => {
+            setIsLoadingFirstTime(false)
         })
     }, []);
+
+    const [needsContinuation, setNeedsContinuation] = useState<boolean>(false)
+    const [continuationType, setContinuationType] = useState<string>('')
+    const [continuationArgs, setContinuationArgs] = useState<any>()
 
     async function loadData() {
         if (!chain) return
         let pools = await getPools(client, chain.id)
-        let ercs = await getErc20sFromPools(client, chain.id, pools)
-        setData(pools.map(x => {
+        let lpInfos = await multicall({
+            contracts: pools.map(x => {
+                return {
+                    address: x.address,
+                    abi: IPoolAbi,
+                    functionName: 'getLpInfo',
+                    args: [address]
+                }
+            })
+        })
+        let ercs = await getErc20sFromPools(client, chain.id, pools, address!)
+        setData(pools.map((x, i) => {
             return {
+                key: x.address,
                 pool: x,
                 currentMonthlyApr: 1.17 / 100,
-                loanCurrency: ercs.get(x.info[0]),
-                collCurrency: ercs.get(x.info[1])
+                loanCurrency: ercs.get(x.info[0])!,
+                collCurrency: ercs.get(x.info[1])!,
+                lpInfo: lpInfos[i].result as any[]
             }
         }))
-        console.log(pools)
     }
 
+    //region CONTRACT WRITES
+    const {
+        data: dataApproveLoanToken,
+        isLoading: isLoadingApproveLoanToken,
+        isSuccess: isSuccessApproveLoanToken,
+        write: writeApproveLoanToken
+    } = useContractWrite({
+        abi: IErc20Abi,
+        functionName: 'approve',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent approval tx (sentTxResult.hash) successfully
+        }
+    })
+
+    const {
+        data: dataApproveMulticallClaim,
+        isLoading: isLoadingApproveMulticallClaim,
+        isSuccess: isSuccessApproveMulticallClaim,
+        write: writeApproveMulticallClaim
+    } = useContractWrite({
+        abi: IPoolAbi,
+        functionName: 'setApprovals',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent approval tx (sentTxResult.hash) successfully
+        }
+    })
+
+    const {
+        data: dataRepay,
+        isLoading: isLoadingRepay,
+        isSuccess: isSuccessRepay,
+        write: writeRepay
+    } = useContractWrite({
+        abi: IPoolAbi,
+        functionName: 'repay',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent loan repayment tx (sentTxResult.hash) successfully
+        }
+    })
+
+    const {
+        data: dataAdd,
+        isLoading: isLoadingAdd,
+        isSuccess: isSuccessAdd,
+        write: writeAdd
+    } = useContractWrite({
+        abi: IPoolAbi,
+        functionName: 'addLiquidity',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent add liquidity tx (sentTxResult.hash) successfully
+        }
+    })
+
+    const {
+        data: dataRemove,
+        isLoading: isLoadingRemove,
+        isSuccess: isSuccessRemove,
+        write: writeRemove
+    } = useContractWrite({
+        abi: IPoolAbi,
+        functionName: 'removeLiquidity',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent remove liquidity tx (sentTxResult.hash) successfully
+        }
+    })
+
+    const {
+        data: dataClaim,
+        isLoading: isLoadingClaim,
+        isSuccess: isSuccessClaim,
+        write: writeClaim
+    } = useContractWrite({
+        abi: IMultiClaimAbi,
+        functionName: 'claimMultiple',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            // TODO: show notification that user has sent claim rewards tx (sentTxResult.hash) successfully
+        }
+    })
+    //endregion
+
+    //region DEPOSIT/WITHDRAW/CLAIM LOGIC HANDLERS
+    async function deposit(amount: bigint) {
+        let pool = data.find(x => x.key == liquidityPoolId)!;
+        let loanToken = getContract({
+            // @ts-ignore
+            address: pool.pool.info[0],
+            abi: IErc20Abi,
+            publicClient: client
+        })
+        let allowance = await loanToken.read.allowance([address, pool.pool.address]) as bigint
+        if (allowance < amount) {
+            // approve
+            writeApproveLoanToken({
+                args: [
+                    pool.pool.address,
+                    amount
+                ],
+                // @ts-ignore
+                address: loanToken.address,
+            })
+            setNeedsContinuation(true)
+            setContinuationArgs({
+                args: [address!, amount, parseInt((Date.now() / 1000 + 600).toFixed(0)), 0],
+                address: pool.pool.address
+            })
+            setContinuationType('deposit')
+        } else {
+            // actually deposit
+            await deposit_inner({
+                args: [address!, amount, parseInt((Date.now() / 1000 + 600).toFixed(0)), 0],
+                address: pool.pool.address
+            })
+        }
+    }
+
+    async function claim(reinvest: boolean) {
+        let pool = data.find(x => x.key == liquidityPoolId)!;
+        let poolContract = getContract({address: pool.pool.address, abi: IPoolAbi, publicClient: client})
+        let isApproved = await poolContract.read.isApproved([address!, CHAIN_INFO[chain!.id].MULTICLAIM, 3])
+        let isApproved2 = await poolContract.read.isApproved([address!, CHAIN_INFO[chain!.id].MULTICLAIM, 1])
+
+        let args = {
+            args: [pool.pool.address, claimGroups, claimGroups.map(x => reinvest), parseInt((Date.now() / 1000 + 600).toFixed(0))],
+            address: CHAIN_INFO[chain!.id].MULTICLAIM,
+        }
+
+        if (!(isApproved && isApproved2)) {
+            // approve claiming to multicall
+            writeApproveMulticallClaim({
+                args: [
+                    CHAIN_INFO[chain!.id].MULTICLAIM,
+                    10
+                ],
+                // @ts-ignore
+                address: pool.pool.address,
+            })
+            setNeedsContinuation(true)
+            setContinuationArgs(args)
+            setContinuationType('claim')
+        } else {
+            claim_inner(args)
+        }
+    }
+
+    async function withdraw(lpShares: bigint) {
+        let pool = data.find(x => x.key == liquidityPoolId)!;
+        writeRemove({
+            // @ts-ignore
+            address: pool.key,
+            args: [
+                address!,
+                lpShares
+            ]
+        })
+    }
+
+    //endregion
+
+    //region CONTINUATION INNER FUNCTION
+    async function deposit_inner(args: any) {
+        writeAdd(args)
+    }
+
+    async function claim_inner(args: any) {
+        writeClaim(args)
+    }
+
+    //endregion
+
     const [data, setData] = useState<PoolWithInfo[]>([])
+    const [isLoadingRewards, setIsLoadingRewards] = useState<boolean>(false)
+    const [rewards, setRewards] = useState<Rewards>({collRewards: 0, loanRewards: 0})
+    const [claimGroups, setClaimGroups] = useState<bigint[][]>([])
 
     const {isTabletSize} = useWindowResize();
 
+    let [currentTx, setCurrentTx] = useState<`0x${string}`>()
+
+    const {data: currentTxData, isLoading: isLoadingCurrentTx} = useWaitForTransaction({
+        hash: currentTx,
+        onSuccess: data => {
+            let firstCall = loadData()
+            if (liquidityPoolId != undefined) {
+                firstCall.then(x => loadRewards(liquidityPoolId))
+            }
+            if (needsContinuation) {
+                if (continuationType == 'deposit') {
+                    deposit_inner(continuationArgs)
+                } else if (continuationType == 'claim') {
+                    claim_inner(continuationArgs)
+                }
+                setNeedsContinuation(false)
+            }
+        },
+    })
+
     const showPoolDetails = (poolId: string) => {
-        setLiquidityPoolId(poolId);
+        // load rewards info
+        setLiquidityPoolId(poolId)
+        // TODO: cancel this Promise on modal close
+        loadRewards(poolId)
     };
 
+    const loadRewards = async (poolId: string) => {
+        let pool = data.find(x => x.pool.address == poolId)!;
+        if (pool.lpInfo[3].length == 0) {
+            return
+        }
+
+        setIsLoadingRewards(true)
+
+        // get claims first
+        let claimLogs = await client.getLogs({
+            event: parseAbiItem('event Claim(address indexed lp, uint256[] loanIdxs, uint256 repayments, uint256 collateral)'),
+            fromBlock: 'earliest',
+            address: pool.pool.address,
+            args: {lp: address!}
+        })
+        let claimedIds = claimLogs.map(x => x.args.loanIdxs!).reduce((current, next) => {return current.concat(next)}, [])
+
+        // check if closed modal
+
+        let borrowLogs = await client.getLogs({
+            event: parseAbiItem('event Borrow(address indexed borrower,uint256 loanIdx,uint256 collateral,uint256 loanAmount,uint256 repaymentAmount,uint256 totalLpShares,uint256 indexed expiry,uint256 indexed referralCode)'),
+            fromBlock: 'earliest',
+            address: pool.pool.address
+        })
+        let repaymentLogs = await client.getLogs({
+            event: parseAbiItem('event Repay(address indexed borrower,uint256 loanIdx,uint256 repaymentAmountAfterFees)'),
+            fromBlock: 'earliest',
+            address: pool.pool.address
+        })
+
+        let rn = Date.now() / 1000
+
+        // we got all loans info, now we just select active ones
+        let repaidIds = repaymentLogs.map(x => x.args.loanIdx!)
+
+        let groups: bigint[][] = []
+        let borders = [pool.lpInfo[0]]
+        for (let i = pool.lpInfo[2]; i < pool.lpInfo[4].length; i++) {
+            groups.push([])
+            borders.push(pool.lpInfo[4][i])
+        }
+        if (groups.length == 0) {
+            borders.push(pool.pool.info[8])
+            groups.push([])
+        }
+
+        let totalClaimableLoan = BigInt(0)
+        let totalClaimableColl = BigInt(0)
+
+        for (let i in borrowLogs) {
+            let loan = borrowLogs[i].args
+            let wasRepaid = repaidIds.includes(loan.loanIdx!)
+            if (!wasRepaid && loan.expiry! > rn) {
+                continue // loan is still active
+            }
+            if (claimedIds.includes(loan.loanIdx!)) {
+                continue // already claimed
+            }
+            for (let bucket = 0; bucket < groups.length; bucket++) {
+                let min = borders[bucket]
+                let max = borders[bucket + 1]
+                if (loan.loanIdx! >= min && loan.loanIdx! < max) {
+                    // falls into this bucket
+                    groups[bucket].push(loan.loanIdx!)
+                    let sharesAtLoan = (pool.lpInfo[3] as bigint[])[bucket + (Number(pool.lpInfo[2]))] as bigint
+
+                    // now we know loanId, totalShares during the time of the loan and shares of the user at the time of the loan.
+                    // we can calculate user reward
+                    if (wasRepaid) {
+                        let globalReward = loan.repaymentAmount!
+                        let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
+                        totalClaimableLoan += userReward
+                    } else {
+                        // expired
+                        let globalReward = loan.collateral!
+                        let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
+                        totalClaimableColl += userReward
+                    }
+
+                    break
+                }
+            }
+        }
+
+        setRewards({
+            collRewards: parseFloat(formatUnits(totalClaimableColl, pool.collCurrency.decimals)),
+            loanRewards: parseFloat(formatUnits(totalClaimableLoan, pool.loanCurrency.decimals)),
+        })
+        setClaimGroups(groups)
+
+        setIsLoadingRewards(false)
+    }
+
     const hidePoolDetails = () => {
-        setLiquidityPoolId(null);
+        // TODO: cancel the loadRewards future if its not complete
+        setLiquidityPoolId(null)
     };
+
+    // disable buttons while waiting for pending txs...
+    const shouldDisableButtons = isLoadingCurrentTx || isLoadingAdd || isLoadingRepay || isLoadingRemove || isLoadingApproveMulticallClaim || isLoadingApproveLoanToken || isLoadingClaim;
 
     return (
         <ListContainer filters={filters} onFilter={onFilter}>
-            <>
-                {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
-                {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
-                {!!liquidityPoolId && (
-                    <LiquidityPoolModal
-                        onClose={hidePoolDetails}
-                        pool={data.find(x => x.pool.address == liquidityPoolId)!}
-                    />
-                )}
-            </>
+            {!isLoadingFirstTime &&
+                <>
+                    {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
+                    {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
+                    {!!liquidityPoolId && (
+                        <LiquidityPoolModal
+                            isLoadingRewards={isLoadingRewards}
+                            shouldDisableButtons={shouldDisableButtons}
+                            rewards={rewards}
+                            onClickDeposit={deposit}
+                            onClickWithdraw={withdraw}
+                            onClickClaim={claim}
+                            onClose={hidePoolDetails}
+                            pool={data.find(x => x.pool.address == liquidityPoolId)!}
+                        />
+                    )}
+                </>
+            }
+            {isLoadingFirstTime &&
+                <>
+                    {
+                        // TODO: display loading animation or whatever
+                        'Loading'
+                    }
+                </>
+            }
         </ListContainer>
     );
 }
