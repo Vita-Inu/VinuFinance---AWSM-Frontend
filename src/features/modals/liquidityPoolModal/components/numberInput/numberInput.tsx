@@ -12,16 +12,17 @@ type Props = {
   value: number;
   onChange: (value: string) => void;
   onMax: VoidFunction;
+  ticker: string;
 };
 
-export function NumberInput({ onChange, value, onMax }: Props) {
+export function NumberInput({ onChange, ticker, value, onMax }: Props) {
   return (
     <Wrapper>
-      <Label>Lorem Ipsum</Label>
+      <Label>Deposit ${ticker}</Label>
       <Boxes>
         <Box>
           <Input value={value} onChange={(evt) => onChange(evt.target.value)} />
-          <Appendix>$VC</Appendix>
+          <Appendix>${ticker}</Appendix>
         </Box>
         <Button onClick={onMax}>MAX</Button>
       </Boxes>
