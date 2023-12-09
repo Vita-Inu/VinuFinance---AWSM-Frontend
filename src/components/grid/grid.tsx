@@ -8,7 +8,7 @@ type Props<T> = {
   cells: DataCell<T>[];
 };
 
-export function Grid<T extends { [key: string]: unknown }>({
+export function Grid<T>({
   data,
   cells,
 }: Props<T>) {
