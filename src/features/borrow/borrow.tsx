@@ -29,6 +29,7 @@ import {pullAllWith} from "lodash-es";
 import {getPools, Pool} from "@/utils/getPools";
 import {getErc20sFromPools, Tokens} from "@/utils/getErc20sFromPools";
 
+//region STRUCTS
 export type PairType = {
     collAddress: `0x{string}`;
     collName: string;
@@ -58,6 +59,7 @@ export type PoolAndSimulationResult = {
         symbol: string
     };
 }
+//endregion
 
 const ZERO = BigInt(0)
 
@@ -119,9 +121,8 @@ export function Borrow() {
 
             let pools = await getPools(client, chain.id)
             setPools(pools)
-            console.log(pools)
 
-            let tokens = await getErc20sFromPools(client, chain.id, pools)
+            let tokens = await getErc20sFromPools(client, chain.id, pools, address!)
             setTokens(tokens)
 
             // get unique pairs
@@ -250,6 +251,7 @@ export function Borrow() {
         setSelectedLoan(pool)
     }
 
+    //region CONTRACT WRITES
     const {
         data: dataBorrow,
         isLoading: isLoadingBorrow,
@@ -275,6 +277,7 @@ export function Borrow() {
             setCurrentTx(sentTxResult.hash)
         }
     })
+    //endregion
 
     let [currentTx, setCurrentTx] = useState<`0x${string}`>()
     const {data: dataTxConfirmation, isLoading: isLoadingTxConfirmation} = useWaitForTransaction({hash: currentTx})
@@ -314,8 +317,6 @@ export function Borrow() {
             })
         }
     }
-
-    console.log('render')
 
     return (
         <Container>
