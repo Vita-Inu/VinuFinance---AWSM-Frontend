@@ -16,7 +16,6 @@ export function BorrowPairs({pairs, onIdSelect, selectedId}: Props) {
     return (
         <Pairs>
             {pairs.map((pair, index) => {
-                console.log(pair)
                 return <Pair
                     key={index}
                     names={[pair.loanName, pair.collName]}
