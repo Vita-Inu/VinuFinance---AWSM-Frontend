@@ -9,31 +9,6 @@ import {PoolAndSimulationResult} from "@/features/borrow";
 import {formatUnits} from "viem";
 const humanizeDuration = require("humanize-duration");
 
-const DATA: Loan[] = [
-    {
-        id: '1',
-        active: true,
-        borrowingPeriod: '90 days',
-        loanAmount: {
-            value: '0 rETH',
-            explain: 'Min. Loan: 0.1 rETH',
-        },
-        repaymentAmount: {
-            value: '0 rETH',
-            explain: 'Int. Cost: 0 rETH',
-        },
-        termRate: {
-            value: '0%',
-            explain: 'APR: 0%',
-        },
-        ltv: '0%',
-        maxLoan: {
-            value: '0.011354088 rETH',
-            explain: 'Max. LTV: 81.8%',
-        },
-    },
-];
-
 type Props = {
     rawData: PoolAndSimulationResult[];
     onSelect: Function;
@@ -44,6 +19,7 @@ export function BorrowLoan({rawData, onSelect: onSelectHigher}: Props) {
     useEffect(() => {
         let newLoans = rawData.map((x, idx) => {
             return {
+                key: idx.toString(),
                 id: idx.toString(),
                 active: idx == 0,
                 borrowingPeriod: humanizeDuration(1000 * parseInt(x.pool.info[4].toString())),
