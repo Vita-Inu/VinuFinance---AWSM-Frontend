@@ -1,4 +1,5 @@
 import {useWindowResize} from '@/hooks';
+import {Loader} from '@/components/loader';
 import {ListContainer, useListFilter} from '@/features/listContainer';
 
 import {DesktopTable, MobileTable} from './components';
@@ -19,16 +20,22 @@ export function Loans() {
     const {chain} = useNetwork()
     let {data} = useBalance({address: address})
 
+    const [isFetchingLoans, setIsFetchingLoans] = useState(true);
     const [openLoans, setOpenLoans] = useState<Loan[]>([])
     const [pastLoans, setPastLoans] = useState<Loan[]>([])
 
     const [allowances, setAllowances] = useState<Record<string, bigint>>({})
 
     useEffect(() => {
+        setIsFetchingLoans(true)
         // fetch loans by address
-        loadInfo().catch(err => {
-            console.log('Failed to fetch loans:', err)
-        })
+        loadInfo()
+            .catch((err) => {
+                console.log('Failed to fetch loans:', err);
+            })
+            .finally(() => {
+                setIsFetchingLoans(false);
+            });
     }, [address]);
 
     async function loadInfo() {
@@ -260,6 +267,10 @@ export function Loans() {
             // @ts-ignore
             address: pool
         })
+    }
+
+    if(isFetchingLoans){
+        return <Loader/>
     }
 
     return (
