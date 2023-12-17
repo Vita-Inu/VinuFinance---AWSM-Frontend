@@ -23,7 +23,7 @@ const TypeColorMap = new Map<NOTIFICATION_TYPE, Colors>([
   [NOTIFICATION_TYPE.ERROR, {icon: '#F04248', blurMain: '#F04248', blurSecond: '#F04248'}]
 ])
 
-const NOTIFICATION_EXPIRATION = 2000;
+const NOTIFICATION_EXPIRATION = 5000;
 
 export function Notification({title, description, type, id, onExpire}: Props) {
   const [isMounted, setIsMounted] = useState(false)

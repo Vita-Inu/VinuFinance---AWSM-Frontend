@@ -1,34 +1,41 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
-import {useWindowResize} from '@/hooks';
-import {ListContainer} from '@/features/listContainer';
-import {useListFilter} from '@/features/listContainer/hooks';
-import {LiquidityPoolModal} from '@/features/modals';
+import { useWindowResize } from '@/hooks';
+import { ListContainer } from '@/features/listContainer';
+import { useListFilter } from '@/features/listContainer/hooks';
+import { LiquidityPoolModal } from '@/features/modals';
+import { NOTIFICATION_TYPE, useNotifications } from '@/features/notifications';
 
-import {DesktopTable, MobileTable} from './components';
-import {getPools, Pool} from "@/utils/getPools";
-import {useAccount, useContractWrite, useNetwork, usePublicClient, useWaitForTransaction, useWalletClient} from "wagmi";
-import {getErc20sFromPools} from "@/utils/getErc20sFromPools";
-import {multicall} from "@wagmi/core";
-import {CHAIN_INFO, IControllerAbi, IErc20Abi, IMulticall3Abi, IMultiClaimAbi, IPoolAbi} from "@/const";
-import {encodeFunctionData, formatUnits, getContract, multicall3Abi, parseAbiItem} from "viem";
+import { DesktopTable, MobileTable } from './components';
+import { getPools, Pool } from '@/utils/getPools';
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  usePublicClient,
+  useWaitForTransaction,
+} from 'wagmi';
+import { getErc20sFromPools } from '@/utils/getErc20sFromPools';
+import { multicall } from '@wagmi/core';
+import { CHAIN_INFO, IErc20Abi, IMultiClaimAbi, IPoolAbi } from '@/const';
+import { formatUnits, getContract, parseAbiItem } from 'viem';
 import { Loader } from '@/components/loader';
 
 export class PoolWithInfo {
-    key!: string;
-    pool!: Pool;
-    loanCurrency!: {
-        decimals: number;
-        symbol: string;
-        balance: number;
-    };
-    collCurrency!: {
-        decimals: number;
-        symbol: string;
-        balance: number;
-    };
-    currentMonthlyApr!: number;
-    lpInfo!: any[];
+  key!: string;
+  pool!: Pool;
+  loanCurrency!: {
+    decimals: number;
+    symbol: string;
+    balance: number;
+  };
+  collCurrency!: {
+    decimals: number;
+    symbol: string;
+    balance: number;
+  };
+  currentMonthlyApr!: number;
+  lpInfo!: any[];
 }
 
 export class Rewards {
@@ -37,6 +44,8 @@ export class Rewards {
 }
 
 export function LiquidityProviders() {
+    const {sendNotification} = useNotifications()
+
     const [liquidityPoolId, setLiquidityPoolId] = useState<string | null>(null);
     const {address} = useAccount()
     let client = usePublicClient()
@@ -52,7 +61,7 @@ export function LiquidityProviders() {
     useEffect(() => {
         loadData().catch(err => {
             console.log('failed to load data:', err)
-            // TODO: maybe display the error to the user idk
+            sendNotification(NOTIFICATION_TYPE.ERROR, 'Failed to load data')
         }).finally(() => {
             setIsLoadingFirstTime(false)
         })
@@ -99,7 +108,7 @@ export function LiquidityProviders() {
         functionName: 'approve',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent approval tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Approval transaction sent successfully')
         }
     })
 
@@ -113,7 +122,7 @@ export function LiquidityProviders() {
         functionName: 'setApprovals',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent approval tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Approval transaction sent successfully')
         }
     })
 
@@ -127,7 +136,7 @@ export function LiquidityProviders() {
         functionName: 'repay',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent loan repayment tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Repay transaction sent successfully')
         }
     })
 
@@ -141,7 +150,7 @@ export function LiquidityProviders() {
         functionName: 'addLiquidity',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent add liquidity tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Add liquidity transaction sent successfully')
         }
     })
 
@@ -155,7 +164,7 @@ export function LiquidityProviders() {
         functionName: 'removeLiquidity',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent remove liquidity tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Remove liquidity transaction sent successfully')
         }
     })
 
@@ -169,7 +178,7 @@ export function LiquidityProviders() {
         functionName: 'claimMultiple',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
-            // TODO: show notification that user has sent claim rewards tx (sentTxResult.hash) successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Claim rewards transaction sent successfully')
         }
     })
     //endregion

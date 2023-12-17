@@ -1,6 +1,7 @@
 import {useWindowResize} from '@/hooks';
 import {Loader} from '@/components/loader';
 import {ListContainer, useListFilter} from '@/features/listContainer';
+import {useNotifications, NOTIFICATION_TYPE} from '@/features/notifications';
 
 import {DesktopTable, MobileTable} from './components';
 import {useAccount, useBalance, useContractWrite, useNetwork, usePublicClient, useWaitForTransaction} from "wagmi";
@@ -15,6 +16,8 @@ import {multicall} from "@wagmi/core";
 import {IErc20Abi, IPoolAbi} from "@/const";
 
 export function Loans() {
+    const {sendNotification} = useNotifications()
+
     const {address} = useAccount()
     let client = usePublicClient()
     const {chain} = useNetwork()
@@ -213,7 +216,7 @@ export function Loans() {
         functionName: 'approve',
         onSuccess: sentTxResult => {
             setCurrentApproveTx(sentTxResult.hash)
-            // todo: show notification that user has approved successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Approval transaction sent successfully')
         }
     })
 
@@ -228,7 +231,7 @@ export function Loans() {
         functionName: 'repay',
         onSuccess: sentTxResult => {
             setCurrentRepayTx(sentTxResult.hash)
-            // todo: show notification that user has repayed a loan
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Repay transaction sent successfully')
         }
     })
     //endregion

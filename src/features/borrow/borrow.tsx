@@ -1,34 +1,30 @@
-import {ChangeEvent, useEffect, useRef, useState} from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import {Container} from '@/components/container';
-import {Loader} from '@/components/loader';
-import {BorrowConfirm} from '@/features/borrowConfirm';
-import {BorrowSettings} from '@/features/borrowSettings';
+import { Container } from '@/components/container';
+import { Loader } from '@/components/loader';
+import { BorrowConfirm } from '@/features/borrowConfirm';
+import { BorrowSettings } from '@/features/borrowSettings';
 
-import {BorrowPairs} from '../borrowPairs';
-import {BorrowPledge} from '../borrowPledge';
-import {BorrowLoan} from '../borrowLoan';
+import { BorrowPairs } from '../borrowPairs';
+import { BorrowPledge } from '../borrowPledge';
+import { BorrowLoan } from '../borrowLoan';
 
-import {Step} from './components';
-import {Grid, SetupCol, ConfirmCol} from './styled';
+import { Step } from './components';
+import { ConfirmCol, Grid, SetupCol } from './styled';
 import {
     useAccount,
     useBlockNumber,
-    useContractRead,
-    useContractReads,
     useContractWrite,
     useNetwork,
-    usePublicClient, useWaitForTransaction
-} from "wagmi";
-import {CHAIN_INFO, IControllerAbi, IErc20Abi, IPoolAbi} from "@/const";
-import {sha256} from "@noble/hashes/sha256";
-import {etherUnits, formatEther, getContract, parseAbiItem, parseEther, parseUnits} from "viem";
-import {useDebounce} from "@/hooks/useDebounce";
-import {watchBlockNumber, watchReadContracts} from "@wagmi/core";
-import {watchBlocks} from "viem/actions";
-import {pullAllWith} from "lodash-es";
-import {getPools, Pool} from "@/utils/getPools";
-import {getErc20sFromPools, Tokens} from "@/utils/getErc20sFromPools";
+    usePublicClient,
+    useWaitForTransaction,
+} from 'wagmi';
+import { IErc20Abi, IPoolAbi } from '@/const';
+import { getContract, parseUnits } from 'viem';
+import { useDebounce } from '@/hooks/useDebounce';
+import { getPools, Pool } from '@/utils/getPools';
+import { getErc20sFromPools, Tokens } from '@/utils/getErc20sFromPools';
+import { NOTIFICATION_TYPE, useNotifications } from '@/features/notifications';
 
 //region STRUCTS
 export type PairType = {
@@ -73,6 +69,8 @@ export function Borrow() {
     //
     // On selected pair change or value change change poolsToSimulate
     // Every block fetch info from rpc for poolsToSimulate and balance for currentCollateralToken
+
+    const {sendNotification} = useNotifications()
 
     const {address} = useAccount()
     const [valueUndebounced, setValue] = useState<string>('0');
@@ -263,6 +261,7 @@ export function Borrow() {
         functionName: 'borrow',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Borrow transaction sent successfully')
         }
     })
 
@@ -276,6 +275,7 @@ export function Borrow() {
         functionName: 'approve',
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Approval transaction sent successfully')
         }
     })
     //endregion
