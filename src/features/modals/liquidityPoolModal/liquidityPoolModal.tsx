@@ -93,26 +93,27 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         <Value>Loading..</Value>
                     }
                 </Cell>
+                <Cell/>
                 <Cell>
                     <Button
                         fullWidth
                         preset={BUTTON_PRESET.PINK}
-                        disabled={isLoadingRewards || (rewards.collRewards + rewards.loanRewards) === 0 || shouldDisableButtons}
+                        loading={isLoadingRewards}
+                        disabled={(rewards.collRewards + rewards.loanRewards) === 0 || shouldDisableButtons}
                         onClick={() => onClickClaim(false)}
                     >
-                        {isLoadingRewards && 'Loading..'}
-                        {!isLoadingRewards && 'Claim'}
+                        Claim
                     </Button>
                 </Cell>
                 <Cell>
                     <Button
                         fullWidth
                         preset={BUTTON_PRESET.PINK}
-                        disabled={isLoadingRewards || (rewards.collRewards + rewards.loanRewards) === 0 || shouldDisableButtons}
+                        loading={isLoadingRewards}
+                        disabled={(rewards.collRewards + rewards.loanRewards) === 0 || shouldDisableButtons}
                         onClick={() => onClickClaim(true)}
                     >
-                        {isLoadingRewards && 'Loading..'}
-                        {!isLoadingRewards && 'Claim and reinvest'}
+                        Claim and reinvest
                     </Button>
                 </Cell>
                 <Cell>
