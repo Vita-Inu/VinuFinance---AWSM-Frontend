@@ -1,6 +1,7 @@
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 
 import {Container} from '@/components/container';
+import {Loader} from '@/components/loader';
 import {BorrowConfirm} from '@/features/borrowConfirm';
 import {BorrowSettings} from '@/features/borrowSettings';
 
@@ -366,10 +367,7 @@ export function Borrow() {
                         </Step>}
                 </ConfirmCol>
             </Grid>}
-            {pairs.length == 0 &&
-                <div>
-                    Loading...
-                </div>}
+            {pairs.length == 0 && <Loader/>}
         </Container>
     );
 }
