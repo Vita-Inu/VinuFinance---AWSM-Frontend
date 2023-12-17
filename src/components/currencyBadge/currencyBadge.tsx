@@ -1,25 +1,13 @@
-import {IconsMap} from '@/utils/currency';
-
-import {Wrapper, Text, Bubble} from './styled';
+import {Wrapper, Text} from './styled';
 
 type Props = {
-    address: string;
-    name: string;
+    symbol: string;
 };
 
-export function CurrencyBadge({address, name}: Props) {
-    const matched = IconsMap.get(address);
-
+export function CurrencyBadge({symbol}: Props) {
     return (
         <Wrapper>
-            {matched &&
-                <Bubble src={matched} alt={'currency'} width={24} height={24}/>
-            }
-            {!matched &&
-                // TODO: display like a question mark image or whatever
-                <></>
-            }
-            <Text>{name}</Text>
+            <Text>{symbol}</Text>
         </Wrapper>
     );
 }

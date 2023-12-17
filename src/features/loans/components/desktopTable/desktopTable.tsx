@@ -15,11 +15,6 @@ type Props = {
 export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
     const COLUMNS_OPEN: Column<Loan>[] = [
         {
-            label: '',
-            key: 'pair',
-            render: (row) => <Value>TODO: render pair bubbles</Value>,
-        },
-        {
             label: 'Borrowed Amount',
             key: 'borrowed',
             render: (row) => (
@@ -62,9 +57,8 @@ export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
         {
             label: '',
             key: 'actions',
-            // todo: if isLoading is true, make the button have a spinner/loading animation inside + disabled
             render: (row) => (
-                <Button disabled={isLoading} onClick={() => {
+                <Button loading={isLoading} onClick={() => {
                     repay(row.id, row.pool)
                 }} preset={BUTTON_PRESET.PINK}>Repay</Button>
             ),
@@ -72,11 +66,6 @@ export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
     ]
 
     const COLUMNS_PAST: Column<Loan>[] = [
-        {
-            label: '',
-            key: 'pair',
-            render: (row) => <Value>TODO: render pair bubbles</Value>,
-        },
         {
             label: 'Borrowed Amount',
             key: 'borrowed',

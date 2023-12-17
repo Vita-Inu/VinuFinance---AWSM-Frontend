@@ -37,6 +37,10 @@ export const Box = styled.div`
 `;
 
 export const Slider = styled(RcSlider)`
+  &.rc-slider-disabled {
+    background-color: transparent;
+  }
+  
   .rc-slider-rail {
     height: 0.6rem;
     background-color: rgb(255 255 255 / 15%);

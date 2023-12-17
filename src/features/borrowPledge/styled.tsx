@@ -3,27 +3,17 @@ import { styled } from 'styled-components';
 import { aeonik } from '@/fonts';
 
 export const Wrapper = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
   padding: 2.4rem;
   border-radius: 1.2rem;
   background: rgba(223, 206, 253, 0.15);
   max-width: 73rem;
 
   @media (max-width: 767px) {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
     padding: 1.8rem;
   }
 `;
 
-export const Box = styled.div`
-  @media (max-width: 767px) {
-    width: 100%;
-  }
-`;
+export const Box = styled.div``;
 
 export const Amount = styled.div`
   display: flex;
@@ -93,11 +83,8 @@ export const Helpers = styled.div`
   display: flex;
   align-content: center;
   gap: 0.8rem;
-
-  @media (max-width: 767px) {
-    margin-top: 0.8rem;
-    justify-content: flex-end;
-  }
+  margin-top: 0.8rem;
+  justify-content: flex-end;
 `;
 
 export const Balance = styled.div`

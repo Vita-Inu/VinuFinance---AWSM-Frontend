@@ -1,5 +1,7 @@
 import {useWindowResize} from '@/hooks';
+import {Loader} from '@/components/loader';
 import {ListContainer, useListFilter} from '@/features/listContainer';
+import {useNotifications, NOTIFICATION_TYPE} from '@/features/notifications';
 
 import {DesktopTable, MobileTable} from './components';
 import {useAccount, useBalance, useContractWrite, useNetwork, usePublicClient, useWaitForTransaction} from "wagmi";
@@ -14,21 +16,29 @@ import {multicall} from "@wagmi/core";
 import {IErc20Abi, IPoolAbi} from "@/const";
 
 export function Loans() {
+    const {sendNotification} = useNotifications()
+
     const {address} = useAccount()
     let client = usePublicClient()
     const {chain} = useNetwork()
     let {data} = useBalance({address: address})
 
+    const [isFetchingLoans, setIsFetchingLoans] = useState(true);
     const [openLoans, setOpenLoans] = useState<Loan[]>([])
     const [pastLoans, setPastLoans] = useState<Loan[]>([])
 
     const [allowances, setAllowances] = useState<Record<string, bigint>>({})
 
     useEffect(() => {
+        setIsFetchingLoans(true)
         // fetch loans by address
-        loadInfo().catch(err => {
-            console.log('Failed to fetch loans:', err)
-        })
+        loadInfo()
+            .catch((err) => {
+                console.log('Failed to fetch loans:', err);
+            })
+            .finally(() => {
+                setIsFetchingLoans(false);
+            });
     }, [address]);
 
     async function loadInfo() {
@@ -206,7 +216,7 @@ export function Loans() {
         functionName: 'approve',
         onSuccess: sentTxResult => {
             setCurrentApproveTx(sentTxResult.hash)
-            // todo: show notification that user has approved successfully
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Approval transaction sent successfully')
         }
     })
 
@@ -221,7 +231,7 @@ export function Loans() {
         functionName: 'repay',
         onSuccess: sentTxResult => {
             setCurrentRepayTx(sentTxResult.hash)
-            // todo: show notification that user has repayed a loan
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Repay transaction sent successfully')
         }
     })
     //endregion
@@ -260,6 +270,10 @@ export function Loans() {
             // @ts-ignore
             address: pool
         })
+    }
+
+    if(isFetchingLoans){
+        return <Loader/>
     }
 
     return (

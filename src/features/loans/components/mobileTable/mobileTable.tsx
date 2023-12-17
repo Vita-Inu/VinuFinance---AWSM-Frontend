@@ -22,7 +22,6 @@ type Props = {
 
 export function MobileTable({data, repay, isLoading, currentFilter}: Props) {
     const CELLS_OPEN: DataCell<Loan>[] = [
-        // todo optionally: render pair bubbles too
         {
             render: (row) => (
                 <>
@@ -63,7 +62,7 @@ export function MobileTable({data, repay, isLoading, currentFilter}: Props) {
             fullWidth: true,
             render: (row) => (
                 <>
-                    <Button disabled={isLoading} onClick={() => {
+                    <Button loading={isLoading} onClick={() => {
                         repay(row.id, row.pool)
                     }} preset={BUTTON_PRESET.PINK}>Repay</Button>
                 </>
@@ -72,7 +71,6 @@ export function MobileTable({data, repay, isLoading, currentFilter}: Props) {
     ];
 
     const CELLS_PAST: DataCell<Loan>[] = [
-        // todo optionally: render pair bubbles too
         {
             render: (row) => (
                 <>
