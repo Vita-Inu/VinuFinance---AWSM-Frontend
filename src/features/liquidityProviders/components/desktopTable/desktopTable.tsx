@@ -13,12 +13,12 @@ export function DesktopTable({ data, onView }: Props) {
     {
       label: 'Loan Currency',
       key: 'loanCurrency',
-      render: (row) => <CurrencyBadge address={row.pool.info[0]} name={row.loanCurrency.symbol}/>,
+      render: (row) => <CurrencyBadge symbol={row.loanCurrency.symbol}/>,
     },
     {
       label: 'Collateral Currency',
       key: 'collateralCurrency',
-      render: (row) => <CurrencyBadge address={row.pool.info[1]} name={row.collCurrency.symbol} />,
+      render: (row) => <CurrencyBadge symbol={row.collCurrency.symbol} />,
     },
     {
       label: 'Total Liquidity',

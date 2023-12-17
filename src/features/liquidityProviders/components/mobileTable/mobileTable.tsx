@@ -24,7 +24,7 @@ export function MobileTable({data, onView}: Props) {
             render: (row) => (
                 <>
                     <Label>Loan Currency</Label>
-                    <CurrencyBadge address={row.pool.info[0]} name={row.loanCurrency.symbol}/>,
+                    <CurrencyBadge symbol={row.loanCurrency.symbol}/>,
                 </>
             ),
         },
@@ -32,7 +32,7 @@ export function MobileTable({data, onView}: Props) {
             render: (row) => (
                 <>
                     <Label>Collateral Currency</Label>
-                    <CurrencyBadge address={row.pool.info[1]} name={row.collCurrency.symbol} />,
+                    <CurrencyBadge symbol={row.collCurrency.symbol} />,
                 </>
             ),
         },

@@ -22,7 +22,6 @@ type Props = {
 
 export function MobileTable({data, repay, isLoading, currentFilter}: Props) {
     const CELLS_OPEN: DataCell<Loan>[] = [
-        // todo optionally: render pair bubbles too
         {
             render: (row) => (
                 <>
@@ -72,7 +71,6 @@ export function MobileTable({data, repay, isLoading, currentFilter}: Props) {
     ];
 
     const CELLS_PAST: DataCell<Loan>[] = [
-        // todo optionally: render pair bubbles too
         {
             render: (row) => (
                 <>

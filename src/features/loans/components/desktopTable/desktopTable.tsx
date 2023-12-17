@@ -15,11 +15,6 @@ type Props = {
 export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
     const COLUMNS_OPEN: Column<Loan>[] = [
         {
-            label: '',
-            key: 'pair',
-            render: (row) => <Value>TODO: render pair bubbles</Value>,
-        },
-        {
             label: 'Borrowed Amount',
             key: 'borrowed',
             render: (row) => (
@@ -71,11 +66,6 @@ export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
     ]
 
     const COLUMNS_PAST: Column<Loan>[] = [
-        {
-            label: '',
-            key: 'pair',
-            render: (row) => <Value>TODO: render pair bubbles</Value>,
-        },
         {
             label: 'Borrowed Amount',
             key: 'borrowed',
