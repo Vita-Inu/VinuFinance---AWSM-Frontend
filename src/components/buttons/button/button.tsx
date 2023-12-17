@@ -1,4 +1,4 @@
-import { css, styled } from 'styled-components';
+import { css, keyframes, styled } from 'styled-components';
 import { ReactNode } from 'react';
 
 import { DEFAULT_COLOR_PRESET, presetColorMap } from './utils';
@@ -10,14 +10,26 @@ type Props = {
   size?: BUTTON_SIZE;
   onClick?: VoidFunction;
   disabled?: boolean;
+  loading?: boolean;
   fullWidth?: boolean;
 };
+
+const rotate = keyframes`
+  from {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+
+  to {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg) 
+  }
+`;
 
 const StyledButton = styled.div<{
   $text: string;
   $background: string;
   $backgroundHovered: string;
   $disabled?: boolean;
+  $loading?: boolean;
   $fullWidth?: boolean;
   size?: BUTTON_SIZE;
 }>`
@@ -31,9 +43,24 @@ const StyledButton = styled.div<{
   background: ${(props) => props.$background};
   color: ${(props) => props.$text};
   transition: 0.2s ease-in-out;
+  position: relative;
 
   @media (max-width: 767px) {
     font-size: 1.4rem;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2rem;
+    height: 2rem;
+    border-top: 0.1rem solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    animation: ${rotate} 1s linear infinite;
+    transition: .2s ease-in-out;
+    opacity: 0;
   }
 
   &:hover {
@@ -56,13 +83,25 @@ const StyledButton = styled.div<{
     `}
 
   ${(props) =>
+    props.$loading &&
+    css`
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: transparent;
+      
+      &:before {
+        opacity: 1;
+      }
+    `}
+
+  ${(props) =>
     props.$fullWidth &&
     css`
       width: 100%;
     `}
 `;
 
-export const Button = ({ preset, disabled, fullWidth, ...props }: Props) => {
+export const Button = ({ preset, disabled, fullWidth, loading, ...props }: Props) => {
   const presetColors =
     (preset && presetColorMap.get(preset)) ?? DEFAULT_COLOR_PRESET;
 
@@ -70,6 +109,7 @@ export const Button = ({ preset, disabled, fullWidth, ...props }: Props) => {
     <StyledButton
       {...props}
       $disabled={disabled}
+      $loading={loading}
       $fullWidth={fullWidth}
       $text={presetColors.text}
       $background={presetColors.background}

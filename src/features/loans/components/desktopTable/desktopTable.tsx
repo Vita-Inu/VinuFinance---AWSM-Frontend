@@ -62,9 +62,8 @@ export function DesktopTable({data, repay, isLoading, currentFilter}: Props) {
         {
             label: '',
             key: 'actions',
-            // todo: if isLoading is true, make the button have a spinner/loading animation inside + disabled
             render: (row) => (
-                <Button disabled={isLoading} onClick={() => {
+                <Button loading={isLoading} onClick={() => {
                     repay(row.id, row.pool)
                 }} preset={BUTTON_PRESET.PINK}>Repay</Button>
             ),
