@@ -12,6 +12,7 @@ import {getErc20sFromPools} from "@/utils/getErc20sFromPools";
 import {multicall} from "@wagmi/core";
 import {CHAIN_INFO, IControllerAbi, IErc20Abi, IMulticall3Abi, IMultiClaimAbi, IPoolAbi} from "@/const";
 import {encodeFunctionData, formatUnits, getContract, multicall3Abi, parseAbiItem} from "viem";
+import { Loader } from '@/components/loader';
 
 export class PoolWithInfo {
     key!: string;
@@ -397,34 +398,28 @@ export function LiquidityProviders() {
     // disable buttons while waiting for pending txs...
     const shouldDisableButtons = isLoadingCurrentTx || isLoadingAdd || isLoadingRepay || isLoadingRemove || isLoadingApproveMulticallClaim || isLoadingApproveLoanToken || isLoadingClaim;
 
+    if(isLoadingFirstTime) {
+        return <Loader/>
+    }
+
     return (
         <ListContainer filters={filters} onFilter={onFilter}>
-            {!isLoadingFirstTime &&
-                <>
-                    {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
-                    {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
-                    {!!liquidityPoolId && (
-                        <LiquidityPoolModal
-                            isLoadingRewards={isLoadingRewards}
-                            shouldDisableButtons={shouldDisableButtons}
-                            rewards={rewards}
-                            onClickDeposit={deposit}
-                            onClickWithdraw={withdraw}
-                            onClickClaim={claim}
-                            onClose={hidePoolDetails}
-                            pool={data.find(x => x.pool.address == liquidityPoolId)!}
-                        />
-                    )}
-                </>
-            }
-            {isLoadingFirstTime &&
-                <>
-                    {
-                        // TODO: display loading animation or whatever
-                        'Loading'
-                    }
-                </>
-            }
+            <>
+                {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
+                {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
+                {!!liquidityPoolId && (
+                  <LiquidityPoolModal
+                    isLoadingRewards={isLoadingRewards}
+                    shouldDisableButtons={shouldDisableButtons}
+                    rewards={rewards}
+                    onClickDeposit={deposit}
+                    onClickWithdraw={withdraw}
+                    onClickClaim={claim}
+                    onClose={hidePoolDetails}
+                    pool={data.find(x => x.pool.address == liquidityPoolId)!}
+                  />
+                )}
+            </>
         </ListContainer>
     );
 }
