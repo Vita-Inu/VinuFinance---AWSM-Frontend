@@ -8,6 +8,7 @@ import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import {formatUnits, parseUnits} from "viem";
 import {Explain} from "@/components/table";
 import {res} from "pino-std-serializers";
+import * as DateFns from 'date-fns'
 
 type Props = {
     pool: PoolWithInfo;
@@ -61,6 +62,9 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
         }
         return result
     }
+
+    const lockSeconds = pool.lpInfo[1] - (Date.now() / 1000)
+    const lockText = lockSeconds > 0 ? DateFns.formatDistance(0, lockSeconds, { includeSeconds: true }) : null
 
     return (
         <ModalBase title={'Pool details'} onClose={onClose}>
@@ -143,12 +147,10 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         fullWidth
                         preset={BUTTON_PRESET.PURPLE}
                         onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}
-                        disabled={providedAmount == 0 || shouldDisableButtons}
+                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}
                     >
-                        {
-                            // TODO: if pool.lpInfo[1] > (Date.now() / 1000) disable the button and tell the user they can withdraw in (pool.lpInfo[1] - (Date.now() / 1000)) seconds
-                        }
-                        Withdraw
+                        {lockText && `Unlocks in ${lockText}`}
+                        {!lockText && `Withdraw`}
                     </Button>
                 </Cell>
             </Grid>
