@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi';
 
 import { URLS } from '@/utils';
 import { UserActions } from '@/features/dropdowns';
+import { WrapButton } from '@/features/wrapButton';
 
 import { Item, Items, Wrapper, Bottom, Content } from './styled';
 
@@ -24,7 +25,14 @@ export function Menu() {
           ))}
         </Items>
       </Content>
-      <Bottom>{address && <UserActions address={address} />}</Bottom>
+      <Bottom>
+        {address && (
+          <>
+            <WrapButton/>
+            <UserActions address={address} />
+          </>
+        )}
+      </Bottom>
     </Wrapper>
   );
 }
