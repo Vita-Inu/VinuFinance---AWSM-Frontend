@@ -1,10 +1,8 @@
+import { CurrencyInput } from '@/components/inputs';
+
 import {
-  Boxes,
   Wrapper,
   Label,
-  Input,
-  Button,
-  Appendix,
   Box,
 } from './numberInput.styled';
 
@@ -19,13 +17,9 @@ export function NumberInput({ onChange, ticker, value, onMax }: Props) {
   return (
     <Wrapper>
       <Label>Deposit ${ticker}</Label>
-      <Boxes>
-        <Box>
-          <Input value={value} onChange={(evt) => onChange(evt.target.value)} />
-          <Appendix>${ticker}</Appendix>
-        </Box>
-        <Button onClick={onMax}>MAX</Button>
-      </Boxes>
+      <Box>
+        <CurrencyInput value={value} onChange={onChange} onMax={onMax} ticker={ticker}/>
+      </Box>
     </Wrapper>
   );
 }
