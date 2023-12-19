@@ -92,6 +92,7 @@ export function Loans() {
                 },
                 repayBefore: {
                     value: `${dueDate.getHours()}:${dueDate.getMinutes()} ${dueDate.toDateString()}`,
+                    // todo: make this like "in 2 days" or something
                     explain: 'tomorrow2'
                 },
                 repaymentAmount: {
