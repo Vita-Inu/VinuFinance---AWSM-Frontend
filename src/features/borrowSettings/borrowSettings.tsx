@@ -46,8 +46,8 @@ export function BorrowSettings() {
           </Close>
         </Top>
         <Inputs>
-          <Input label={'Slippage Tolerance Loan Amount'} />
-          <Input label={'Transaction Deadline'} />
+          <Input postfix={'%'} label={'Slippage Tolerance Loan Amount'} />
+          <Input postfix={'secs'} label={'Transaction Deadline'} />
         </Inputs>
         <Buttons>
           <Button preset={BUTTON_PRESET.PINK} onClick={onClick}>
