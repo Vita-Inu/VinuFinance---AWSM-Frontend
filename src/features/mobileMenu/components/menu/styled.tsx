@@ -44,4 +44,5 @@ export const Bottom = styled.div`
   flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
+  gap: 1.6rem;
 `;

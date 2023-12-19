@@ -9,6 +9,7 @@ import { ROUTE, URLS } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
 import { UserActions, Notifications } from '@/features/dropdowns';
 import { MobileMenu } from '@/features/mobileMenu';
+import { WrapButton } from '@/features/wrapButton';
 import { useWindowResize } from '@/hooks';
 
 import { Menu, MenuItem, Row, Wrapper, Buttons } from './components';
@@ -40,6 +41,7 @@ export function Header() {
                 {!address && <ConnectButton />}
                 {address && (
                   <>
+                    <WrapButton/>
                     <UserActions address={address} />
                     <Notifications />
                   </>
