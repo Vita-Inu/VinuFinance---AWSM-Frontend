@@ -103,7 +103,7 @@ export function WrapModal({onClose}: Props) {
     }
 
     return (
-        <ModalBase title={'Pool details'} onClose={onClose}>
+        <ModalBase title={'Wrap VC/Unwrap wVC'} onClose={onClose}>
             <Wrapper>
                 <SwitchBox>
                     <Switch options={OPTIONS} value={option} onChange={setOption}/>
