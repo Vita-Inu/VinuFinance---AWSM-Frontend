@@ -1,5 +1,4 @@
 import { Column, Explain, Table, Value } from '@/components/table';
-import { LoanProvider } from '@/features/liquidityProviders/types';
 import { CurrencyBadge } from '@/components/currencyBadge';
 import { Button, BUTTON_PRESET } from '@/components/buttons';
 import {PoolWithInfo} from "@/features/liquidityProviders";
