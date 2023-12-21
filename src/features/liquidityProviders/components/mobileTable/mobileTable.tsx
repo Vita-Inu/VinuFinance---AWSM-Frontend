@@ -12,7 +12,6 @@ import {
     Value,
 } from '@/components/grid';
 
-import {LoanProvider} from '../../types';
 import {PoolWithInfo} from "@/features/liquidityProviders";
 import {formatUnits} from "viem";
 
