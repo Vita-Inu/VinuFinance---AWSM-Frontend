@@ -14,6 +14,7 @@ import {ValueWithExplain} from "@/components/table";
 import {randomInt} from "crypto";
 import {multicall} from "@wagmi/core";
 import {IErc20Abi, IPoolAbi} from "@/const";
+import humanizeDuration from "humanize-duration"
 
 export function Loans() {
     const {sendNotification} = useNotifications()
@@ -78,6 +79,7 @@ export function Loans() {
             let loanToken = tokens.get(pool.info[0])!
             let collToken = tokens.get(pool.info[1])!
             let dueDate = new Date(Number(x.args.expiry) * 1000);
+            let remainingTime = dueDate.getTime() - Date.now()
             return {
                 key: x.args.loanIdx!.toString(),
                 id: x.args.loanIdx!,
@@ -92,8 +94,7 @@ export function Loans() {
                 },
                 repayBefore: {
                     value: `${dueDate.getHours()}:${dueDate.getMinutes()} ${dueDate.toDateString()}`,
-                    // todo: make this like "in 2 days" or something
-                    explain: 'tomorrow2'
+                    explain: remainingTime > 0 ? humanizeDuration(remainingTime, { largest: 2 }) : ''
                 },
                 repaymentAmount: {
                     value: `${parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,

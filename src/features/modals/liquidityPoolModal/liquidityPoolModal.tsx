@@ -8,7 +8,6 @@ import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import {formatUnits, parseUnits} from "viem";
 import {Explain} from "@/components/table";
 import {res} from "pino-std-serializers";
-import * as DateFns from 'date-fns'
 
 type Props = {
     pool: PoolWithInfo;
@@ -64,7 +63,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
     }
 
     const lockSeconds = pool.lpInfo[1] - (Date.now() / 1000)
-    const lockText = lockSeconds > 0 ? DateFns.formatDistance(0, lockSeconds, { includeSeconds: true }) : null
+    const lockText = lockSeconds > 0 ? humanizeDuration(lockSeconds * 1000) : null
 
     return (
         <ModalBase title={'Pool details'} onClose={onClose}>
