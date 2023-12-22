@@ -21,18 +21,11 @@ type Props = {
 };
 
 export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons}: Props) {
-    const [inputVal, setInputVal] = useState(0);
+    const [inputVal, setInputVal] = useState('');
     const [range, setRange] = useState(100);
 
     const onInputChange = (val: string) => {
-        const newVal = parseFloat(val);
-
-        if (isNaN(newVal)) {
-            setInputVal(0);
-            return;
-        }
-
-        setInputVal(newVal);
+        setInputVal(val);
     };
 
     let lpShares = BigInt(0)
@@ -64,6 +57,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
 
     const lockSeconds = pool.lpInfo[1] - (Date.now() / 1000)
     const lockText = lockSeconds > 0 ? humanizeDuration(lockSeconds * 1000) : null
+    const isPositiveValue = parseFloat(inputVal) > 0
 
     return (
         <ModalBase title={'Pool details'} onClose={onClose}>
@@ -136,7 +130,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         fullWidth
                         preset={BUTTON_PRESET.PURPLE}
                         onClick={() => onClickDeposit(parseUnits(inputVal.toString(), pool.loanCurrency.decimals))}
-                        disabled={shouldDisableButtons}
+                        disabled={shouldDisableButtons || !isPositiveValue}
                     >
                         Deposit
                     </Button>
@@ -146,7 +140,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         fullWidth
                         preset={BUTTON_PRESET.PURPLE}
                         onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}
-                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}
+                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText || !isPositiveValue}
                     >
                         {lockText && `Unlocks in ${lockText}`}
                         {!lockText && `Withdraw`}
