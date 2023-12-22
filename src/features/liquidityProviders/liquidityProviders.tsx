@@ -411,6 +411,9 @@ export function LiquidityProviders() {
         return <Loader/>
     }
 
+    // TODO: for the tab switching (ALL_POOLS, MY_POOLS) the pools need to be filtered. MY_POOLS should only show the pools where the following is true:
+    // let sharesOverTime = pool.lpInfo[3]; // this is an array of bigint
+    // the last element must be > 0
     return (
         <ListContainer filters={filters} onFilter={onFilter}>
             <>
