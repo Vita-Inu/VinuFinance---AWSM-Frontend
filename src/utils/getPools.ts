@@ -28,7 +28,7 @@ export async function getPools(client: PublicClient, chainId: number): Promise<P
 
     // gather potential pool addresses where controller is our controller
     let potentialPools = logs.filter(x => {
-        return x.args.poolController == CHAIN_INFO[chainId].CONTROLLER
+        return x.args.poolController!.toLowerCase() == CHAIN_INFO[chainId].CONTROLLER.toLowerCase()
     })
 
     let controller = getContract({
