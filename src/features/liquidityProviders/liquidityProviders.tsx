@@ -43,6 +43,11 @@ export class Rewards {
     loanRewards!: number;
 }
 
+enum FILTER {
+    ALL_POOLS = 'ALL_POOLS',
+    MY_POOLS = 'MY_POOLS'
+}
+
 export function LiquidityProviders() {
     const {sendNotification} = useNotifications()
 
@@ -52,8 +57,8 @@ export function LiquidityProviders() {
     const {chain} = useNetwork()
 
     const {onFilter, filters, currentFilter} = useListFilter([
-        {label: 'All pools', value: 'ALL_POOLS'},
-        {label: 'My pools', value: 'MY_POOLS'},
+        {label: 'All pools', value: FILTER.ALL_POOLS},
+        {label: 'My pools', value: FILTER.MY_POOLS},
     ]);
 
     const [isLoadingFirstTime, setIsLoadingFirstTime] = useState<boolean>(true)
@@ -411,14 +416,21 @@ export function LiquidityProviders() {
         return <Loader/>
     }
 
-    // TODO: for the tab switching (ALL_POOLS, MY_POOLS) the pools need to be filtered. MY_POOLS should only show the pools where the following is true:
-    // let sharesOverTime = pool.lpInfo[3]; // this is an array of bigint
-    // the last element must be > 0
+    const filteredPools = data.filter((pool) => {
+        if(currentFilter === FILTER.ALL_POOLS) return true;
+
+        const sharesOverTime = pool.lpInfo[3] as bigint[];
+
+        if(!sharesOverTime.length) return false
+
+        return sharesOverTime[sharesOverTime.length - 1] > 0
+    })
+
     return (
         <ListContainer filters={filters} onFilter={onFilter}>
             <>
-                {!isTabletSize && <DesktopTable data={data} onView={showPoolDetails}/>}
-                {isTabletSize && <MobileTable data={data} onView={showPoolDetails}/>}
+                {!isTabletSize && <DesktopTable data={filteredPools} onView={showPoolDetails}/>}
+                {isTabletSize && <MobileTable data={filteredPools} onView={showPoolDetails}/>}
                 {!!liquidityPoolId && (
                   <LiquidityPoolModal
                     isLoadingRewards={isLoadingRewards}
