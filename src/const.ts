@@ -12,10 +12,8 @@ export const vinuChain = {
         symbol: 'VC',
     },
     rpcUrls: {
-        /*public: {http: ['https://vinuchain-rpc.com']},
-        default: {http: ['https://vinuchain-rpc.com']},*/
-        public: {http: ['http://localhost:5000']},
-        default: {http: ['http://localhost:5000']},
+        public: {http: ['https://vinuchain-rpc.com']},
+        default: {http: ['https://vinuchain-rpc.com']},
     },
     blockExplorers: {
         etherscan: {name: 'VinuScan', url: 'https://vinuscan.com'},
