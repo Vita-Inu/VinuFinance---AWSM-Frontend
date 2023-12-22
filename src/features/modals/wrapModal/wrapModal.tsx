@@ -23,10 +23,15 @@ type Props = {
     onClose: VoidFunction;
 };
 
-const OPTIONS: [SwitchOption, SwitchOption] = [{label: 'Wrap VC', value: 'WRAP'}, {
-    label: 'Unwrap wVC',
-    value: 'UNWRAP'
-}]
+enum ACTION {
+    WRAP = 'WRAP',
+    UNWRAP = 'UNWRAP'
+}
+
+const OPTIONS: [SwitchOption, SwitchOption] = [
+  {label: 'Wrap VC', value: ACTION.WRAP},
+  {label: 'Unwrap wVC', value: ACTION.UNWRAP}
+]
 
 export function WrapModal({onClose}: Props) {
     const {address} = useAccount()
@@ -70,26 +75,15 @@ export function WrapModal({onClose}: Props) {
     })
     //endregion
 
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState('')
     const [option, setOption] = useState(OPTIONS[0].value)
 
     const onInputChange = (val: string) => {
-        const newVal = parseFloat(val);
-
-        if (isNaN(newVal)) {
-            setValue(0);
-            return;
-        }
-
-        setValue(newVal);
+        setValue(val);
     };
 
-    // TODO: disable buttons while this is true
-    const isLoading = isLoadingWrap || isLoadingUnwrap;
-
-    // TODO: call this function upon button press
     const write = () => {
-        if (option == 'WRAP') {
+        if (option == ACTION.WRAP) {
             // wrapping
             writeWrap({
                 value: parseUnits(value.toString(10), 18)
@@ -102,6 +96,17 @@ export function WrapModal({onClose}: Props) {
         }
     }
 
+    const onMax = () => {
+        if(option === ACTION.WRAP){
+            setValue(nativeBalance?.value.toString() ?? '0')
+        }
+
+        setValue(wrappedBalance ?? '0')
+    }
+
+    const isLoading = isLoadingWrap || isLoadingUnwrap;
+    const canContinue = parseFloat(value) > 0
+
     return (
         <ModalBase title={'Wrap VC/Unwrap wVC'} onClose={onClose}>
             <Wrapper>
@@ -109,18 +114,17 @@ export function WrapModal({onClose}: Props) {
                     <Switch options={OPTIONS} value={option} onChange={setOption}/>
                 </SwitchBox>
                 <InputBox>
-                    {
-                        // TODO: the 'ticker' should be 'VC' if the user wants to *wrap* and 'wVC' if the user wants to *unwrap*
-                        // TODO: the onMax function should setValue to 'nativeBalance' if the user wants to *wrap* and 'wrappedBalance' if the user wants to *wrap*
-                    }
-                    <CurrencyInput value={value} onChange={onInputChange} onMax={() => setValue(1000)} ticker={'VC'}
-                                   maxText={'SET MAX'}/>
+                    <CurrencyInput
+                      value={value}
+                      onChange={onInputChange} onMax={onMax}
+                      ticker={option === ACTION.WRAP ? 'VC' : 'wVC'}
+                      maxText={'SET MAX'}
+                    />
                 </InputBox>
                 <Buttons>
-                    {
-                        // TODO: this button should say wrap or unwrap depending on the switch
-                    }
-                    <Button preset={BUTTON_PRESET.PINK}>Save</Button>
+                    <Button preset={BUTTON_PRESET.PINK} loading={isLoading} disabled={!canContinue} onClick={write}>
+                        {option === ACTION.WRAP ? 'Wrap' : 'Unwrap'}
+                    </Button>
                 </Buttons>
             </Wrapper>
         </ModalBase>
