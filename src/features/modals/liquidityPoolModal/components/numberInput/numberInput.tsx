@@ -7,7 +7,7 @@ import {
 } from './numberInput.styled';
 
 type Props = {
-  value: number;
+  value: string;
   onChange: (value: string) => void;
   onMax: VoidFunction;
   ticker: string;

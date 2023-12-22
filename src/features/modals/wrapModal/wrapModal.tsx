@@ -86,12 +86,12 @@ export function WrapModal({onClose}: Props) {
         if (option == ACTION.WRAP) {
             // wrapping
             writeWrap({
-                value: parseUnits(value.toString(10), 18)
+                value: parseUnits(value, 18)
             })
         } else {
             // unwrapping
             writeUnwrap({
-                value: parseUnits(value.toString(10), 18)
+                value: parseUnits(value, 18)
             })
         }
     }
@@ -101,7 +101,7 @@ export function WrapModal({onClose}: Props) {
             setValue(nativeBalance?.value.toString() ?? '0')
         }
 
-        setValue(wrappedBalance ?? '0')
+        setValue(wrappedBalance?.toString() ?? '0')
     }
 
     const isLoading = isLoadingWrap || isLoadingUnwrap;
