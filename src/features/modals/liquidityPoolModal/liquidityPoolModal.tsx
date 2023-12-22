@@ -140,7 +140,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         fullWidth
                         preset={BUTTON_PRESET.PURPLE}
                         onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}
-                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText || !isPositiveValue}
+                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}
                     >
                         {lockText && `Unlocks in ${lockText}`}
                         {!lockText && `Withdraw`}
