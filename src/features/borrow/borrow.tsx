@@ -60,6 +60,9 @@ export type PoolAndSimulationResult = {
 
 const ZERO = BigInt(0)
 
+const DEFAULT_DEADLINE = 600;
+const DEFAULT_SLIPPAGE = 1;
+
 export function Borrow() {
     // The logic here is: use has 2 inputs:
     // 1) input field with value
@@ -94,6 +97,11 @@ export function Borrow() {
     let [simulatedLoans, setSimulatedLoans] = useState<PoolAndSimulationResult[]>()
     let [selectedLoan, setSelectedLoan] = useState<PoolAndSimulationResult>()
     let client = usePublicClient()
+
+    const [borrowSettings, setBorrowSettings] = useState({
+        deadline: DEFAULT_DEADLINE,
+        slippage: DEFAULT_SLIPPAGE
+    })
 
     useEffect(() => {
         pairRef.current = currentPair
@@ -299,21 +307,17 @@ export function Borrow() {
                 address: selectedLoan?.collToken.address,
             })
         } else {
-            // TODO: bring the user input from BorrowSettings here (Slippage Tolerance Loan Amount). If invalid user input, use the default 1
-            let slippage = 1;
-            // TODO: bring the user input from BorrowSettings here (Transaction Deadline). If invalid user input, use the default 600
-            let deadline = 600;
             writeBorrow({
                 args: [
                     address,
                     rawValue,
                     // minLoanLimit: basically slippage
                     // set it to 99%
-                    selectedLoan?.loan[0]! * BigInt(100 - slippage) / BigInt(100),
+                    selectedLoan?.loan[0]! * BigInt(100 - borrowSettings.slippage) / BigInt(100),
                     // max repay limit: 1% slippage, so 101
-                    selectedLoan?.loan[1]! * BigInt(100 + slippage) / BigInt(100),
+                    selectedLoan?.loan[1]! * BigInt(100 + borrowSettings.slippage) / BigInt(100),
                     // deadline: current ts + 600 (10 mins)
-                    Math.floor(Date.now() / 1000) + deadline,
+                    Math.floor(Date.now() / 1000) + borrowSettings.deadline,
                     // referral code
                     0
                 ],
@@ -359,7 +363,12 @@ export function Borrow() {
                         <Step
                             stepNo={4}
                             title={'Check Details & Confirm'}
-                            appendItem={<BorrowSettings/>}
+                            appendItem={
+                                <BorrowSettings
+                                  defaultValues={borrowSettings}
+                                  onSave={setBorrowSettings}
+                                />
+                            }
                         >
                             <BorrowConfirm
                                 isLoading={isLoadingApprove || isLoadingBorrow || isLoadingTxConfirmation || isSimulatingPools}
