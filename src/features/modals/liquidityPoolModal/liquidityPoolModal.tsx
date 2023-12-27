@@ -73,7 +73,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                 </Cell>
                 <Cell>
                     <Label>Total Liquidity</Label>
-                    <Value>{parseFloat(formatUnits(pool.pool.info[5], pool.collCurrency.decimals)).toFixed(2)} {pool.collCurrency.symbol}</Value>
+                    <Value>{parseFloat(formatUnits(pool.pool.info[5], pool.loanCurrency.decimals)).toFixed(2)} {pool.loanCurrency.symbol}</Value>
                     <Explain>$0.0</Explain>
                 </Cell>
                 <Cell>

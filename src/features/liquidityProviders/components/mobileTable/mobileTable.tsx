@@ -39,7 +39,7 @@ export function MobileTable({data, onView}: Props) {
             render: (row) => (
                 <>
                     <Label>Total Liquidity</Label>
-                    <Value>{parseFloat(formatUnits(row.pool.info[5], row.collCurrency.decimals)).toFixed(2)} {row.collCurrency.symbol}</Value>
+                    <Value>{parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)} {row.loanCurrency.symbol}</Value>
                     <Explain>$0.0</Explain>
                 </>
             ),
