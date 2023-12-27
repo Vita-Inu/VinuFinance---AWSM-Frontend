@@ -21,7 +21,7 @@ export const vinuChain = {
     },
     contracts: {
         multicall3: {
-            address: '0xca11bde05977b3631167028862be2a173976ca11'
+            address: '0x63CE2062281fb85fE5BC407799A455C21f35F355'
         },
     },
 } as const satisfies Chain
