@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const Grid = styled.div`
   display: grid;
@@ -10,7 +10,11 @@ export const Grid = styled.div`
   }
 `;
 
-export const Cell = styled.div``;
+export const Cell = styled.div<{$wide?: boolean}>`
+  ${props => props.$wide && css`
+    grid-column: span 2;
+  `}
+`;
 
 export const Label = styled.div`
   color: rgba(255, 255, 255, 0.45);
@@ -50,3 +54,24 @@ export const Buttons = styled.div`
     margin-top: 4.2rem;
   }
 `;
+
+export const DelegateButton = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  height: 100%;
+`
+
+export const DelegateText = styled.div`
+  color: rgba(255, 255, 255, 0.60);
+  font-family: Aeonik, sans-serif;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5;
+  
+  span {
+    color: #fff;
+    word-break: break-all;
+  }
+`
