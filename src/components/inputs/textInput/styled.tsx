@@ -23,12 +23,6 @@ export const Input = styled.input.attrs({ type: 'text' })`
   border: none;
   -moz-appearance: textfield;
 
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
   &:focus {
     outline: none;
   }
