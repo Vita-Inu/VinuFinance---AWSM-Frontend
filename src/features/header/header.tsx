@@ -7,7 +7,7 @@ import { Logo } from '@/components/logo';
 import { Container } from '@/components/container';
 import { ROUTE, URLS } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
-import { UserActions, Notifications } from '@/features/dropdowns';
+import { UserActions } from '@/features/dropdowns';
 import { MobileMenu } from '@/features/mobileMenu';
 import { WrapButton } from '@/features/wrapButton';
 import { useWindowResize } from '@/hooks';
@@ -43,14 +43,14 @@ export function Header() {
                   <>
                     <WrapButton/>
                     <UserActions address={address} />
-                    <Notifications />
+                    {/*<Notifications />*/}
                   </>
                 )}
               </Buttons>
             )}
             {isTabletSize && (
               <Buttons>
-                {address && <Notifications />}
+                {/*{address && <Notifications />}*/}
                 <MobileMenu />
               </Buttons>
             )}
