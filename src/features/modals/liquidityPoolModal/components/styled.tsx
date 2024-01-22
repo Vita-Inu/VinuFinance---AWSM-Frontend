@@ -61,3 +61,17 @@ export const DelegateButton = styled.div`
   justify-content: flex-end;
   height: 100%;
 `
+
+export const DelegateText = styled.div`
+  color: rgba(255, 255, 255, 0.60);
+  font-family: Aeonik, sans-serif;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5;
+  
+  span {
+    color: #fff;
+    word-break: break-all;
+  }
+`

@@ -3,7 +3,7 @@ import {Button, BUTTON_PRESET} from '@/components/buttons';
 import {ModalBase} from '../modalBase';
 
 const humanizeDuration = require("humanize-duration");
-import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton} from './components';
+import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton, DelegateText} from './components';
 import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import {formatUnits, parseUnits} from "viem";
 import {Explain} from "@/components/table";
@@ -26,6 +26,8 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
 
     const [delegateAddress, setDelegateAddress] = useState('')
     const [showDelegate, setShowDelegate] = useState(false)
+    // const delegatedAddress = "0xa54A41B6eAF70F5E058a1e4542524DC88944e8C4"
+    const delegatedAddress = null
 
     const onInputChange = (val: string) => {
         setInputVal(val);
@@ -152,7 +154,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                 <Cell $wide>
                     <ExpandButton expanded={showDelegate} onClick={() => setShowDelegate((prev) => !prev)}>Emergency withdrawal delegation</ExpandButton>
                 </Cell>
-                {showDelegate && (
+                {showDelegate && !delegatedAddress && (
                     <>
                         <Cell>
                             <TextInput value={delegateAddress} onChange={setDelegateAddress}/>
@@ -166,6 +168,26 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                                   onClick={() => undefined}
                                 >
                                     Delegate
+                                </Button>
+                            </DelegateButton>
+                        </Cell>
+                    </>
+                )}
+                {showDelegate && !!delegatedAddress && (
+                    <>
+                        <Cell>
+                            <DelegateText>
+                                Delegating to <span>{delegatedAddress}</span>
+                            </DelegateText>
+                        </Cell>
+                        <Cell>
+                            <DelegateButton>
+                                <Button
+                                  preset={BUTTON_PRESET.PINK}
+                                  loading={false}
+                                  onClick={() => undefined}
+                                >
+                                    Undelegate
                                 </Button>
                             </DelegateButton>
                         </Cell>
