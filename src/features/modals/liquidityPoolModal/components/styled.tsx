@@ -50,3 +50,10 @@ export const Buttons = styled.div`
     margin-top: 4.2rem;
   }
 `;
+
+export const DelegateButton = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  height: 100%;
+`

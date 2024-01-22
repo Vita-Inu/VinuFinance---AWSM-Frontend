@@ -3,7 +3,7 @@ import {Button, BUTTON_PRESET} from '@/components/buttons';
 import {ModalBase} from '../modalBase';
 
 const humanizeDuration = require("humanize-duration");
-import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, RangeSlider} from './components';
+import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton} from './components';
 import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import {formatUnits, parseUnits} from "viem";
 import {Explain} from "@/components/table";
@@ -23,6 +23,8 @@ type Props = {
 export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons}: Props) {
     const [inputVal, setInputVal] = useState('');
     const [range, setRange] = useState(100);
+
+    const [delegateAddress, setDelegateAddress] = useState('')
 
     const onInputChange = (val: string) => {
         setInputVal(val);
@@ -145,6 +147,27 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         {lockText && `Unlocks in ${lockText}`}
                         {!lockText && `Withdraw`}
                     </Button>
+                </Cell>
+                <Cell>
+
+                </Cell>
+                <Cell>
+
+                </Cell>
+                <Cell>
+                    <TextInput value={delegateAddress} onChange={setDelegateAddress}/>
+                </Cell>
+                <Cell>
+                    <DelegateButton>
+                        <Button
+                          preset={BUTTON_PRESET.PINK}
+                          loading={false}
+                          disabled={!delegateAddress.length}
+                          onClick={() => undefined}
+                        >
+                            Delegate
+                        </Button>
+                    </DelegateButton>
                 </Cell>
             </Grid>
         </ModalBase>
