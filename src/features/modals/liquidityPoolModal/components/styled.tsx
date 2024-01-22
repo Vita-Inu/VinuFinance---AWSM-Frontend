@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const Grid = styled.div`
   display: grid;
@@ -10,7 +10,11 @@ export const Grid = styled.div`
   }
 `;
 
-export const Cell = styled.div``;
+export const Cell = styled.div<{$wide?: boolean}>`
+  ${props => props.$wide && css`
+    grid-column: span 2;
+  `}
+`;
 
 export const Label = styled.div`
   color: rgba(255, 255, 255, 0.45);

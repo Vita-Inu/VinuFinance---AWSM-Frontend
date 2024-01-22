@@ -3,7 +3,7 @@ import {Button, BUTTON_PRESET} from '@/components/buttons';
 import {ModalBase} from '../modalBase';
 
 const humanizeDuration = require("humanize-duration");
-import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton} from './components';
+import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton} from './components';
 import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import {formatUnits, parseUnits} from "viem";
 import {Explain} from "@/components/table";
@@ -25,6 +25,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
     const [range, setRange] = useState(100);
 
     const [delegateAddress, setDelegateAddress] = useState('')
+    const [showDelegate, setShowDelegate] = useState(false)
 
     const onInputChange = (val: string) => {
         setInputVal(val);
@@ -148,27 +149,28 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         {!lockText && `Withdraw`}
                     </Button>
                 </Cell>
-                <Cell>
-
+                <Cell $wide>
+                    <ExpandButton expanded={showDelegate} onClick={() => setShowDelegate((prev) => !prev)}>Emergency withdrawal delegation</ExpandButton>
                 </Cell>
-                <Cell>
-
-                </Cell>
-                <Cell>
-                    <TextInput value={delegateAddress} onChange={setDelegateAddress}/>
-                </Cell>
-                <Cell>
-                    <DelegateButton>
-                        <Button
-                          preset={BUTTON_PRESET.PINK}
-                          loading={false}
-                          disabled={!delegateAddress.length}
-                          onClick={() => undefined}
-                        >
-                            Delegate
-                        </Button>
-                    </DelegateButton>
-                </Cell>
+                {showDelegate && (
+                    <>
+                        <Cell>
+                            <TextInput value={delegateAddress} onChange={setDelegateAddress}/>
+                        </Cell>
+                        <Cell>
+                            <DelegateButton>
+                                <Button
+                                  preset={BUTTON_PRESET.PINK}
+                                  loading={false}
+                                  disabled={!delegateAddress.length}
+                                  onClick={() => undefined}
+                                >
+                                    Delegate
+                                </Button>
+                            </DelegateButton>
+                        </Cell>
+                    </>
+                )}
             </Grid>
         </ModalBase>
     );
