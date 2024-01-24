@@ -15,10 +15,12 @@ export const Row = styled.div`
 `;
 
 export const Menu = styled.nav`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem;
+  margin: 0 0.8rem;
   gap: 1.6rem;
   border-radius: 3rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.15);
@@ -51,8 +53,15 @@ export const MenuItem = styled.span<{ $active: boolean }>`
 `;
 
 export const Buttons = styled.div`
+  flex-grow: 1;
+  flex-basis: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 0.8rem;
 `;
+
+export const LogoBox = styled.div`
+  flex-grow: 1;
+  flex-basis: 100%;
+`

@@ -7,12 +7,13 @@ import { Logo } from '@/components/logo';
 import { Container } from '@/components/container';
 import { ROUTE, URLS } from '@/utils';
 import { ConnectButton } from '@/features/connectButton';
+import { BridgeButton } from '@/features/bridgeButton';
 import { UserActions } from '@/features/dropdowns';
 import { MobileMenu } from '@/features/mobileMenu';
 import { WrapButton } from '@/features/wrapButton';
 import { useWindowResize } from '@/hooks';
 
-import { Menu, MenuItem, Row, Wrapper, Buttons } from './components';
+import { Buttons, Menu, MenuItem, Row, Wrapper, LogoBox } from './components';
 
 export function Header() {
   const { address } = useAccount();
@@ -26,9 +27,11 @@ export function Header() {
       <Wrapper>
         <Container>
           <Row>
-            <Link href={ROUTE.HOME}>
-              <Logo />
-            </Link>
+            <LogoBox>
+              <Link href={ROUTE.HOME}>
+                <Logo />
+              </Link>
+            </LogoBox>
             <Menu>
               {URLS.map(({ url, label }) => (
                 <Link key={uuidV4()} href={url}>
@@ -38,10 +41,11 @@ export function Header() {
             </Menu>
             {!isTabletSize && (
               <Buttons>
+                <BridgeButton/>
                 {!address && <ConnectButton />}
                 {address && (
                   <>
-                    <WrapButton/>
+                    <WrapButton />
                     <UserActions address={address} />
                     {/*<Notifications />*/}
                   </>
