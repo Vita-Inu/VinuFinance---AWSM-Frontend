@@ -13,7 +13,7 @@ import { MobileMenu } from '@/features/mobileMenu';
 import { WrapButton } from '@/features/wrapButton';
 import { useWindowResize } from '@/hooks';
 
-import { Buttons, Menu, MenuItem, Row, Wrapper } from './components';
+import { Buttons, Menu, MenuItem, Row, Wrapper, LogoBox } from './components';
 
 export function Header() {
   const { address } = useAccount();
@@ -27,9 +27,11 @@ export function Header() {
       <Wrapper>
         <Container>
           <Row>
-            <Link href={ROUTE.HOME}>
-              <Logo />
-            </Link>
+            <LogoBox>
+              <Link href={ROUTE.HOME}>
+                <Logo />
+              </Link>
+            </LogoBox>
             <Menu>
               {URLS.map(({ url, label }) => (
                 <Link key={uuidV4()} href={url}>
