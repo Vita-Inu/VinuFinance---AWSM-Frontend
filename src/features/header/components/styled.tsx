@@ -19,7 +19,7 @@ export const Menu = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.1rem;
+  padding: 1.4rem 1.1rem;
   margin: 0 0.8rem;
   gap: 1.6rem;
   border-radius: 3rem;
