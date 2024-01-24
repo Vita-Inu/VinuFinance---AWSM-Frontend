@@ -45,4 +45,5 @@ export const Bottom = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 1.6rem;
+  flex-wrap: wrap;
 `;

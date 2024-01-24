@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import { URLS } from '@/utils';
 import { UserActions } from '@/features/dropdowns';
 import { WrapButton } from '@/features/wrapButton';
+import { BridgeButton } from '@/features/bridgeButton';
 
 import { Item, Items, Wrapper, Bottom, Content } from './styled';
 
@@ -26,6 +27,7 @@ export function Menu() {
         </Items>
       </Content>
       <Bottom>
+        <BridgeButton/>
         {address && (
           <>
             <WrapButton/>
