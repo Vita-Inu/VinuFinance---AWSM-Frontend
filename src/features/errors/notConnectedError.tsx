@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Button, BUTTON_PRESET } from '@/components/buttons';
 import { WalletDescriptionModal } from '@/features/modals';
 import { ConnectButton } from '@/features/connectButton';
 
@@ -31,7 +30,6 @@ export function NotConnectedError() {
           </Description>
           <Buttons>
             <ConnectButton />
-            <Button preset={BUTTON_PRESET.WHITE}>Learn more</Button>
           </Buttons>
           <LinkWrapper>
             <Link onClick={showModal} role={'button'}>

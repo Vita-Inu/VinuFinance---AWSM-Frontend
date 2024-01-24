@@ -8,31 +8,15 @@ export function WalletDescriptionModal({ onClose }: Props) {
   return (
     <ModalBase title={'What is wallet?'} onClose={onClose}>
       <p>
-        Fusce iaculis, orci nec vehicula blandit, felis mauris facilisis tellus,
-        id interdum leo nibh eget urna. Suspendisse et eros sed nisl porttitor
-        dapibus et quis velit. Mauris sodales eros justo, ut lobortis nibh
-        suscipit sed. Nunc varius erat libero, quis lobortis lorem efficitur et.
-        Etiam ac velit rhoncus, sagittis orci nec, sollicitudin turpis.
-        Vestibulum lobortis a quam vitae faucibus. Morbi metus quam, aliquam nec
-        nibh eget, dapibus viverra ipsum. Vestibulum tempor a ipsum facilisis
-        venenatis. Sed mollis pretium eros, ut tempus dolor commodo quis. Nulla
-        facilisi. Quisque ultrices lorem vitae efficitur consectetur. Sed
-        laoreet dictum tellus id sagittis. Curabitur vestibulum augue vitae mi
-        pharetra placerat.
-      </p>
-      <br />
-      <p>
-        Fusce iaculis, orci nec vehicula blandit, felis mauris facilisis tellus,
-        id interdum leo nibh eget urna. Suspendisse et eros sed nisl porttitor
-        dapibus et quis velit. Mauris sodales eros justo, ut lobortis nibh
-        suscipit sed. Nunc varius erat libero, quis lobortis lorem efficitur et.
-        Etiam ac velit rhoncus, sagittis orci nec, sollicitudin turpis.
-        Vestibulum lobortis a quam vitae faucibus. Morbi metus quam, aliquam nec
-        nibh eget, dapibus viverra ipsum. Vestibulum tempor a ipsum facilisis
-        venenatis. Sed mollis pretium eros, ut tempus dolor commodo quis. Nulla
-        facilisi. Quisque ultrices lorem vitae efficitur consectetur. Sed
-        laoreet dictum tellus id sagittis. Curabitur vestibulum augue vitae mi
-        pharetra placerat.
+        A wallet in decentralized finance (DeFi) is a digital tool for managing
+        your cryptocurrencies. It securely stores your digital assets and allows
+        you to conduct transactions on the blockchain. Wallets, available as
+        web, mobile, desktop, or hardware versions, generate private keys
+        (similar to passwords) for transaction authorization. In DeFi platforms
+        like VinuFinance, a wallet isn&apos;t just for storage; it&apos;s your access
+        point for activities like lending and borrowing. It&apos;s essential to keep
+        your private keys safe, as they control access to your funds and enable
+        you to interact with the DeFi ecosystem.
       </p>
     </ModalBase>
   );
