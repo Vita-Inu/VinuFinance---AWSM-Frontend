@@ -27,8 +27,9 @@ export const vinuChain = {
 } as const satisfies Chain
 
 export type ChainInfo = {
-    CONTROLLER: `0x{string}`,
-    MULTICLAIM: `0x{string}`,
+    CONTROLLER: `0x${string}`,
+    MULTICLAIM: `0x${string}`,
+    EMERGENCY_WITHDRAWAL: `0x${string}`,
     WETH: `0x{string}`,
     ALLOWED_POOL_HASHES: readonly string[]
 }
@@ -38,6 +39,7 @@ export const CHAIN_INFO: { [id: number]: ChainInfo } = {
         CONTROLLER: '0xe95dCa8B8E2f8982Dd3dEf3B070b6CF577f0d8c4' as `0x{string}`,
         MULTICLAIM: '0xA260d19aEe266cC85F41f160271F9C72ea8E2837' as `0x{string}`,
         WETH: '0xEd8c5530a0A086a12f57275728128a60DFf04230' as `0x{string}`,
+        EMERGENCY_WITHDRAWAL: '0xeBC1C9Ae7FC761330929d682d97334513C1FcB4b' as `0x{string}`,
         ALLOWED_POOL_HASHES: ["d9e68d14c5fba51abecc0eebfed5bf364a6061b2bff391e89211d87bbfde9cbb"]
     },
 }
@@ -2953,5 +2955,178 @@ export const IMultiClaimAbi: Abi = [
         "stateMutability": "nonpayable",
         "type": "function",
         "name": "claimMultiple"
+    }
+]
+
+export const IEmergencyWithdrawalAbi: Abi = [
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "pool",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "escrow",
+                "type": "address"
+            }
+        ],
+        "name": "Approved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "pool",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "escrow",
+                "type": "address"
+            }
+        ],
+        "name": "Unapproved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "pool",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "escrow",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "contract IERC20",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "Withdrawal",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_pool",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_escrow",
+                "type": "address"
+            }
+        ],
+        "name": "approve",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IBasePool",
+                "name": "_pool",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_onBehalfOf",
+                "type": "address"
+            }
+        ],
+        "name": "collectEmergency",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_pool",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_escrow",
+                "type": "address"
+            }
+        ],
+        "name": "isApproved",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_pool",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_escrow",
+                "type": "address"
+            }
+        ],
+        "name": "unapprove",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
 ]
