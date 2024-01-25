@@ -17,10 +17,13 @@ type Props = {
     onClose: VoidFunction;
     onClickClaim: (reinvested: boolean) => void;
     onClickWithdraw: (val: bigint) => void;
+    onClickDelegate: (val: `0x${string}`) => void;
+    onClickUndelegate: () => void;
     onClickDeposit: (val: bigint) => void;
+    currentDelegatedAddress: `0x${string}` | undefined;
 };
 
-export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons}: Props) {
+export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons, onClickUndelegate, onClickDelegate, }: Props) {
     const [inputVal, setInputVal] = useState('');
     const [range, setRange] = useState(100);
 
@@ -165,7 +168,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                                   preset={BUTTON_PRESET.PINK}
                                   loading={false}
                                   disabled={!delegateAddress.length}
-                                  onClick={() => undefined}
+                                  onClick={() => onClickDelegate(delegateAddress)}
                                 >
                                     Delegate
                                 </Button>
@@ -185,7 +188,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                                 <Button
                                   preset={BUTTON_PRESET.PINK}
                                   loading={false}
-                                  onClick={() => undefined}
+                                  onClick={() => onClickUndelegate}
                                 >
                                     Undelegate
                                 </Button>
