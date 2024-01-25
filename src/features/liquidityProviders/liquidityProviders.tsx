@@ -1,41 +1,42 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { useWindowResize } from '@/hooks';
-import { ListContainer } from '@/features/listContainer';
-import { useListFilter } from '@/features/listContainer/hooks';
-import { LiquidityPoolModal } from '@/features/modals';
-import { NOTIFICATION_TYPE, useNotifications } from '@/features/notifications';
+import {useWindowResize} from '@/hooks';
+import {ListContainer} from '@/features/listContainer';
+import {useListFilter} from '@/features/listContainer/hooks';
+import {LiquidityPoolModal} from '@/features/modals';
+import {NOTIFICATION_TYPE, useNotifications} from '@/features/notifications';
 
-import { DesktopTable, MobileTable } from './components';
-import { getPools, Pool } from '@/utils/getPools';
+import {DesktopTable, MobileTable} from './components';
+import {getPools, Pool} from '@/utils/getPools';
 import {
-  useAccount,
-  useContractWrite,
-  useNetwork,
-  usePublicClient,
-  useWaitForTransaction,
+    useAccount,
+    useContractWrite,
+    useNetwork,
+    usePublicClient,
+    useWaitForTransaction,
 } from 'wagmi';
-import { getErc20sFromPools } from '@/utils/getErc20sFromPools';
-import { multicall } from '@wagmi/core';
-import { CHAIN_INFO, IErc20Abi, IMultiClaimAbi, IPoolAbi } from '@/const';
-import { formatUnits, getContract, parseAbiItem } from 'viem';
-import { Loader } from '@/components/loader';
+import {getErc20sFromPools} from '@/utils/getErc20sFromPools';
+import {multicall} from '@wagmi/core';
+import {CHAIN_INFO, IEmergencyWithdrawalAbi, IErc20Abi, IMultiClaimAbi, IPoolAbi} from '@/const';
+import {formatUnits, getContract, parseAbiItem} from 'viem';
+import {Loader} from '@/components/loader';
+import {getFirstApprovedEscrow} from "@/utils/getApprovedEscrows";
 
 export class PoolWithInfo {
-  key!: string;
-  pool!: Pool;
-  loanCurrency!: {
-    decimals: number;
-    symbol: string;
-    balance: number;
-  };
-  collCurrency!: {
-    decimals: number;
-    symbol: string;
-    balance: number;
-  };
-  currentMonthlyApr!: number;
-  lpInfo!: any[];
+    key!: `0x${string}`;
+    pool!: Pool;
+    loanCurrency!: {
+        decimals: number;
+        symbol: string;
+        balance: number;
+    };
+    collCurrency!: {
+        decimals: number;
+        symbol: string;
+        balance: number;
+    };
+    currentMonthlyApr!: number;
+    lpInfo!: any[];
 }
 
 export class Rewards {
@@ -75,6 +76,7 @@ export function LiquidityProviders() {
     const [needsContinuation, setNeedsContinuation] = useState<boolean>(false)
     const [continuationType, setContinuationType] = useState<string>('')
     const [continuationArgs, setContinuationArgs] = useState<any>()
+    const [currentlyDelegatingTo, setCurrentlyDelegatingTo] = useState<`0x${string}` | undefined>();
 
     async function loadData() {
         if (!chain) return
@@ -100,6 +102,7 @@ export function LiquidityProviders() {
                 lpInfo: lpInfos[i].result as any[]
             }
         }))
+
     }
 
     //region CONTRACT WRITES
@@ -186,9 +189,37 @@ export function LiquidityProviders() {
             sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Claim rewards transaction sent successfully')
         }
     })
+
+    const {
+        data: dataDelegate,
+        isLoading: isLoadingDelegate,
+        isSuccess: isSuccessDelegate,
+        write: writeDelegate
+    } = useContractWrite({
+        abi: IEmergencyWithdrawalAbi,
+        functionName: 'approve',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Emergency withdrawal delegation transaction sent successfully')
+        }
+    })
+
+    const {
+        data: dataUndelegate,
+        isLoading: isLoadingUndelegate,
+        isSuccess: isSuccessUndelegate,
+        write: writeUndelegate
+    } = useContractWrite({
+        abi: IEmergencyWithdrawalAbi,
+        functionName: 'unapprove',
+        onSuccess: sentTxResult => {
+            setCurrentTx(sentTxResult.hash)
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Emergency withdrawal undelegation transaction sent successfully')
+        }
+    })
     //endregion
 
-    //region DEPOSIT/WITHDRAW/CLAIM LOGIC HANDLERS
+    //region DEPOSIT/WITHDRAW/CLAIM/DELEGATE/UNDELEGATE LOGIC HANDLERS
     async function deposit(amount: bigint) {
         let pool = data.find(x => x.key == liquidityPoolId)!;
         let loanToken = getContract({
@@ -264,6 +295,40 @@ export function LiquidityProviders() {
         })
     }
 
+    async function undelegate() {
+        let pool = data.find(x => x.key == liquidityPoolId)!;
+        writeUndelegate({
+            // @ts-ignore
+            address: CHAIN_INFO[chain!.id].EMERGENCY_WITHDRAWAL,
+            args: [pool.pool.address, currentlyDelegatingTo]
+        })
+    }
+
+    async function delegate(delegateTo: `0x${string}`) {
+        let pool = data.find(x => x.pool.address == liquidityPoolId)!;
+        let poolContract = getContract({address: pool.pool.address, abi: IPoolAbi, publicClient: client})
+        let isApproved = await poolContract.read.isApproved([delegateTo!, CHAIN_INFO[chain!.id].EMERGENCY_WITHDRAWAL, 2])
+        let args = {
+            args: [pool.pool.address, delegateTo],
+            address: CHAIN_INFO[chain!.id].EMERGENCY_WITHDRAWAL,
+        }
+        if (!isApproved) {
+            // approve REMOVE_LIQUIDITY to emergency withdrawal contract
+            writeApproveMulticallClaim({
+                args: [
+                    CHAIN_INFO[chain!.id].EMERGENCY_WITHDRAWAL,
+                    4
+                ],
+                // @ts-ignore
+                address: pool.pool.address,
+            })
+            setNeedsContinuation(true)
+            setContinuationArgs(args)
+            setContinuationType('delegate')
+        } else {
+            delegate_inner(args)
+        }
+    }
     //endregion
 
     //region CONTINUATION INNER FUNCTION
@@ -275,6 +340,9 @@ export function LiquidityProviders() {
         writeClaim(args)
     }
 
+    async function delegate_inner(args: any) {
+        writeDelegate(args)
+    }
     //endregion
 
     const [data, setData] = useState<PoolWithInfo[]>([])
@@ -311,6 +379,7 @@ export function LiquidityProviders() {
         loadRewards(poolId)
     };
 
+    // this also loads the escrow ure currently delegating to
     const loadRewards = async (poolId: string) => {
         let pool = data.find(x => x.pool.address == poolId)!;
         if (pool.lpInfo[3].length == 0) {
@@ -326,7 +395,9 @@ export function LiquidityProviders() {
             address: pool.pool.address,
             args: {lp: address!}
         })
-        let claimedIds = claimLogs.map(x => x.args.loanIdxs!).reduce((current, next) => {return current.concat(next)}, [])
+        let claimedIds = claimLogs.map(x => x.args.loanIdxs!).reduce((current, next) => {
+            return current.concat(next)
+        }, [])
 
         // check if closed modal
 
@@ -401,6 +472,9 @@ export function LiquidityProviders() {
         })
         setClaimGroups(groups)
 
+        // load addresses that u delegate to
+        setCurrentlyDelegatingTo(await getFirstApprovedEscrow(client, chain!.id, address!, pool.key))
+
         setIsLoadingRewards(false)
     }
 
@@ -412,16 +486,16 @@ export function LiquidityProviders() {
     // disable buttons while waiting for pending txs...
     const shouldDisableButtons = isLoadingCurrentTx || isLoadingAdd || isLoadingRepay || isLoadingRemove || isLoadingApproveMulticallClaim || isLoadingApproveLoanToken || isLoadingClaim;
 
-    if(isLoadingFirstTime) {
+    if (isLoadingFirstTime) {
         return <Loader/>
     }
 
     const filteredPools = data.filter((pool) => {
-        if(currentFilter === FILTER.ALL_POOLS) return true;
+        if (currentFilter === FILTER.ALL_POOLS) return true;
 
         const sharesOverTime = pool.lpInfo[3] as bigint[];
 
-        if(!sharesOverTime.length) return false
+        if (!sharesOverTime.length) return false
 
         return sharesOverTime[sharesOverTime.length - 1] > 0
     })
@@ -432,16 +506,19 @@ export function LiquidityProviders() {
                 {!isTabletSize && <DesktopTable data={filteredPools} onView={showPoolDetails}/>}
                 {isTabletSize && <MobileTable data={filteredPools} onView={showPoolDetails}/>}
                 {!!liquidityPoolId && (
-                  <LiquidityPoolModal
-                    isLoadingRewards={isLoadingRewards}
-                    shouldDisableButtons={shouldDisableButtons}
-                    rewards={rewards}
-                    onClickDeposit={deposit}
-                    onClickWithdraw={withdraw}
-                    onClickClaim={claim}
-                    onClose={hidePoolDetails}
-                    pool={data.find(x => x.pool.address == liquidityPoolId)!}
-                  />
+                    <LiquidityPoolModal
+                        isLoadingRewards={isLoadingRewards}
+                        shouldDisableButtons={shouldDisableButtons}
+                        rewards={rewards}
+                        onClickDeposit={deposit}
+                        onClickWithdraw={withdraw}
+                        onClickClaim={claim}
+                        onClose={hidePoolDetails}
+                        pool={data.find(x => x.pool.address == liquidityPoolId)!}
+                        onClickDelegate={delegate}
+                        onClickUndelegate={undelegate}
+                        currentDelegatedAddress={currentlyDelegatingTo}
+                    />
                 )}
             </>
         </ListContainer>
