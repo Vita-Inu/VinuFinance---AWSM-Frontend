@@ -19,7 +19,7 @@ export async function getFirstApprovedEscrow(client: PublicClient, chainId: numb
         // @ts-ignore
         contracts: logs.map(x => {
             return {
-                address: CHAIN_INFO[chainId].CONTROLLER,
+                address: CHAIN_INFO[chainId].EMERGENCY_WITHDRAWAL,
                 abi: IEmergencyWithdrawalAbi,
                 functionName: 'isApproved',
                 args: [user, pool, x.args.escrow]
