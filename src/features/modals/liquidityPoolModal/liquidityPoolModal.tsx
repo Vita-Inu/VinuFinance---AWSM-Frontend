@@ -169,7 +169,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                                   preset={BUTTON_PRESET.PINK}
                                   loading={false}
                                   disabled={!delegateAddress.length || !isDelegateAddressValid}
-                                  onClick={() => onClickDelegate(delegateAddress)}
+                                  onClick={() => onClickDelegate(delegateAddress as `0x${string}`)}
                                 >
                                     Delegate
                                 </Button>
