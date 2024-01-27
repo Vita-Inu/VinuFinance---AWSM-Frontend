@@ -329,6 +329,7 @@ export function LiquidityProviders() {
             delegate_inner(args)
         }
     }
+
     //endregion
 
     //region CONTINUATION INNER FUNCTION
@@ -343,6 +344,7 @@ export function LiquidityProviders() {
     async function delegate_inner(args: any) {
         writeDelegate(args)
     }
+
     //endregion
 
     const [data, setData] = useState<PoolWithInfo[]>([])
@@ -384,95 +386,92 @@ export function LiquidityProviders() {
     // this also loads the escrow ure currently delegating to
     const loadRewards = async (poolId: string) => {
         let pool = data.find(x => x.pool.address == poolId)!;
-        if (pool.lpInfo[3].length == 0) {
-            return
-        }
-
         setIsLoadingRewards(true)
+        if (pool.lpInfo[3].length != 0) {
+            // get claims first
+            let claimLogs = await client.getLogs({
+                event: parseAbiItem('event Claim(address indexed lp, uint256[] loanIdxs, uint256 repayments, uint256 collateral)'),
+                fromBlock: 'earliest',
+                address: pool.pool.address,
+                args: {lp: address!}
+            })
+            let claimedIds = claimLogs.map(x => x.args.loanIdxs!).reduce((current, next) => {
+                return current.concat(next)
+            }, [])
 
-        // get claims first
-        let claimLogs = await client.getLogs({
-            event: parseAbiItem('event Claim(address indexed lp, uint256[] loanIdxs, uint256 repayments, uint256 collateral)'),
-            fromBlock: 'earliest',
-            address: pool.pool.address,
-            args: {lp: address!}
-        })
-        let claimedIds = claimLogs.map(x => x.args.loanIdxs!).reduce((current, next) => {
-            return current.concat(next)
-        }, [])
+            // check if closed modal
 
-        // check if closed modal
+            let borrowLogs = await client.getLogs({
+                event: parseAbiItem('event Borrow(address indexed borrower,uint256 loanIdx,uint256 collateral,uint256 loanAmount,uint256 repaymentAmount,uint256 totalLpShares,uint256 indexed expiry,uint256 indexed referralCode)'),
+                fromBlock: 'earliest',
+                address: pool.pool.address
+            })
+            let repaymentLogs = await client.getLogs({
+                event: parseAbiItem('event Repay(address indexed borrower,uint256 loanIdx,uint256 repaymentAmountAfterFees)'),
+                fromBlock: 'earliest',
+                address: pool.pool.address
+            })
 
-        let borrowLogs = await client.getLogs({
-            event: parseAbiItem('event Borrow(address indexed borrower,uint256 loanIdx,uint256 collateral,uint256 loanAmount,uint256 repaymentAmount,uint256 totalLpShares,uint256 indexed expiry,uint256 indexed referralCode)'),
-            fromBlock: 'earliest',
-            address: pool.pool.address
-        })
-        let repaymentLogs = await client.getLogs({
-            event: parseAbiItem('event Repay(address indexed borrower,uint256 loanIdx,uint256 repaymentAmountAfterFees)'),
-            fromBlock: 'earliest',
-            address: pool.pool.address
-        })
+            let rn = Date.now() / 1000
 
-        let rn = Date.now() / 1000
+            // we got all loans info, now we just select active ones
+            let repaidIds = repaymentLogs.map(x => x.args.loanIdx!)
 
-        // we got all loans info, now we just select active ones
-        let repaidIds = repaymentLogs.map(x => x.args.loanIdx!)
-
-        let groups: bigint[][] = []
-        let borders = [pool.lpInfo[0]]
-        for (let i = pool.lpInfo[2]; i < pool.lpInfo[4].length; i++) {
-            groups.push([])
-            borders.push(pool.lpInfo[4][i])
-        }
-        if (groups.length == 0) {
-            borders.push(pool.pool.info[8])
-            groups.push([])
-        }
-
-        let totalClaimableLoan = BigInt(0)
-        let totalClaimableColl = BigInt(0)
-
-        for (let i in borrowLogs) {
-            let loan = borrowLogs[i].args
-            let wasRepaid = repaidIds.includes(loan.loanIdx!)
-            if (!wasRepaid && loan.expiry! > rn) {
-                continue // loan is still active
+            let groups: bigint[][] = []
+            let borders = [pool.lpInfo[0]]
+            for (let i = pool.lpInfo[2]; i < pool.lpInfo[4].length; i++) {
+                groups.push([])
+                borders.push(pool.lpInfo[4][i])
             }
-            if (claimedIds.includes(loan.loanIdx!)) {
-                continue // already claimed
+            if (groups.length == 0) {
+                borders.push(pool.pool.info[8])
+                groups.push([])
             }
-            for (let bucket = 0; bucket < groups.length; bucket++) {
-                let min = borders[bucket]
-                let max = borders[bucket + 1]
-                if (loan.loanIdx! >= min && loan.loanIdx! < max) {
-                    // falls into this bucket
-                    groups[bucket].push(loan.loanIdx!)
-                    let sharesAtLoan = (pool.lpInfo[3] as bigint[])[bucket + (Number(pool.lpInfo[2]))] as bigint
 
-                    // now we know loanId, totalShares during the time of the loan and shares of the user at the time of the loan.
-                    // we can calculate user reward
-                    if (wasRepaid) {
-                        let globalReward = loan.repaymentAmount!
-                        let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
-                        totalClaimableLoan += userReward
-                    } else {
-                        // expired
-                        let globalReward = loan.collateral!
-                        let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
-                        totalClaimableColl += userReward
+            let totalClaimableLoan = BigInt(0)
+            let totalClaimableColl = BigInt(0)
+
+            for (let i in borrowLogs) {
+                let loan = borrowLogs[i].args
+                let wasRepaid = repaidIds.includes(loan.loanIdx!)
+                if (!wasRepaid && loan.expiry! > rn) {
+                    continue // loan is still active
+                }
+                if (claimedIds.includes(loan.loanIdx!)) {
+                    continue // already claimed
+                }
+                for (let bucket = 0; bucket < groups.length; bucket++) {
+                    let min = borders[bucket]
+                    let max = borders[bucket + 1]
+                    if (loan.loanIdx! >= min && loan.loanIdx! < max) {
+                        // falls into this bucket
+                        groups[bucket].push(loan.loanIdx!)
+                        let sharesAtLoan = (pool.lpInfo[3] as bigint[])[bucket + (Number(pool.lpInfo[2]))] as bigint
+
+                        // now we know loanId, totalShares during the time of the loan and shares of the user at the time of the loan.
+                        // we can calculate user reward
+                        if (wasRepaid) {
+                            let globalReward = loan.repaymentAmount!
+                            let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
+                            totalClaimableLoan += userReward
+                        } else {
+                            // expired
+                            let globalReward = loan.collateral!
+                            let userReward = globalReward * sharesAtLoan / loan.totalLpShares!
+                            totalClaimableColl += userReward
+                        }
+
+                        break
                     }
-
-                    break
                 }
             }
-        }
 
-        setRewards({
-            collRewards: parseFloat(formatUnits(totalClaimableColl, pool.collCurrency.decimals)),
-            loanRewards: parseFloat(formatUnits(totalClaimableLoan, pool.loanCurrency.decimals)),
-        })
-        setClaimGroups(groups)
+            setRewards({
+                collRewards: parseFloat(formatUnits(totalClaimableColl, pool.collCurrency.decimals)),
+                loanRewards: parseFloat(formatUnits(totalClaimableLoan, pool.loanCurrency.decimals)),
+            })
+            setClaimGroups(groups)
+        }
 
         // load addresses that u delegate to
         setCurrentlyDelegatingTo(await getFirstApprovedEscrow(client, chain!.id, address!, pool.key))
