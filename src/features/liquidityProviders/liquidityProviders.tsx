@@ -366,6 +366,8 @@ export function LiquidityProviders() {
                     deposit_inner(continuationArgs)
                 } else if (continuationType == 'claim') {
                     claim_inner(continuationArgs)
+                } else if (continuationType == 'delegate') {
+                    delegate_inner(continuationArgs)
                 }
                 setNeedsContinuation(false)
             }
