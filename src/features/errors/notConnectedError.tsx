@@ -23,7 +23,7 @@ export function NotConnectedError() {
     <>
       <Wrapper>
         <Container>
-          <Title>Please, connect your wallet</Title>
+          <Title>Please connect your wallet</Title>
           <Description>
             Please connect your wallet to see your loans, borrowings, and open
             positions
