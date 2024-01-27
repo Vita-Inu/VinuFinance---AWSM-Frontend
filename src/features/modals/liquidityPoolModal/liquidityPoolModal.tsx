@@ -5,7 +5,7 @@ import {ModalBase} from '../modalBase';
 const humanizeDuration = require("humanize-duration");
 import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton, DelegateText} from './components';
 import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
-import {formatUnits, parseUnits} from "viem";
+import { formatUnits, isAddress, parseUnits } from 'viem';
 import {Explain} from "@/components/table";
 import {res} from "pino-std-serializers";
 
@@ -66,6 +66,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
     const lockSeconds = pool.lpInfo[1] - (Date.now() / 1000)
     const lockText = lockSeconds > 0 ? humanizeDuration(lockSeconds * 1000) : null
     const isPositiveValue = parseFloat(inputVal) > 0
+    const isDelegateAddressValid = isAddress(delegateAddress)
 
     return (
         <ModalBase title={'Pool details'} onClose={onClose}>
@@ -167,7 +168,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                                 <Button
                                   preset={BUTTON_PRESET.PINK}
                                   loading={false}
-                                  disabled={!delegateAddress.length}
+                                  disabled={!delegateAddress.length || !isDelegateAddressValid}
                                   onClick={() => onClickDelegate(delegateAddress)}
                                 >
                                     Delegate
