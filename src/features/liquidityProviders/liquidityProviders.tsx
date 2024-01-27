@@ -77,6 +77,8 @@ export function LiquidityProviders() {
     const [continuationType, setContinuationType] = useState<string>('')
     const [continuationArgs, setContinuationArgs] = useState<any>()
     const [currentlyDelegatingTo, setCurrentlyDelegatingTo] = useState<`0x${string}` | undefined>();
+    const [currentPendingTxType, setCurrentPendingTxType] = useState<string | undefined>();
+    const [isLoadingDelegateUndelegateButton, setIsLoadingDelegateUndelegateButton] = useState<boolean>(false);
 
     async function loadData() {
         if (!chain) return
@@ -201,6 +203,7 @@ export function LiquidityProviders() {
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
             sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Emergency withdrawal delegation transaction sent successfully')
+            setCurrentPendingTxType('delegate')
         }
     })
 
@@ -215,6 +218,7 @@ export function LiquidityProviders() {
         onSuccess: sentTxResult => {
             setCurrentTx(sentTxResult.hash)
             sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Emergency withdrawal undelegation transaction sent successfully')
+            setCurrentPendingTxType('undelegate')
         }
     })
     //endregion
@@ -296,6 +300,7 @@ export function LiquidityProviders() {
     }
 
     async function undelegate() {
+        setIsLoadingDelegateUndelegateButton(true)
         let pool = data.find(x => x.key == liquidityPoolId)!;
         writeUndelegate({
             // @ts-ignore
@@ -305,6 +310,7 @@ export function LiquidityProviders() {
     }
 
     async function delegate(delegateTo: `0x${string}`) {
+        setIsLoadingDelegateUndelegateButton(true)
         let pool = data.find(x => x.pool.address == liquidityPoolId)!;
         let poolContract = getContract({address: pool.pool.address, abi: IPoolAbi, publicClient: client})
         let isApproved = await poolContract.read.isApproved([delegateTo!, CHAIN_INFO[chain!.id].EMERGENCY_WITHDRAWAL, 2])
@@ -372,6 +378,9 @@ export function LiquidityProviders() {
                     delegate_inner(continuationArgs)
                 }
                 setNeedsContinuation(false)
+            }
+            if (currentPendingTxType == 'delegate' || currentPendingTxType == 'undelegate') {
+                setIsLoadingDelegateUndelegateButton(false)
             }
         },
     })
@@ -519,6 +528,7 @@ export function LiquidityProviders() {
                         onClickDelegate={delegate}
                         onClickUndelegate={undelegate}
                         currentDelegatedAddress={currentlyDelegatingTo}
+                        isLoadingDelegateUndelegateButton={isLoadingDelegateUndelegateButton}
                     />
                 )}
             </>

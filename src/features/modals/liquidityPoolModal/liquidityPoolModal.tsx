@@ -21,9 +21,10 @@ type Props = {
     onClickUndelegate: () => void;
     onClickDeposit: (val: bigint) => void;
     currentDelegatedAddress: `0x${string}` | undefined;
+    isLoadingDelegateUndelegateButton: boolean;
 };
 
-export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons, onClickUndelegate, onClickDelegate, currentDelegatedAddress }: Props) {
+export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons, onClickUndelegate, onClickDelegate, currentDelegatedAddress, isLoadingDelegateUndelegateButton }: Props) {
     const [inputVal, setInputVal] = useState('');
     const [range, setRange] = useState(100);
 
@@ -166,7 +167,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                             <DelegateButton>
                                 <Button
                                   preset={BUTTON_PRESET.PINK}
-                                  loading={false}
+                                  loading={isLoadingDelegateUndelegateButton}
                                   disabled={!delegateAddress.length || !isDelegateAddressValid}
                                   onClick={() => onClickDelegate(delegateAddress as `0x${string}`)}
                                 >
@@ -187,7 +188,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                             <DelegateButton>
                                 <Button
                                   preset={BUTTON_PRESET.PINK}
-                                  loading={false}
+                                  loading={isLoadingDelegateUndelegateButton}
                                   onClick={onClickUndelegate}
                                 >
                                     Undelegate
