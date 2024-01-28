@@ -36,7 +36,7 @@ export type ChainInfo = {
 
 export const CHAIN_INFO: { [id: number]: ChainInfo } = {
     207: {
-        CONTROLLER: '0x6B754f3A35Fb5a1e23F75ad0d51eF0758538594A' as `0x{string}`,
+        CONTROLLER: '0x17bA239f2815BA01152522521737275a2439216f' as `0x{string}`,
         MULTICLAIM: '0xA260d19aEe266cC85F41f160271F9C72ea8E2837' as `0x{string}`,
         WETH: '0xEd8c5530a0A086a12f57275728128a60DFf04230' as `0x{string}`,
         EMERGENCY_WITHDRAWAL: '0xeBC1C9Ae7FC761330929d682d97334513C1FcB4b' as `0x{string}`,
