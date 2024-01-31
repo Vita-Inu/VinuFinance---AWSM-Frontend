@@ -1,5 +1,7 @@
+import { UAParser } from 'ua-parser-js';
+
 import { Agreement } from '@/components/inputs';
-import { CoinbaseButton, MetamaskButton } from '@/features/walletButtons';
+import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton } from '@/features/walletButtons';
 
 import { ModalBase } from '../modalBase';
 
@@ -13,6 +15,8 @@ type Props = {
 export function ConnectModal({ onClose }: Props) {
   const { agreements, handleAgreementChange, canLogin } = useConnectModal();
 
+  const parsedUserAgent = (new UAParser()).getResult();
+
   const haveMetaMask = !!window?.ethereum?.isMetaMask;
 
   return (
@@ -21,7 +25,12 @@ export function ConnectModal({ onClose }: Props) {
         {haveMetaMask && (
           <MetamaskButton disabled={!canLogin} onConnect={onClose} />
         )}
+        {!haveMetaMask && ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '') && (
+          <MetamaskLinkButton disabled={!canLogin}/>
+        )}
+        <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
         <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
+        <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
       </Buttons>
       <Agreements>
         <Agreement

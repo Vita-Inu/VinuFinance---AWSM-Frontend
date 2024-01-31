@@ -1,5 +1,7 @@
 import { MetaMaskConnector } from '@wagmi/connectors/metaMask';
 
+import { vinuChain } from '@/const';
+
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
 import MetamaskIcon from './assets/metamask.svg';
@@ -11,7 +13,7 @@ type Props = {
 
 export function MetamaskButton({ disabled, onConnect }: Props) {
   const { connect, isConnecting } = useWalletButton({
-    connector: new MetaMaskConnector(),
+    connector: new MetaMaskConnector({chains: [vinuChain]}),
     onSuccess: onConnect,
   });
 

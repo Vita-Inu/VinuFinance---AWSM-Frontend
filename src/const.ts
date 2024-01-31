@@ -3130,3 +3130,5 @@ export const IEmergencyWithdrawalAbi: Abi = [
         "type": "function"
     }
 ]
+
+export const WALLET_CONNECT_PROJECT_ID = 'f8617e1540e86f55af62bbd739df69e4'

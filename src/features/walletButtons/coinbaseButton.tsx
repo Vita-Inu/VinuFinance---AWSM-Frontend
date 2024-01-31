@@ -1,5 +1,7 @@
 import { CoinbaseWalletConnector } from '@wagmi/connectors/coinbaseWallet';
 
+import { vinuChain } from '@/const';
+
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
 import CoinbaseIcon from './assets/coinbase.svg';
@@ -11,7 +13,10 @@ type Props = {
 
 export function CoinbaseButton({ disabled, onConnect }: Props) {
   const { connect } = useWalletButton({
-    connector: new CoinbaseWalletConnector({ options: { appName: 'wagmi' } }),
+    connector: new CoinbaseWalletConnector({
+      chains: [vinuChain],
+      options: { appName: 'wagmi' }
+    }),
     onSuccess: onConnect,
   });
 
