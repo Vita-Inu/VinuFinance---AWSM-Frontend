@@ -1,4 +1,5 @@
-import { CoinbaseWalletConnector } from '@wagmi/connectors/coinbaseWallet';
+import { InjectedConnector } from '@wagmi/connectors/injected';
+import type { WindowProvider } from '@wagmi/connectors'
 
 import { vinuChain } from '@/const';
 
@@ -11,11 +12,15 @@ type Props = {
   onConnect: VoidFunction;
 };
 
-export function CoinbaseButton({ disabled, onConnect }: Props) {
+export function TrustWalletButton({ disabled, onConnect }: Props) {
   const { connect } = useWalletButton({
-    connector: new CoinbaseWalletConnector({
+    connector: new InjectedConnector({
       chains: [vinuChain],
-      options: { appName: 'wagmi' }
+      options: {
+        name: 'trustwallet',
+        shimDisconnect: true,
+        getProvider: () => window?.trustwallet as WindowProvider | undefined
+      }
     }),
     onSuccess: onConnect,
   });
@@ -26,12 +31,12 @@ export function CoinbaseButton({ disabled, onConnect }: Props) {
       onClick={connect}
       icon={{
         src: CoinbaseIcon,
-        alt: 'Coinbase',
+        alt: 'Trust wallet',
         width: 16,
         height: 16,
       }}
     >
-      Coinbase
+      Trust wallet
     </WalletButton>
   );
 }

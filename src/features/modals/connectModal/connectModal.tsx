@@ -1,5 +1,5 @@
 import { Agreement } from '@/components/inputs';
-import { CoinbaseButton, MetamaskButton } from '@/features/walletButtons';
+import { CoinbaseButton, MetamaskButton, TrustWalletButton } from '@/features/walletButtons';
 
 import { ModalBase } from '../modalBase';
 
@@ -22,6 +22,7 @@ export function ConnectModal({ onClose }: Props) {
           <MetamaskButton disabled={!canLogin} onConnect={onClose} />
         )}
         <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
+        <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
       </Buttons>
       <Agreements>
         <Agreement
