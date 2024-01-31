@@ -5,7 +5,7 @@ import { vinuChain } from '@/const';
 
 import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
-import CoinbaseIcon from './assets/coinbase.svg';
+import TrustWalletIcon from './assets/trustwallet.svg';
 
 type Props = {
   disabled: boolean;
@@ -30,7 +30,7 @@ export function TrustWalletButton({ disabled, onConnect }: Props) {
       disabled={disabled}
       onClick={connect}
       icon={{
-        src: CoinbaseIcon,
+        src: TrustWalletIcon,
         alt: 'Trust wallet',
         width: 16,
         height: 16,
