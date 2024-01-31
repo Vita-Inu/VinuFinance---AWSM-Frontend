@@ -16,8 +16,8 @@ import {
 } from './components';
 import {useAccount, useBalance, useContractRead, useContractWrite, useNetwork} from "wagmi";
 import {CHAIN_INFO, IMultiClaimAbi, IWethAbi} from "@/const";
-import {NOTIFICATION_TYPE} from "@/features/notifications";
-import {parseUnits} from "viem";
+import {NOTIFICATION_TYPE, useNotifications} from "@/features/notifications";
+import {formatUnits, parseUnits} from "viem";
 
 type Props = {
     onClose: VoidFunction;
@@ -34,6 +34,7 @@ const OPTIONS: [SwitchOption, SwitchOption] = [
 ]
 
 export function WrapModal({onClose}: Props) {
+    const {sendNotification} = useNotifications()
     const {address} = useAccount()
     const {chain} = useNetwork()
     const {data: nativeBalance} = useBalance({address: address, watch: true})
@@ -56,7 +57,7 @@ export function WrapModal({onClose}: Props) {
         functionName: 'deposit',
         address: CHAIN_INFO[chain?.id!].WETH,
         onSuccess: sentTxResult => {
-            // send wrap tx: sentTxResult.hash
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Wrapping transaction sent successfully')
         }
     })
 
@@ -71,6 +72,7 @@ export function WrapModal({onClose}: Props) {
         address: CHAIN_INFO[chain?.id!].WETH,
         onSuccess: sentTxResult => {
             // send unwrap tx: sentTxResult.hash
+            sendNotification(NOTIFICATION_TYPE.SUCCESS, 'Unwrapping transaction sent successfully')
         }
     })
     //endregion
@@ -91,17 +93,18 @@ export function WrapModal({onClose}: Props) {
         } else {
             // unwrapping
             writeUnwrap({
-                value: parseUnits(value, 18)
+                args: [parseUnits(value, 18)]
             })
         }
     }
 
     const onMax = () => {
         if(option === ACTION.WRAP){
-            setValue(nativeBalance?.value.toString() ?? '0')
+            setValue(formatUnits(BigInt(nativeBalance?.value ?? '0'), 18))
+            return
         }
 
-        setValue(wrappedBalance?.toString() ?? '0')
+        setValue(formatUnits(wrappedBalance as bigint ?? BigInt(0), 18))
     }
 
     const isLoading = isLoadingWrap || isLoadingUnwrap;
