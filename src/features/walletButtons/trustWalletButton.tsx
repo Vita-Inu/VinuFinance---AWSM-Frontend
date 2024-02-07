@@ -32,7 +32,6 @@ export function TrustWalletButton({ disabled, onConnect }: Props) {
       chains: [vinuChain],
       options: {
         name: 'trustwallet',
-        shimDisconnect: true,
         getProvider
       }
     }),
