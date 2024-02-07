@@ -12,6 +12,20 @@ type Props = {
   onConnect: VoidFunction;
 };
 
+const getProvider = (): WindowProvider | undefined => {
+  const injectedProviderExist = typeof window?.ethereum !== 'undefined'
+
+  if(!injectedProviderExist) return
+
+  if(window.ethereum?.isTrust) return window.ethereum
+
+  if(window.ethereum?.providers) {
+    return window.ethereum.providers.find((eth: NonNullable<Window['ethereum']>) => eth.isTrust)
+  }
+
+  return window.trustwallet as WindowProvider | undefined
+}
+
 export function TrustWalletButton({ disabled, onConnect }: Props) {
   const { connect } = useWalletButton({
     connector: new InjectedConnector({
@@ -19,7 +33,7 @@ export function TrustWalletButton({ disabled, onConnect }: Props) {
       options: {
         name: 'trustwallet',
         shimDisconnect: true,
-        getProvider: () => window?.trustwallet as WindowProvider | undefined
+        getProvider
       }
     }),
     onSuccess: onConnect,
