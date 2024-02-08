@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 
 import { Agreement } from '@/components/inputs';
-import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton } from '@/features/walletButtons';
+import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton } from '@/features/walletButtons';
 
 import { ModalBase } from '../modalBase';
 
@@ -16,21 +16,39 @@ export function ConnectModal({ onClose }: Props) {
   const { agreements, handleAgreementChange, canLogin } = useConnectModal();
 
   const parsedUserAgent = (new UAParser()).getResult();
+  const isMobile = ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '')
 
   const haveMetaMask = !!window?.ethereum?.isMetaMask;
+  const haveTrustWallet = !!window?.ethereum?.isTrust;
 
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
       <Buttons>
-        {haveMetaMask && (
+        {!isMobile && (
+          <>
+            <MetamaskButton disabled={!canLogin} onConnect={onClose} />
+            <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
+            <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
+            <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
+          </>
+        )}
+
+        {isMobile && !window?.ethereum && (
+          <>
+            <MetamaskLinkButton disabled={!canLogin}/>
+            <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
+            <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
+            <TrustWalletLinkButton disabled={!canLogin} />
+          </>
+        )}
+
+        {isMobile && haveMetaMask && (
           <MetamaskButton disabled={!canLogin} onConnect={onClose} />
         )}
-        {!haveMetaMask && ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '') && (
-          <MetamaskLinkButton disabled={!canLogin}/>
+
+        {!isMobile && haveTrustWallet && (
+          <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
         )}
-        <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
-        <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
-        <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
       </Buttons>
       <Agreements>
         <Agreement

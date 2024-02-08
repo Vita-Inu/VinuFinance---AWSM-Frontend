@@ -10,7 +10,7 @@ type Props = {
     height: number;
   };
   children: ReactNode;
-  onClick: VoidFunction;
+  onClick?: VoidFunction;
   disabled?: boolean;
   connecting?: boolean;
 };

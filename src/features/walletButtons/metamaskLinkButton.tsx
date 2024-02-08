@@ -9,9 +9,7 @@ export function MetamaskLinkButton({ disabled }: Props) {
   return (
     <a href={`https://metamask.app.link/dapp/${window.location.host}`}>
       <WalletButton
-        connecting={false}
         disabled={disabled}
-        onClick={() => undefined}
         icon={{
           src: MetamaskIcon,
           alt: 'Metamask',
