@@ -19,7 +19,7 @@ export function ConnectModal({ onClose }: Props) {
   const isMobile = ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '')
 
   const haveMetaMask = !!window?.ethereum?.isMetaMask;
-  const haveTrustWallet = !!window?.ethereum?.isTrust;
+  const haveTrustWallet = !!window?.trustwallet;
 
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
@@ -33,21 +33,15 @@ export function ConnectModal({ onClose }: Props) {
           </>
         )}
 
-        {isMobile && !window?.ethereum && (
+        {isMobile && (
           <>
-            <MetamaskLinkButton disabled={!canLogin}/>
+            {haveMetaMask && <MetamaskButton disabled={!canLogin} onConnect={onClose} />}
+            {!haveMetaMask && <MetamaskLinkButton disabled={!canLogin}/>}
             <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
             <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
-            <TrustWalletLinkButton disabled={!canLogin} />
+            {haveTrustWallet && <TrustWalletButton disabled={!canLogin} onConnect={onClose} />}
+            {!haveTrustWallet && <TrustWalletLinkButton disabled={!canLogin} />}
           </>
-        )}
-
-        {isMobile && haveMetaMask && (
-          <MetamaskButton disabled={!canLogin} onConnect={onClose} />
-        )}
-
-        {!isMobile && haveTrustWallet && (
-          <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
         )}
       </Buttons>
       <Agreements>
