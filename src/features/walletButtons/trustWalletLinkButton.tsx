@@ -1,5 +1,3 @@
-import { vinuChain } from '@/const';
-
 import { WalletButton } from './components';
 import TrustWalletIcon from './assets/trustwallet.svg';
 
@@ -10,7 +8,7 @@ type Props = {
 
 export function TrustWalletLinkButton({ disabled }: Props) {
   return (
-    <a href={`https://link.trustwallet.com/open_url?coin_id=${vinuChain.id}&url=${window.location.origin}`}>
+    <a href={`https://link.trustwallet.com/open_url`}>
     <WalletButton
       disabled={disabled}
       icon={{
