@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 
 import { Agreement } from '@/components/inputs';
-import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton } from '@/features/walletButtons';
+import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton, getTrustWalletProvider, getMetamaskProvider } from '@/features/walletButtons';
 
 import { ModalBase } from '../modalBase';
 
@@ -18,8 +18,8 @@ export function ConnectModal({ onClose }: Props) {
   const parsedUserAgent = (new UAParser()).getResult();
   const isMobile = ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '')
 
-  const haveMetaMask = !!window?.ethereum?.isMetaMask;
-  const haveTrustWallet = !!window?.trustwallet;
+  const haveMetaMask = !!getMetamaskProvider();
+  const haveTrustWallet = !!getTrustWalletProvider();
 
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>

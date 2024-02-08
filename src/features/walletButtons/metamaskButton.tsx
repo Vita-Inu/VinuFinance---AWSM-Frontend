@@ -1,4 +1,5 @@
 import { MetaMaskConnector } from '@wagmi/connectors/metaMask';
+import type { WindowProvider } from '@wagmi/connectors';
 
 import { vinuChain } from '@/const';
 
@@ -10,6 +11,18 @@ type Props = {
   disabled: boolean;
   onConnect: VoidFunction;
 };
+
+export const getMetamaskProvider = (): WindowProvider | undefined => {
+  const injectedProviderExist = typeof window?.ethereum !== 'undefined'
+
+  if(!injectedProviderExist) return
+
+  if(window.ethereum?.isMetaMask) return window.ethereum
+
+  if(window.ethereum?.providers) {
+    return window.ethereum.providers.find((eth: NonNullable<Window['ethereum']>) => eth.isMetaMask)
+  }
+}
 
 export function MetamaskButton({ disabled, onConnect }: Props) {
   const { connect, isConnecting } = useWalletButton({

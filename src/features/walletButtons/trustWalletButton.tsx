@@ -12,7 +12,7 @@ type Props = {
   onConnect: VoidFunction;
 };
 
-const getProvider = (): WindowProvider | undefined => {
+export const getTrustWalletProvider = (): WindowProvider | undefined => {
   const injectedProviderExist = typeof window?.ethereum !== 'undefined'
 
   if(!injectedProviderExist) return
@@ -32,7 +32,7 @@ export function TrustWalletButton({ disabled, onConnect }: Props) {
       chains: [vinuChain],
       options: {
         name: 'trustwallet',
-        getProvider
+        getProvider: getTrustWalletProvider
       }
     }),
     onSuccess: onConnect,
