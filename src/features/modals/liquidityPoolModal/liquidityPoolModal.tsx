@@ -154,27 +154,6 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         </Button>
                     </WithdrawalWrap>
                 </Cell>
-                {/*<Cell>*/}
-                {/*    <Button*/}
-                {/*        fullWidth*/}
-                {/*        preset={BUTTON_PRESET.PURPLE}*/}
-                {/*        onClick={() => onClickDeposit(parseUnits(inputVal.toString(), pool.loanCurrency.decimals))}*/}
-                {/*        disabled={shouldDisableButtons || !isPositiveValue}*/}
-                {/*    >*/}
-                {/*        Deposit*/}
-                {/*    </Button>*/}
-                {/*</Cell>*/}
-                {/*<Cell>*/}
-                {/*    <Button*/}
-                {/*        fullWidth*/}
-                {/*        preset={BUTTON_PRESET.PURPLE}*/}
-                {/*        onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}*/}
-                {/*        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}*/}
-                {/*    >*/}
-                {/*        {lockText && `Unlocks in ${lockText}`}*/}
-                {/*        {!lockText && `Withdraw`}*/}
-                {/*    </Button>*/}
-                {/*</Cell>*/}
                 <Cell $wide>
                     <ExpandButton expanded={showDelegate} onClick={() => setShowDelegate((prev) => !prev)}>Emergency withdrawal delegation</ExpandButton>
                 </Cell>
