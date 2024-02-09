@@ -51,6 +51,7 @@ export const Appendix = styled.div`
 `;
 
 export const Button = styled.div`
+  flex-shrink: 0;
   padding: 0.9rem 1.2rem;
   border-radius: 12px;
   background: #dfcefd;
