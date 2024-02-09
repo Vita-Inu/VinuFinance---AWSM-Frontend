@@ -39,6 +39,7 @@ export const Value = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 1.8;
+  word-break: break-all;
 `;
 
 export const Explain = styled.div`

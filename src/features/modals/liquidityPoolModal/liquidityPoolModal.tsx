@@ -3,11 +3,10 @@ import {Button, BUTTON_PRESET} from '@/components/buttons';
 import {ModalBase} from '../modalBase';
 
 const humanizeDuration = require("humanize-duration");
-import {Buttons, Cell, Describe, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton, DelegateText} from './components';
+import {Cell, Grid, Label, Value, NumberInput, TextInput, RangeSlider, DelegateButton, ExpandButton, DelegateText, DepositWrap, WithdrawalWrap} from './components';
 import {PoolWithInfo, Rewards} from "@/features/liquidityProviders";
 import { formatUnits, isAddress, parseUnits } from 'viem';
 import {Explain} from "@/components/table";
-import {res} from "pino-std-serializers";
 
 type Props = {
     pool: PoolWithInfo;
@@ -122,38 +121,38 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                         Claim and reinvest
                     </Button>
                 </Cell>
-                <Cell>
-                    <NumberInput
-                        value={inputVal}
-                        onChange={onInputChange}
-                        onMax={() => onInputChange(pool.loanCurrency.balance.toString())}
-                        ticker={pool.loanCurrency.symbol}
-                    />
+                <Cell $smallMobileWide>
+                    <DepositWrap>
+                        <NumberInput
+                            value={inputVal}
+                            onChange={onInputChange}
+                            onMax={() => onInputChange(pool.loanCurrency.balance.toString())}
+                            ticker={pool.loanCurrency.symbol}
+                        />
+                        <Button
+                          fullWidth
+                          preset={BUTTON_PRESET.PURPLE}
+                          onClick={() => onClickDeposit(parseUnits(inputVal.toString(), pool.loanCurrency.decimals))}
+                          disabled={shouldDisableButtons || !isPositiveValue}
+                        >
+                            Deposit
+                        </Button>
+                    </DepositWrap>
                 </Cell>
-                <Cell>
-                    <RangeSlider value={range} maxAmount={providedAmount} loanCurrency={pool.loanCurrency}
-                                 onChange={setRange}/>
-                </Cell>
-                <Cell>
-                    <Button
-                        fullWidth
-                        preset={BUTTON_PRESET.PURPLE}
-                        onClick={() => onClickDeposit(parseUnits(inputVal.toString(), pool.loanCurrency.decimals))}
-                        disabled={shouldDisableButtons || !isPositiveValue}
-                    >
-                        Deposit
-                    </Button>
-                </Cell>
-                <Cell>
-                    <Button
-                        fullWidth
-                        preset={BUTTON_PRESET.PURPLE}
-                        onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}
-                        disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}
-                    >
-                        {lockText && `Unlocks in ${lockText}`}
-                        {!lockText && `Withdraw`}
-                    </Button>
+                <Cell $smallMobileWide>
+                    <WithdrawalWrap>
+                        <RangeSlider value={range} maxAmount={providedAmount} loanCurrency={pool.loanCurrency}
+                                     onChange={setRange}/>
+                        <Button
+                          fullWidth
+                          preset={BUTTON_PRESET.PURPLE}
+                          onClick={() => onClickWithdraw(lpShares * BigInt(range * 10000) / BigInt(1000000))}
+                          disabled={providedAmount == 0 || shouldDisableButtons || !!lockText}
+                        >
+                            {lockText && `Unlocks in ${lockText}`}
+                            {!lockText && `Withdraw`}
+                        </Button>
+                    </WithdrawalWrap>
                 </Cell>
                 <Cell $wide>
                     <ExpandButton expanded={showDelegate} onClick={() => setShowDelegate((prev) => !prev)}>Emergency withdrawal delegation</ExpandButton>

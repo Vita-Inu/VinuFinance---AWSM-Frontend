@@ -24,6 +24,7 @@ export const Amount = styled.div`
 
 export const Value = styled.input`
   ${aeonik.style}
+  width: 100%;
   color: #fff;
   font-size: 3.6rem;
   font-style: normal;

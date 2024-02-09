@@ -10,9 +10,15 @@ export const Grid = styled.div`
   }
 `;
 
-export const Cell = styled.div<{$wide?: boolean}>`
+export const Cell = styled.div<{$wide?: boolean, $smallMobileWide?: boolean}>`
   ${props => props.$wide && css`
     grid-column: span 2;
+  `}
+
+  ${props => props.$smallMobileWide && css`
+    @media (max-width: 450px) {
+      grid-column: span 2;
+    }
   `}
 `;
 
@@ -73,5 +79,25 @@ export const DelegateText = styled.div`
   span {
     color: #fff;
     word-break: break-all;
+  }
+`
+
+export const WithdrawalWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3.8rem;
+
+  @media (max-width: 767px) {
+    gap: 3.2rem;
+  }
+`
+
+export const DepositWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+
+  @media (max-width: 767px) {
+    gap: 1.8rem;
   }
 `
