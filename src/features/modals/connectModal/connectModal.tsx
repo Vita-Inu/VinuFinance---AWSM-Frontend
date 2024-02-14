@@ -2,6 +2,7 @@ import { UAParser } from 'ua-parser-js';
 
 import { Agreement } from '@/components/inputs';
 import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton, getTrustWalletProvider, getMetamaskProvider } from '@/features/walletButtons';
+import { confirmAgreements } from '@/utils';
 
 import { ModalBase } from '../modalBase';
 
@@ -21,26 +22,31 @@ export function ConnectModal({ onClose }: Props) {
   const haveMetaMask = !!getMetamaskProvider();
   const haveTrustWallet = !!getTrustWalletProvider();
 
+  const onConnect = () => {
+    confirmAgreements()
+    onClose()
+  }
+
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
       <Buttons>
         {!isMobile && (
           <>
-            <MetamaskButton disabled={!canLogin} onConnect={onClose} />
-            <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
-            <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
-            <TrustWalletButton disabled={!canLogin} onConnect={onClose} />
+            <MetamaskButton disabled={!canLogin} onConnect={onConnect} />
+            <WalletConnectButton disabled={!canLogin} onConnect={onConnect} />
+            <CoinbaseButton disabled={!canLogin} onConnect={onConnect} />
+            <TrustWalletButton disabled={!canLogin} onConnect={onConnect} />
           </>
         )}
 
         {isMobile && (
           <>
-            {haveMetaMask && <MetamaskButton disabled={!canLogin} onConnect={onClose} />}
-            {!haveMetaMask && <MetamaskLinkButton disabled={!canLogin}/>}
-            <WalletConnectButton disabled={!canLogin} onConnect={onClose} />
-            <CoinbaseButton disabled={!canLogin} onConnect={onClose} />
-            {haveTrustWallet && <TrustWalletButton disabled={!canLogin} onConnect={onClose} />}
-            {!haveTrustWallet && <TrustWalletLinkButton disabled={!canLogin} />}
+            {haveMetaMask && <MetamaskButton disabled={!canLogin} onConnect={onConnect} />}
+            {!haveMetaMask && <MetamaskLinkButton disabled={!canLogin} onClick={onConnect}/>}
+            <WalletConnectButton disabled={!canLogin} onConnect={onConnect} />
+            <CoinbaseButton disabled={!canLogin} onConnect={onConnect} />
+            {haveTrustWallet && <TrustWalletButton disabled={!canLogin} onConnect={onConnect} />}
+            {!haveTrustWallet && <TrustWalletLinkButton disabled={!canLogin} onClick={onConnect} />}
           </>
         )}
       </Buttons>
