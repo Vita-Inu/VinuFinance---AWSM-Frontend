@@ -15,9 +15,9 @@ import {
 import {PoolWithInfo} from "@/features/liquidityProviders";
 import {formatUnits} from "viem";
 
-type Props = { data: PoolWithInfo[]; onView: (id: string) => void };
+type Props = { data: PoolWithInfo[]; onView: (id: string) => void, priceMap: any };
 
-export function MobileTable({data, onView}: Props) {
+export function MobileTable({data, onView, priceMap}: Props) {
     const CELLS: DataCell<PoolWithInfo>[] = [
         {
             render: (row) => (
@@ -40,7 +40,7 @@ export function MobileTable({data, onView}: Props) {
                 <>
                     <Label>Total Liquidity</Label>
                     <Value>{parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)} {row.loanCurrency.symbol}</Value>
-                    <Explain>$0.0</Explain>
+                    <Explain>${(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
                 </>
             ),
         },
@@ -66,7 +66,7 @@ export function MobileTable({data, onView}: Props) {
                 <>
                     <Label>Max. Loan Per Collateral Unit</Label>
                     <Value>{formatUnits(row.pool.info[2], row.loanCurrency.decimals)} {row.loanCurrency.symbol}</Value>
-                    <Explain>$0.0</Explain>
+                    <Explain>${(parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
                 </>
             ),
         },

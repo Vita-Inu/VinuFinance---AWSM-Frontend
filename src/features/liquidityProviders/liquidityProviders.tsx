@@ -21,6 +21,7 @@ import {CHAIN_INFO, IEmergencyWithdrawalAbi, IErc20Abi, IMultiClaimAbi, IPoolAbi
 import {formatUnits, getContract, parseAbiItem} from 'viem';
 import {Loader} from '@/components/loader';
 import {getFirstApprovedEscrow} from "@/utils/getApprovedEscrows";
+import { getPoolsMonthlyAprs, getTokensPrices } from '@/utils/backendInfo';
 
 export class PoolWithInfo {
     key!: `0x${string}`;
@@ -79,6 +80,7 @@ export function LiquidityProviders() {
     const [currentlyDelegatingTo, setCurrentlyDelegatingTo] = useState<`0x${string}` | undefined>();
     const [currentPendingTxType, setCurrentPendingTxType] = useState<string | undefined>();
     const [isLoadingDelegateUndelegateButton, setIsLoadingDelegateUndelegateButton] = useState<boolean>(false);
+    const [priceMap, setPriceMap] = useState<any>();
 
     async function loadData() {
         if (!chain) return
@@ -93,18 +95,22 @@ export function LiquidityProviders() {
                 }
             })
         })
+        let aprMap = await getPoolsMonthlyAprs(pools.map(x => x.address))
         let ercs = await getErc20sFromPools(client, chain.id, pools, address!)
         setData(pools.map((x, i) => {
             return {
                 key: x.address,
                 pool: x,
-                currentMonthlyApr: 1.17 / 100,
+                currentMonthlyApr: aprMap[x.address] || 0,
                 loanCurrency: ercs.get(x.info[0])!,
                 collCurrency: ercs.get(x.info[1])!,
                 lpInfo: lpInfos[i].result as any[]
             }
         }))
-
+        // load erc prices
+        let tokenList = Array.from(ercs.keys()) as `0x${string}`[]
+        let localPriceMap = await getTokensPrices(tokenList)
+        setPriceMap(localPriceMap)
     }
 
     //region CONTRACT WRITES
@@ -513,8 +519,8 @@ export function LiquidityProviders() {
     return (
         <ListContainer filters={filters} onFilter={onFilter}>
             <>
-                {!isTabletSize && <DesktopTable data={filteredPools} onView={showPoolDetails}/>}
-                {isTabletSize && <MobileTable data={filteredPools} onView={showPoolDetails}/>}
+                {!isTabletSize && <DesktopTable priceMap={priceMap} data={filteredPools} onView={showPoolDetails}/>}
+                {isTabletSize && <MobileTable priceMap={priceMap} data={filteredPools} onView={showPoolDetails}/>}
                 {!!liquidityPoolId && (
                     <LiquidityPoolModal
                         isLoadingRewards={isLoadingRewards}
