@@ -25,6 +25,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { getPools, Pool } from '@/utils/getPools';
 import { getErc20sFromPools, Tokens } from '@/utils/getErc20sFromPools';
 import { NOTIFICATION_TYPE, useNotifications } from '@/features/notifications';
+import { getTokensPrices } from '@/utils/backendInfo';
 
 //region STRUCTS
 export type PairType = {
@@ -96,6 +97,7 @@ export function Borrow() {
     let [collAllowance, setCollAllowance] = useState<bigint>(ZERO) // raw
     let [simulatedLoans, setSimulatedLoans] = useState<PoolAndSimulationResult[]>()
     let [selectedLoan, setSelectedLoan] = useState<PoolAndSimulationResult>()
+    const [priceMap, setPriceMap] = useState<any>();
     let client = usePublicClient()
 
     const [borrowSettings, setBorrowSettings] = useState({
@@ -146,6 +148,9 @@ export function Borrow() {
 
             setPairs(pairsInfo)
             setCurrentPair(pairsInfo[0])
+            let tokenList = Array.from(tokens.keys()) as `0x${string}`[]
+            let localPriceMap = await getTokensPrices(tokenList)
+            setPriceMap(localPriceMap)
         }
         fetchPools().catch(err => {
             console.log('Failed to fetch pools: ', err)
@@ -329,7 +334,7 @@ export function Borrow() {
 
     return (
         <Container>
-            {pairs.length != 0 && <Grid>
+            {pairs.length != 0 && priceMap != undefined && <Grid>
                 <SetupCol>
                     <Step stepNo={1} title={'Select Borrow Pair'}>
                         <BorrowPairs
@@ -347,6 +352,7 @@ export function Borrow() {
                             }}
                             balance={collBalance}
                             currency={currentPair!.collName}
+                            price={priceMap[currentPair?.collAddress!]! as number}
                         />
                     </Step>
                     <Step stepNo={3} title={'Select Loan Option'}>
@@ -376,6 +382,8 @@ export function Borrow() {
                                 pool={selectedLoan}
                                 allowance={collAllowance}
                                 inputAmnt={parseUnits(value, selectedLoan.collToken.decimals)}
+                                collPrice={priceMap[selectedLoan.collToken.address]}
+                                loanPrice={priceMap[selectedLoan.loanToken.address]}
                             />
                         </Step>}
                 </ConfirmCol>

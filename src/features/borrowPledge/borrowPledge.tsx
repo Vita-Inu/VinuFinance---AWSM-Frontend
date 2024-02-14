@@ -19,9 +19,10 @@ type Props = {
   onMax: VoidFunction;
   currency: string;
   balance: string;
+  price: number;
 };
 
-export function BorrowPledge({ value, onMax, onValueChange, currency, balance }: Props) {
+export function BorrowPledge({ value, onMax, onValueChange, currency, balance, price }: Props) {
   return (
     <Wrapper>
       <Box>
@@ -29,7 +30,7 @@ export function BorrowPledge({ value, onMax, onValueChange, currency, balance }:
           <Currency>{currency}</Currency>
           <Value type={'number'} value={value} onChange={onValueChange} />
         </Amount>
-        <Fiat>$0.00</Fiat>
+        <Fiat>${(price * parseFloat(value) || 0).toFixed(2)}</Fiat>
       </Box>
       <Box>
         <Helpers>
