@@ -1,7 +1,8 @@
 import { UAParser } from 'ua-parser-js';
+import { useConfig } from 'wagmi';
 
 import { Agreement } from '@/components/inputs';
-import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton, getTrustWalletProvider, getMetamaskProvider } from '@/features/walletButtons';
+import { CoinbaseButton, MetamaskButton, TrustWalletButton, MetamaskLinkButton, WalletConnectButton, TrustWalletLinkButton } from '@/features/walletButtons';
 import { confirmAgreements } from '@/utils';
 
 import { ModalBase } from '../modalBase';
@@ -19,8 +20,7 @@ export function ConnectModal({ onClose }: Props) {
   const parsedUserAgent = (new UAParser()).getResult();
   const isMobile = ['mobile', 'tablet'].includes(parsedUserAgent.device.type ?? '')
 
-  const haveMetaMask = !!getMetamaskProvider();
-  const haveTrustWallet = !!getTrustWalletProvider();
+  const {connectors} = useConfig()
 
   const onConnect = () => {
     confirmAgreements()
@@ -30,25 +30,35 @@ export function ConnectModal({ onClose }: Props) {
   return (
     <ModalBase title={'Connect a wallet'} onClose={onClose}>
       <Buttons>
-        {!isMobile && (
-          <>
-            <MetamaskButton disabled={!canLogin} onConnect={onConnect} />
-            <WalletConnectButton disabled={!canLogin} onConnect={onConnect} />
-            <CoinbaseButton disabled={!canLogin} onConnect={onConnect} />
-            <TrustWalletButton disabled={!canLogin} onConnect={onConnect} />
-          </>
-        )}
+        {connectors.map((connector) => {
+          if(connector.id === 'metaMask') {
+            if(connector.ready) {
+              return <MetamaskButton key={'metamask'} disabled={!canLogin} onConnect={onConnect} connector={connector} />
+            }
 
-        {isMobile && (
-          <>
-            {haveMetaMask && <MetamaskButton disabled={!canLogin} onConnect={onConnect} />}
-            {!haveMetaMask && <MetamaskLinkButton disabled={!canLogin} onClick={onConnect}/>}
-            <WalletConnectButton disabled={!canLogin} onConnect={onConnect} />
-            <CoinbaseButton disabled={!canLogin} onConnect={onConnect} />
-            {haveTrustWallet && <TrustWalletButton disabled={!canLogin} onConnect={onConnect} />}
-            {!haveTrustWallet && <TrustWalletLinkButton disabled={!canLogin} onClick={onConnect} />}
-          </>
-        )}
+            if(!connector.ready && isMobile) {
+              return <MetamaskLinkButton key={'metamaskMobile'} disabled={!canLogin} onClick={onConnect}/>
+            }
+          }
+
+          if(connector.id === 'walletConnect' && connector.ready) {
+            return <WalletConnectButton key={'walletconnect'} disabled={!canLogin} onConnect={onConnect} connector={connector} />
+          }
+
+          if(connector.id === 'coinbaseWallet' && connector.ready) {
+            return <CoinbaseButton key={'coinbasewallet'} disabled={!canLogin} onConnect={onConnect} connector={connector} />
+          }
+
+          if(connector.name === 'trustwallet') {
+            if(connector.ready) {
+              return <TrustWalletButton key={'trustwallet'} disabled={!canLogin} onConnect={onConnect} connector={connector} />
+            }
+
+            if(!connector.ready && isMobile) {
+              return <TrustWalletLinkButton key={'trustwalletMobile'} disabled={!canLogin} onClick={onConnect} />
+            }
+          }
+        })}
       </Buttons>
       <Agreements>
         <Agreement

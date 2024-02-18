@@ -1,3 +1,4 @@
+import { Connector } from 'wagmi';
 import { InjectedConnector } from '@wagmi/connectors/injected';
 import type { WindowProvider } from '@wagmi/connectors'
 
@@ -7,12 +8,14 @@ import { WalletButton } from './components';
 import { useWalletButton } from './hooks';
 import TrustWalletIcon from './assets/trustwallet.svg';
 
+
 type Props = {
   disabled: boolean;
   onConnect: VoidFunction;
+  connector: Connector
 };
 
-export const getTrustWalletProvider = (): WindowProvider | undefined => {
+const getTrustWalletProvider = (): WindowProvider | undefined => {
   const injectedProviderExist = typeof window?.ethereum !== 'undefined'
 
   if(!injectedProviderExist) return
@@ -26,15 +29,20 @@ export const getTrustWalletProvider = (): WindowProvider | undefined => {
   return window.trustwallet as WindowProvider | undefined
 }
 
-export function TrustWalletButton({ disabled, onConnect }: Props) {
+export const getTrustWalletConnector = () => {
+  return new InjectedConnector({
+    chains: [vinuChain],
+    options: {
+      name: 'trustwallet',
+      getProvider: getTrustWalletProvider,
+      shimDisconnect: true
+    }
+  })
+}
+
+export function TrustWalletButton({ disabled, onConnect, connector }: Props) {
   const { connect } = useWalletButton({
-    connector: new InjectedConnector({
-      chains: [vinuChain],
-      options: {
-        name: 'trustwallet',
-        getProvider: getTrustWalletProvider
-      }
-    }),
+    connector,
     onSuccess: onConnect,
   });
 
