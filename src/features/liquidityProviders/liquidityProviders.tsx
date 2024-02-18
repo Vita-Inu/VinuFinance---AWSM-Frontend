@@ -101,7 +101,7 @@ export function LiquidityProviders() {
             return {
                 key: x.address,
                 pool: x,
-                currentMonthlyApr: aprMap[x.address] || 0,
+                currentMonthlyApr: x.address in aprMap ? aprMap[x.address] as number : 0,
                 loanCurrency: ercs.get(x.info[0])!,
                 collCurrency: ercs.get(x.info[1])!,
                 lpInfo: lpInfos[i].result as any[]
