@@ -28,7 +28,7 @@ export function Wagmi({ children }: PropsWithChildren) {
 
   const config = createConfig({
     autoConnect: agreementsConfirmed(),
-    connectors: [getMetamaskConnector(), getWalletConnectConnector(), getCoinbaseConnector(), getTrustWalletConnector()], //TODO:: Move all connectors here, check pancakeswap example and use them in buttons
+    connectors: [getMetamaskConnector(), getWalletConnectConnector(), getCoinbaseConnector(), getTrustWalletConnector()],
     publicClient,
     webSocketPublicClient,
   });
