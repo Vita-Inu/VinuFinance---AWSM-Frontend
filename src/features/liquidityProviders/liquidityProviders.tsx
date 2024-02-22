@@ -535,6 +535,7 @@ export function LiquidityProviders() {
                         onClickUndelegate={undelegate}
                         currentDelegatedAddress={currentlyDelegatingTo}
                         isLoadingDelegateUndelegateButton={isLoadingDelegateUndelegateButton}
+                        oldPool={liquidityPoolId == '0xfeec5A79D8f6d0CcC9f55Ed96cf985501CC4Db37' || liquidityPoolId == '0x2Eb1970dc38AfF84735cf965126ec5044197285C'}
                     />
                 )}
             </>

@@ -21,9 +21,10 @@ type Props = {
     onClickDeposit: (val: bigint) => void;
     currentDelegatedAddress: `0x${string}` | undefined;
     isLoadingDelegateUndelegateButton: boolean;
+    oldPool: boolean;
 };
 
-export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons, onClickUndelegate, onClickDelegate, currentDelegatedAddress, isLoadingDelegateUndelegateButton }: Props) {
+export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDeposit, isLoadingRewards, rewards, onClickClaim, shouldDisableButtons, onClickUndelegate, onClickDelegate, currentDelegatedAddress, isLoadingDelegateUndelegateButton, oldPool }: Props) {
     const [inputVal, setInputVal] = useState('');
     const [range, setRange] = useState(100);
 
@@ -70,6 +71,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
     return (
         <ModalBase title={'Pool details'} onClose={onClose}>
             <Grid>
+                <div>{/* my bad idk how to add a commend the proper way. TODO: add like a banner here thats shown if `oldPool` is true and says "This pool is deprecated. Withdraw assets from this pool and migrate them to the new one." */}</div>
                 <Cell>
                     <Label>Loan Tenor</Label>
                     <Value>{humanizeDuration(1000 * parseInt(pool.pool.info[4].toString()))}</Value>
@@ -133,7 +135,7 @@ export function LiquidityPoolModal({onClose, pool, onClickWithdraw, onClickDepos
                           fullWidth
                           preset={BUTTON_PRESET.PURPLE}
                           onClick={() => onClickDeposit(parseUnits(inputVal.toString(), pool.loanCurrency.decimals))}
-                          disabled={shouldDisableButtons || !isPositiveValue}
+                          disabled={shouldDisableButtons || !isPositiveValue || oldPool}
                         >
                             Deposit
                         </Button>
