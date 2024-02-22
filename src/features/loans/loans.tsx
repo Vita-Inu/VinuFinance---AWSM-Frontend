@@ -84,6 +84,10 @@ export function Loans() {
             let collToken = tokens.get(pool.info[1])!
             let dueDate = new Date(Number(x.args.expiry) * 1000);
             let remainingTime = dueDate.getTime() - Date.now()
+
+            const repaymentPrice = pool.info[0] in localPriceMap ? localPriceMap[pool.info[0]] as number : 0;
+            const collateralPrice = pool.info[1] in localPriceMap ? localPriceMap[pool.info[1]] as number : 0;
+
             return {
                 key: x.args.loanIdx!.toString(),
                 id: x.args.loanIdx!,
@@ -94,7 +98,7 @@ export function Loans() {
                 pool: pool.address,
                 borrowed: {
                     value: `${parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * localPriceMap[pool.info[0]]).toFixed(2)}`
+                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)}`
                 },
                 repayBefore: {
                     value: `${dueDate.getHours()}:${dueDate.getMinutes()} ${dueDate.toDateString()}`,
@@ -102,11 +106,11 @@ export function Loans() {
                 },
                 repaymentAmount: {
                     value: `${parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(localPriceMap[pool.info[0]] * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
+                    explain: `$${(repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
                 },
                 collateralAmount: {
                     value: `${parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)} ${collToken.symbol}`,
-                    explain: `$${(localPriceMap[pool.info[1]] * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
+                    explain: `$${(collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
                 },
                 uniqueId: `${x.args.loanIdx}${pool.address}`,
                 repaymentAmountRaw: x.args.repaymentAmount,
@@ -142,6 +146,10 @@ export function Loans() {
             let pool = pools.find(pool => pool.address == x.address)!
             let loanToken = tokens.get(pool.info[0])!
             let collToken = tokens.get(pool.info[1])!
+
+            const repaymentPrice = pool.info[0] in localPriceMap ? localPriceMap[pool.info[0]] as number : 0;
+            const collateralPrice = pool.info[1] in localPriceMap ? localPriceMap[pool.info[1]] as number : 0;
+
             return {
                 key: x.args.loanIdx!.toString(),
                 id: x.args.loanIdx!,
@@ -152,7 +160,7 @@ export function Loans() {
                 pool: pool.address,
                 borrowed: {
                     value: `${parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * localPriceMap[pool.info[0]]).toFixed(2)}`
+                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)}`
                 },
                 repayBefore: {
                     value: 'tomorrow',
@@ -160,11 +168,11 @@ export function Loans() {
                 },
                 repaymentAmount: {
                     value: `${parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(localPriceMap[pool.info[0]] * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
+                    explain: `$${(repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
                 },
                 collateralAmount: {
                     value: `${parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)} ${collToken.symbol}`,
-                    explain: `$${(localPriceMap[pool.info[1]] * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
+                    explain: `$${(collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
                 },
                 uniqueId: `${x.args.loanIdx}${pool.address}`,
                 wasPaidOff: repaidIds.includes(x.args.loanIdx!)
