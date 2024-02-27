@@ -5,9 +5,9 @@ import {PoolWithInfo} from "@/features/liquidityProviders";
 import {formatEther, formatUnits} from "viem";
 const humanizeDuration = require("humanize-duration");
 
-type Props = { data: PoolWithInfo[]; onView: (id: string) => void };
+type Props = { data: PoolWithInfo[]; onView: (id: string) => void, priceMap: any };
 
-export function DesktopTable({ data, onView }: Props) {
+export function DesktopTable({ data, onView, priceMap }: Props) {
   const COLUMNS: Column<PoolWithInfo>[] = [
     {
       label: 'Loan Currency',
@@ -25,7 +25,7 @@ export function DesktopTable({ data, onView }: Props) {
       render: (row) => (
         <>
           <Value>{parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)} {row.loanCurrency.symbol}</Value>
-          <Explain>$0.0</Explain>
+          <Explain>${(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
         </>
       ),
     },
@@ -34,7 +34,7 @@ export function DesktopTable({ data, onView }: Props) {
       key: 'currentApr',
       render: (row) => (
         <>
-          <Value>{(1 + (row.currentMonthlyApr * 12).toFixed(2))}%</Value>
+          <Value>{((row.currentMonthlyApr * 100 * 12)).toFixed(2)}%</Value>
           <Explain>~{(Math.pow(1 + row.currentMonthlyApr, 12) * 100 - 100).toFixed(2)}% APY</Explain>
         </>
       ),
@@ -54,7 +54,7 @@ export function DesktopTable({ data, onView }: Props) {
       render: (row) => (
         <>
           <Value>{formatUnits(row.pool.info[2], row.loanCurrency.decimals)} {row.loanCurrency.symbol}</Value>
-          <Explain>$0.0</Explain>
+          <Explain>${(parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
         </>
       ),
     },

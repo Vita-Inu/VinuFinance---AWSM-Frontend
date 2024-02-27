@@ -6,7 +6,9 @@ export const confirmAgreements = () => {
 }
 
 export const agreementsConfirmed = () => {
-  const value = localStorage.getItem(STORAGE_KEY)
+  if(typeof window === 'undefined') return false
+
+  const value = localStorage?.getItem(STORAGE_KEY)
 
   return value === STORAGE_VALUE
 }

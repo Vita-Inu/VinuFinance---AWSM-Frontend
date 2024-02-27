@@ -11,28 +11,30 @@ type Props = {
     onconfirmed: VoidFunction;
     isLoading: boolean;
     allowance: bigint;
+    collPrice: number;
+    loanPrice: number;
 }
 
-export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowance}: Props) {
+export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowance, collPrice, loanPrice}: Props) {
     let collateralAmnt = parseFloat(formatUnits(BigInt(inputAmnt.toString()), pool.collToken.decimals))
     let borrowAmnt = parseFloat(formatUnits(BigInt(pool.loan[0].toString()), pool.loanToken.decimals))
     let data = [
         {
             label: 'You Send',
             value: collateralAmnt.toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: '($0.00)',
+            explain: `($${(collPrice * collateralAmnt).toFixed(2)})`,
             dateTime: null,
         },
         {
             label: 'You Borrow',
             value: borrowAmnt.toFixed(3) + ' ' + pool.loanToken.symbol,
-            explain: '($0.00)',
+            explain: `($${(borrowAmnt * loanPrice).toFixed(2)})`,
             dateTime: null,
         },
         {
             label: 'Repayment Amount',
             value: parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals)).toFixed(3) + ' ' + pool.loanToken.symbol,
-            explain: '($0.00)',
+            explain: `($${(loanPrice * parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals))).toFixed(2)})`,
             dateTime: null,
         },
         {
@@ -44,13 +46,13 @@ export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowanc
         {
             label: 'Reclaimable Amount',
             value: parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals)).toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: '($0.00)',
+            explain: `($${(collPrice * parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals))).toFixed(2)})`,
             dateTime: null,
         },
         {
             label: 'Total Fees',
             value: parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)).toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: '0 %',
+            explain: `${(parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)) / collateralAmnt * 100).toFixed(2)}%`,
             dateTime: null,
         },
     ]
