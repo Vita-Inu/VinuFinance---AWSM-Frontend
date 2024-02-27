@@ -36,23 +36,27 @@ type Props = {
   currentDelegatedAddress: `0x${string}` | undefined;
   isLoadingDelegateUndelegateButton: boolean;
   oldPool: boolean;
+  loanTokenBalance: number;
+  loanTokenPrice: number;
 };
 
 export function LiquidityPoolModal({
-  onClose,
-  pool,
-  onClickWithdraw,
-  onClickDeposit,
-  isLoadingRewards,
-  rewards,
-  onClickClaim,
-  shouldDisableButtons,
-  onClickUndelegate,
-  onClickDelegate,
-  currentDelegatedAddress,
-  isLoadingDelegateUndelegateButton,
-  oldPool,
-}: Props) {
+                                     onClose,
+                                     pool,
+                                     onClickWithdraw,
+                                     onClickDeposit,
+                                     isLoadingRewards,
+                                     rewards,
+                                     onClickClaim,
+                                     shouldDisableButtons,
+                                     onClickUndelegate,
+                                     onClickDelegate,
+                                     currentDelegatedAddress,
+                                     isLoadingDelegateUndelegateButton,
+                                     oldPool,
+                                     loanTokenBalance,
+                                     loanTokenPrice
+                                   }: Props) {
   const [inputVal, setInputVal] = useState('');
   const [range, setRange] = useState(100);
 
@@ -101,6 +105,10 @@ export function LiquidityPoolModal({
   const lockSeconds = pool.lpInfo[1] - Date.now() / 1000;
   const lockText =
     lockSeconds > 0 ? humanizeDuration(lockSeconds * 1000) : null;
+  let parsedValue = parseFloat(inputVal);
+  if (isNaN(parsedValue)) {
+    parsedValue = 0;
+  }
   const isPositiveValue = parseFloat(inputVal) > 0;
   const isDelegateAddressValid = isAddress(delegateAddress);
 
@@ -108,8 +116,7 @@ export function LiquidityPoolModal({
     <ModalBase title={'Pool details'} onClose={onClose}>
       {oldPool && (
         <Banner>
-          This pool is deprecated. Withdraw assets from this pool and migrate
-          them to the new one.
+          This pool is deprecated. Withdraw assets from this pool and migrate them to the new one.
         </Banner>
       )}
       <Grid>
@@ -125,7 +132,7 @@ export function LiquidityPoolModal({
             {formatUnits(pool.pool.info[2], pool.loanCurrency.decimals)}{' '}
             {pool.loanCurrency.symbol}
           </Value>
-          <Explain>$0.0</Explain>
+          <Explain>${(parseFloat(formatUnits(pool.pool.info[2], pool.loanCurrency.decimals)) * loanTokenPrice).toFixed(3)}</Explain>
         </Cell>
         <Cell>
           <Label>Total Liquidity</Label>
@@ -135,11 +142,11 @@ export function LiquidityPoolModal({
             ).toFixed(2)}{' '}
             {pool.loanCurrency.symbol}
           </Value>
-          <Explain>$0.0</Explain>
+          <Explain>${(parseFloat(formatUnits(pool.pool.info[5], pool.loanCurrency.decimals)) * loanTokenPrice).toFixed(3)}</Explain>
         </Cell>
         <Cell>
           <Label>Current APR</Label>
-          <Value>{1 + (pool.currentMonthlyApr * 12).toFixed(2)}%</Value>
+          <Value>{(pool.currentMonthlyApr * 12).toFixed(2)}%</Value>
           <Explain>
             ~{(Math.pow(1 + pool.currentMonthlyApr, 12) * 100 - 100).toFixed(2)}
             % APY
@@ -195,9 +202,10 @@ export function LiquidityPoolModal({
                   parseUnits(inputVal.toString(), pool.loanCurrency.decimals),
                 )
               }
-              disabled={shouldDisableButtons || !isPositiveValue || oldPool}
+              disabled={shouldDisableButtons || !isPositiveValue || oldPool || loanTokenBalance < parsedValue}
             >
-              Deposit
+              {parsedValue > loanTokenBalance && 'Insufficient balance'}
+              {parsedValue <= loanTokenBalance && 'Deposit'}
             </Button>
           </DepositWrap>
         </Cell>
