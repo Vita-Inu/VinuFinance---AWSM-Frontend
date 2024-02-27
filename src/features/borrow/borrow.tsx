@@ -206,16 +206,6 @@ export function Borrow() {
             && x.info[0] == currentPair!.loanAddress)
         if (shouldSetLoading) setIsSimulatingPools(true)
         let simulatedLoans = await Promise.all(relatedPools.map(x => {
-            if (x.info[3] > rawValue) {
-                // loan too small
-                return {
-                    error: 'Loan too small',
-                    0: ZERO,
-                    1: ZERO,
-                    2: ZERO,
-                    3: ZERO
-                }
-            }
             let contract = getContract({
                 address: x.address,
                 abi: IPoolAbi,
