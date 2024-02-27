@@ -523,6 +523,7 @@ export function LiquidityProviders() {
                 {isTabletSize && <MobileTable priceMap={priceMap} data={filteredPools} onView={showPoolDetails}/>}
                 {!!liquidityPoolId && (
                     <LiquidityPoolModal
+                        loanTokenBalance={data.find(x => x.pool.address == liquidityPoolId)!.loanCurrency.balance}
                         isLoadingRewards={isLoadingRewards}
                         shouldDisableButtons={shouldDisableButtons}
                         rewards={rewards}
@@ -535,7 +536,8 @@ export function LiquidityProviders() {
                         onClickUndelegate={undelegate}
                         currentDelegatedAddress={currentlyDelegatingTo}
                         isLoadingDelegateUndelegateButton={isLoadingDelegateUndelegateButton}
-                        oldPool={liquidityPoolId == '0xfeec5A79D8f6d0CcC9f55Ed96cf985501CC4Db37' || liquidityPoolId == '0x2Eb1970dc38AfF84735cf965126ec5044197285C'}
+                        loanTokenPrice={priceMap[data.find(x => x.pool.address == liquidityPoolId)!.pool.info['0']]}
+                        oldPool={liquidityPoolId == '0xfeec5A79D8f6d0CcC9f55Ed96cf985501CC4Db37'.toLowerCase() || liquidityPoolId == '0x2Eb1970dc38AfF84735cf965126ec5044197285C'.toLowerCase()}
                     />
                 )}
             </>
