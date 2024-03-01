@@ -30,7 +30,7 @@ export function BorrowPledge({ value, onMax, onValueChange, currency, balance, p
           <Currency>{currency}</Currency>
           <Value type={'number'} value={value} onChange={onValueChange} />
         </Amount>
-        <Fiat>${(price * parseFloat(value) || 0).toFixed(2)}</Fiat>
+        <Fiat>${parseFloat((price * parseFloat(value) || 0).toFixed(2)).toLocaleString('en-US')}</Fiat>
       </Box>
       <Box>
         <Helpers>

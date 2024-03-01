@@ -21,20 +21,20 @@ export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowanc
     let data = [
         {
             label: 'You Send',
-            value: collateralAmnt.toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: `($${(collPrice * collateralAmnt).toFixed(2)})`,
+            value: parseFloat(collateralAmnt.toFixed(3)).toLocaleString('en-US') + ' ' + pool.collToken.symbol,
+            explain: `($${parseFloat((collPrice * collateralAmnt).toFixed(2)).toLocaleString('en-US')})`,
             dateTime: null,
         },
         {
             label: 'You Borrow',
-            value: borrowAmnt.toFixed(3) + ' ' + pool.loanToken.symbol,
-            explain: `($${(borrowAmnt * loanPrice).toFixed(2)})`,
+            value: parseFloat(borrowAmnt.toFixed(3)).toLocaleString('en-US') + ' ' + pool.loanToken.symbol,
+            explain: `($${parseFloat((borrowAmnt * loanPrice).toFixed(2)).toLocaleString('en-US')})`,
             dateTime: null,
         },
         {
             label: 'Repayment Amount',
-            value: parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals)).toFixed(3) + ' ' + pool.loanToken.symbol,
-            explain: `($${(loanPrice * parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals))).toFixed(2)})`,
+            value: parseFloat(parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals)).toFixed(3)).toLocaleString('en-US') + ' ' + pool.loanToken.symbol,
+            explain: `($${parseFloat((loanPrice * parseFloat(formatUnits(BigInt(pool.loan[1].toString()), pool.loanToken.decimals))).toFixed(2)).toLocaleString('en-US')})`,
             dateTime: null,
         },
         {
@@ -45,14 +45,14 @@ export function BorrowConfirm({pool, inputAmnt, onconfirmed, isLoading, allowanc
         },
         {
             label: 'Reclaimable Amount',
-            value: parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals)).toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: `($${(collPrice * parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals))).toFixed(2)})`,
+            value: parseFloat(parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals)).toFixed(3)).toLocaleString('en-US') + ' ' + pool.collToken.symbol,
+            explain: `($${parseFloat((collPrice * parseFloat(formatUnits(BigInt(pool.loan[2].toString()), pool.collToken.decimals))).toFixed(2)).toLocaleString('en-US')})`,
             dateTime: null,
         },
         {
             label: 'Total Fees',
-            value: parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)).toFixed(3) + ' ' + pool.collToken.symbol,
-            explain: `${(parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)) / collateralAmnt * 100).toFixed(2)}%`,
+            value: parseFloat(parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)).toFixed(3)).toLocaleString('en-US')+ ' ' + pool.collToken.symbol,
+            explain: `${parseFloat((parseFloat(formatUnits(BigInt(pool.loan[3].toString()), pool.collToken.decimals)) / collateralAmnt * 100).toFixed(2)).toLocaleString('en-US')}%`,
             dateTime: null,
         },
     ]

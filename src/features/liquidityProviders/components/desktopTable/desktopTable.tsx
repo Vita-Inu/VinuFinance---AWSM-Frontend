@@ -24,8 +24,8 @@ export function DesktopTable({ data, onView, priceMap }: Props) {
       key: 'totalLiquidity',
       render: (row) => (
         <>
-          <Value>{parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)} {row.loanCurrency.symbol}</Value>
-          <Explain>${(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
+          <Value>{parseFloat(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)).toLocaleString('en-US')} {row.loanCurrency.symbol}</Value>
+          <Explain>${parseFloat((parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)).toLocaleString('en-US')}</Explain>
         </>
       ),
     },
@@ -53,8 +53,8 @@ export function DesktopTable({ data, onView, priceMap }: Props) {
       key: 'collateralUnit',
       render: (row) => (
         <>
-          <Value>{formatUnits(row.pool.info[2], row.loanCurrency.decimals)} {row.loanCurrency.symbol}</Value>
-          <Explain>${(parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
+          <Value>{parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)).toLocaleString('en-US')} {row.loanCurrency.symbol}</Value>
+          <Explain>${parseFloat((parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)).toLocaleString('en-US')}</Explain>
         </>
       ),
     },

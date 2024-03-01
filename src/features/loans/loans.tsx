@@ -97,20 +97,20 @@ export function Loans() {
                 loanTokenName: loanToken.symbol,
                 pool: pool.address,
                 borrowed: {
-                    value: `${parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${loanToken.symbol}`,
+                    explain: `$${parseFloat((parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)).toLocaleString('en-US')}`
                 },
                 repayBefore: {
                     value: `${dueDate.getHours()}:${dueDate.getMinutes()} ${dueDate.toDateString()}`,
                     explain: remainingTime > 0 ? humanizeDuration(remainingTime, { largest: 2 }) : ''
                 },
                 repaymentAmount: {
-                    value: `${parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${loanToken.symbol}`,
+                    explain: `$${parseFloat((repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)).toLocaleString('en-US')}`
                 },
                 collateralAmount: {
-                    value: `${parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)} ${collToken.symbol}`,
-                    explain: `$${(collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${collToken.symbol}`,
+                    explain: `$${parseFloat((collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)).toLocaleString('en-US')}`
                 },
                 uniqueId: `${x.args.loanIdx}${pool.address}`,
                 repaymentAmountRaw: x.args.repaymentAmount,
@@ -159,20 +159,20 @@ export function Loans() {
                 loanTokenName: loanToken.symbol,
                 pool: pool.address,
                 borrowed: {
-                    value: `${parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${loanToken.symbol}`,
+                    explain: `$${parseFloat((parseFloat(formatUnits(x.args.loanAmount!, loanToken.decimals)) * repaymentPrice).toFixed(2)).toLocaleString('en-US')}`
                 },
                 repayBefore: {
                     value: 'tomorrow',
                     explain: 'tomorrow2'
                 },
                 repaymentAmount: {
-                    value: `${parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)} ${loanToken.symbol}`,
-                    explain: `$${(repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${loanToken.symbol}`,
+                    explain: `$${parseFloat((repaymentPrice * parseFloat(formatUnits(x.args.repaymentAmount!, loanToken.decimals))).toFixed(2)).toLocaleString('en-US')}`
                 },
                 collateralAmount: {
-                    value: `${parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)} ${collToken.symbol}`,
-                    explain: `$${(collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)}`
+                    value: `${parseFloat(parseFloat(formatUnits(x.args.collateral!, collToken.decimals)).toFixed(3)).toLocaleString('en-US')} ${collToken.symbol}`,
+                    explain: `$${parseFloat((collateralPrice * parseFloat(formatUnits(x.args.collateral!, collToken.decimals))).toFixed(2)).toLocaleString('en-US')}`
                 },
                 uniqueId: `${x.args.loanIdx}${pool.address}`,
                 wasPaidOff: repaidIds.includes(x.args.loanIdx!)
