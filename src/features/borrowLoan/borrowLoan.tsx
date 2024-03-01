@@ -24,11 +24,11 @@ export function BorrowLoan({rawData, onSelect: onSelectHigher}: Props) {
                 active: idx == 0,
                 borrowingPeriod: humanizeDuration(1000 * parseInt(x.pool.info[4].toString())),
                 loanAmount: {
-                    value: parseFloat(formatUnits(BigInt(x.loan[0].toString()), x.loanToken.decimals)).toFixed(3) + ' ' + x.loanToken.symbol,
+                    value: parseFloat(parseFloat(formatUnits(BigInt(x.loan[0].toString()), x.loanToken.decimals)).toFixed(3)).toLocaleString('en-US') + ' ' + x.loanToken.symbol,
                     explain: ''
                 },
                 repaymentAmount: {
-                    value: parseFloat(formatUnits(BigInt(x.loan[1].toString()), x.loanToken.decimals)).toFixed(3) + ' ' + x.loanToken.symbol,
+                    value: parseFloat(parseFloat(formatUnits(BigInt(x.loan[1].toString()), x.loanToken.decimals)).toFixed(3)).toLocaleString('en-US') + ' ' + x.loanToken.symbol,
                     explain: ''
                 },
                 termRate: {

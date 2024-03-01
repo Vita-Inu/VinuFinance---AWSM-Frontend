@@ -39,8 +39,8 @@ export function MobileTable({data, onView, priceMap}: Props) {
             render: (row) => (
                 <>
                     <Label>Total Liquidity</Label>
-                    <Value>{parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)} {row.loanCurrency.symbol}</Value>
-                    <Explain>${(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
+                    <Value>{parseFloat(parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)).toFixed(2)).toLocaleString('en-US')} {row.loanCurrency.symbol}</Value>
+                    <Explain>${parseFloat((parseFloat(formatUnits(row.pool.info[5], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)).toLocaleString('en-US')}</Explain>
                 </>
             ),
         },
@@ -65,8 +65,8 @@ export function MobileTable({data, onView, priceMap}: Props) {
             render: (row) => (
                 <>
                     <Label>Max. Loan Per Collateral Unit</Label>
-                    <Value>{formatUnits(row.pool.info[2], row.loanCurrency.decimals)} {row.loanCurrency.symbol}</Value>
-                    <Explain>${(parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)}</Explain>
+                    <Value>{parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)).toLocaleString('en-US')} {row.loanCurrency.symbol}</Value>
+                    <Explain>${parseFloat((parseFloat(formatUnits(row.pool.info[2], row.loanCurrency.decimals)) * priceMap[row.pool.info['0']]).toFixed(2)).toLocaleString('en-US')}</Explain>
                 </>
             ),
         },
