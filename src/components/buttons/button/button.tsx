@@ -44,11 +44,21 @@ const StyledButton = styled.div<{
   color: ${(props) => props.$text};
   transition: 0.2s ease-in-out;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
 
   @media (max-width: 767px) {
     font-size: 1.4rem;
   }
-  
+
+  & > svg {
+    width: 1.4rem;
+    height: 1.4rem;
+    position: relative;
+    top: 0.1rem;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -59,7 +69,7 @@ const StyledButton = styled.div<{
     border-top: 0.1rem solid rgba(255, 255, 255, 0.45);
     border-radius: 50%;
     animation: ${rotate} 1s linear infinite;
-    transition: .2s ease-in-out;
+    transition: 0.2s ease-in-out;
     opacity: 0;
   }
 
@@ -88,7 +98,7 @@ const StyledButton = styled.div<{
       pointer-events: none;
       background: rgba(255, 255, 255, 0.15);
       color: transparent;
-      
+
       &:before {
         opacity: 1;
       }
@@ -101,7 +111,13 @@ const StyledButton = styled.div<{
     `}
 `;
 
-export const Button = ({ preset, disabled, fullWidth, loading, ...props }: Props) => {
+export const Button = ({
+  preset,
+  disabled,
+  fullWidth,
+  loading,
+  ...props
+}: Props) => {
   const presetColors =
     (preset && presetColorMap.get(preset)) ?? DEFAULT_COLOR_PRESET;
 
