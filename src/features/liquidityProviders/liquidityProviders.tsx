@@ -553,10 +553,10 @@ export function LiquidityProviders() {
   const oldPools = [
     "0xfeec5A79D8f6d0CcC9f55Ed96cf985501CC4Db37".toLowerCase(),
     "0x2Eb1970dc38AfF84735cf965126ec5044197285C".toLowerCase(),
-    /*"0xf0e98da5ef7ca6ad88e42cd3fc47546b10618f1b".toLowerCase(),
+    "0xf0e98da5ef7ca6ad88e42cd3fc47546b10618f1b".toLowerCase(),
     "0x81ff52b811f13548782b4dfbff604045f4786dfb".toLowerCase(),
     "0x68ea6f302e1bfdebcc6336e7309463c97c100a05".toLowerCase(),
-    "0xb8f54383b78fab60d2ecedc59b5cde9a6ae655d1".toLowerCase()*/
+    "0xb8f54383b78fab60d2ecedc59b5cde9a6ae655d1".toLowerCase()
   ];
   const isDeprecated = liquidityPoolId != undefined && oldPools.includes(liquidityPoolId?.toLowerCase())
 
