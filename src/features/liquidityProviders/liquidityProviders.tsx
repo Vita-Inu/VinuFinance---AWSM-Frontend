@@ -682,6 +682,7 @@ export function LiquidityProviders() {
             priceMap={priceMap}
             data={filteredPools}
             onView={showPoolDetails}
+            deprecatedList={oldPools}
           />
         )}
         {isTabletSize && (
@@ -689,6 +690,7 @@ export function LiquidityProviders() {
             priceMap={priceMap}
             data={filteredPools}
             onView={showPoolDetails}
+            deprecatedList={oldPools}
           />
         )}
         {!!liquidityPoolId && (
