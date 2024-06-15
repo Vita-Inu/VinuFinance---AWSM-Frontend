@@ -4,7 +4,10 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, theme } from '@/features/theme';
 import { DashboardLayout } from '@/features/dashboardLayout';
 import { Wagmi } from '@/features/wagmi';
-import { Notifications, NotificationContextProvider } from '@/features/notifications';
+import {
+  Notifications,
+  NotificationContextProvider,
+} from '@/features/notifications';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -16,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <DashboardLayout>
               <Component {...pageProps} />
             </DashboardLayout>
-            <Notifications/>
+            <Notifications />
           </NotificationContextProvider>
         </Wagmi>
       </ThemeProvider>

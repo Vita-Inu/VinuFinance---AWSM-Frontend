@@ -3,7 +3,11 @@ import Head from 'next/head';
 export function PageMeta() {
   return (
     <Head>
-      <title>Vinu Finance</title>
+      <title>VinuFinance - Zero Network Fee Lending Through VinuChain</title>
+      <meta
+        name='description'
+        content='Pioneering DeFi lending platform within the VINU Ecosystem, offering Zero-Liquidation Loans, and through VinuChain, the option for zero fee lending. A first of its kind in crypto.'
+      />
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       <link
